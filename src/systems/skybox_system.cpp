@@ -1,9 +1,9 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "akarin_database/texture/texture_database.hpp"
-#include "akarin_database/shader_code_database.hpp"
-#include "akarin_database/shader_program_database.hpp"
-#include "tools/shader_utilities.hpp"
+#include "akarin_database/shader/shader_code_database.hpp"
+#include "akarin_database/shader/shader_program_database.hpp"
+#include "misc/shader_utilities.hpp"
 
 #include "glad/glad.h"
 #include "stb/stb_image.h"
@@ -63,7 +63,7 @@ const std::array<std::string, 6> faces{
     "./resources/skybox/front.jpg",
     "./resources/skybox/back.jpg"};
 
-std::size_t g_skybox_shader_id = 0;
+GLuint g_skybox_shader_id = 0;
 unsigned int g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
 Texture g_skybox_texture_id;
 

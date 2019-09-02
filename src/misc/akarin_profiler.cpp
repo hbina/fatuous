@@ -1,4 +1,4 @@
-#include "tools/akarin_profiler.hpp"
+#include "misc/akarin_profiler.hpp"
 
 #include <algorithm>
 #include <iostream>

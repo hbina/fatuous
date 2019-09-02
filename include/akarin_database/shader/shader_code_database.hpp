@@ -1,6 +1,8 @@
 #ifndef SHADER_CODE_SYSTEM_HPP
 #define SHADER_CODE_SYSTEM_HPP
 
+#include "glad/glad.h"
+
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -25,9 +27,9 @@ struct ShaderCode
 namespace ShaderCodeDatabase
 {
 
-extern std::unordered_map<std::size_t, ShaderCode> g_shadercode_map;
+extern std::unordered_map<GLuint, ShaderCode> shader_code_map;
 
-std::size_t
+GLuint
 load_shader_code_file(
     const std::string &) noexcept;
 }; // namespace ShaderCodeDatabase

@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build",
+                "--config",
+                "Debug",
+                "--target",
+                "akarin_engine",
+                "-j",
+                "4"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": "cmake generate"
+        },
+        {
+            "label": "cmake generate",
+            "type": "shell",
+            "command": "cmake",
+            "windows": {
+                "args": [
+                    "..",
+                    "-G",
+                    "'Visual Studio 16 2019'"
+                ]
+            },
+            "linux": {
+                "args": [
+                    "..",
+                    "-G",
+                    "'Unix Makefiles'"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            }
+        }
+    ]
+}

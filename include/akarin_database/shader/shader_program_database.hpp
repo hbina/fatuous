@@ -3,15 +3,17 @@
 
 #include "types/texture.hpp"
 
+#include "glad/glad.h"
+
 #include <array>
 #include <vector>
 #include <unordered_map>
 
 struct ShaderProgram
 {
-    std::vector<std::size_t> m_shader_ids;
+    std::vector<GLuint> m_shader_ids;
     ShaderProgram(
-        const std::vector<std::size_t> &p_shader_texts) noexcept
+        const std::vector<GLuint> &p_shader_texts) noexcept
         : m_shader_ids(p_shader_texts){};
     ShaderProgram() = default;
 };
@@ -19,15 +21,15 @@ struct ShaderProgram
 namespace ShaderProgramDatabase
 {
 
-extern std::unordered_map<std::size_t, ShaderProgram> g_shaderprogram_map;
+extern std::unordered_map<GLuint, ShaderProgram> shader_program_map;
 
 void clean_up() noexcept;
 
-std::size_t link_shader_codes(
-    const std::vector<std::size_t> &p_shaders) noexcept;
+GLuint link_shader_codes(
+    const std::vector<GLuint> &p_shaders) noexcept;
 
 void set_shader_program_texture(
-    const std::size_t,
+    const GLuint,
     const std::vector<std::size_t> &) noexcept;
 
 void clear_material(

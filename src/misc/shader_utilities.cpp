@@ -1,21 +1,19 @@
-#include "tools/shader_utilities.hpp"
+#include "misc/shader_utilities.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "glad/glad.h"
 #include "glm/glm.hpp"
-
 
 // TODO :: Consider putting this into akarin_database/
 
 void ShaderUtilities::use(
-    const std::size_t p_shader_program_id) noexcept
+    const GLuint p_shader_program_id) noexcept
 {
     glUseProgram(p_shader_program_id);
 };
 
 void ShaderUtilities::transform_shader(
-    const std::size_t shader_program_id,
+    const GLuint shader_program_id,
     const glm::mat4 &p_projection,
     const glm::mat4 &p_view,
     const glm::vec3 &p_position,
@@ -31,7 +29,7 @@ void ShaderUtilities::transform_shader(
 };
 
 void ShaderUtilities::setBool(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const bool p_value) noexcept
 {
@@ -39,7 +37,7 @@ void ShaderUtilities::setBool(
 };
 
 void ShaderUtilities::setInt(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const int p_value) noexcept
 {
@@ -47,7 +45,7 @@ void ShaderUtilities::setInt(
 };
 
 void ShaderUtilities::setFloat(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const float p_value) noexcept
 {
@@ -55,7 +53,7 @@ void ShaderUtilities::setFloat(
 };
 
 void ShaderUtilities::setVec2(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::vec2 &p_value) noexcept
 {
@@ -63,7 +61,7 @@ void ShaderUtilities::setVec2(
 };
 
 void ShaderUtilities::setVec2(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const std::array<float, 2> &p_array) noexcept
 {
@@ -71,7 +69,7 @@ void ShaderUtilities::setVec2(
 };
 
 void ShaderUtilities::setVec3(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::vec3 &p_value) noexcept
 {
@@ -79,7 +77,7 @@ void ShaderUtilities::setVec3(
 };
 
 void ShaderUtilities::setVec3(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const std::array<float, 3> &p_array) noexcept
 {
@@ -87,7 +85,7 @@ void ShaderUtilities::setVec3(
 };
 
 void ShaderUtilities::setVec4(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::vec4 &p_value) noexcept
 {
@@ -95,7 +93,7 @@ void ShaderUtilities::setVec4(
 };
 
 void ShaderUtilities::setVec4(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const std::array<float, 4> &p_array) noexcept
 {
@@ -103,7 +101,7 @@ void ShaderUtilities::setVec4(
 };
 
 void ShaderUtilities::setMat2(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::mat2 &p_value) noexcept
 {
@@ -111,7 +109,7 @@ void ShaderUtilities::setMat2(
 };
 
 void ShaderUtilities::setMat3(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::mat3 &p_value) noexcept
 {
@@ -119,7 +117,7 @@ void ShaderUtilities::setMat3(
 };
 
 void ShaderUtilities::setMat4(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::string &p_property_name,
     const glm::mat4 &p_value) noexcept
 {

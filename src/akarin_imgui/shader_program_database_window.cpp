@@ -1,10 +1,9 @@
 #include "akarin_imgui/shader_program_database_window.hpp"
-#include "akarin_database/shader_program_database.hpp"
-
+#include "akarin_database/shader/shader_program_database.hpp"
 
 #include "imgui/imgui.h"
-#include "imgui/examples/imgui_impl_glfw.h"
-#include "imgui/examples/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <ostream>
 #include <sstream>
@@ -27,10 +26,12 @@ void ShaderProgramDatabaseWindow::render() noexcept
     {
         ImGui::Text("List of ShaderPrograms loaded:");
         std::for_each(
-            ShaderProgramDatabase::g_shaderprogram_map.cbegin(),
-            ShaderProgramDatabase::g_shaderprogram_map.cend(),
-            [](const auto &p_shader_program_iter) {
+            ShaderProgramDatabase::shader_program_map.cbegin(),
+            ShaderProgramDatabase::shader_program_map.cend(),
+            [](const std::pair<const GLuint, ShaderProgram> &p_shader_program_iter) {
                 std::ostringstream out;
+                out << p_shader_program_iter.first;
+                out << " : ";
                 std::for_each(
                     p_shader_program_iter.second.m_shader_ids.cbegin(),
                     p_shader_program_iter.second.m_shader_ids.end(),
@@ -38,8 +39,7 @@ void ShaderProgramDatabaseWindow::render() noexcept
                         out << p_shader_code_id_iter << ", ";
                     });
                 ImGui::Text(
-                    "%lu : %s",
-                    p_shader_program_iter.first,
+                    "%s",
                     out.str().c_str());
             });
     }

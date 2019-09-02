@@ -1,11 +1,11 @@
 #include "processes/rendering_process.hpp"
-#include "akarin_database/shader_program_database.hpp"
-#include "akarin_database/shader_code_database.hpp"
-#include "akarin_database/model_database.hpp"
+#include "akarin_database/shader/shader_program_database.hpp"
+#include "akarin_database/shader/shader_code_database.hpp"
+#include "akarin_database/model/model_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
 #include "types/shader.hpp"
 #include "types/transform.hpp"
-#include "tools/shader_utilities.hpp"
+#include "misc/shader_utilities.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
@@ -16,23 +16,23 @@
 #include "glm/glm.hpp"
 
 void draw(
-    const std::size_t,
+    const GLuint,
     const ModelData &,
     const Transform &);
 void add_dirlight(
-    const std::size_t,
+    const GLuint,
     const bool) noexcept;
 void add_pointlight(
-    const std::size_t,
+    const GLuint,
     const bool) noexcept;
 void add_spotlight(
-    const std::size_t,
+    const GLuint,
     const bool) noexcept;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
-    static std::size_t p_shader_id = ShaderProgramDatabase::link_shader_codes(
+    static GLuint p_shader_id = ShaderProgramDatabase::link_shader_codes(
         {ShaderCodeDatabase::load_shader_code_file("./shaders/model.vs"),
          ShaderCodeDatabase::load_shader_code_file("./shaders/model.fs")});
     auto entity_view = p_reg.view<ModelData, Transform>();
@@ -74,7 +74,7 @@ void RenderingProcess::clear_screen() noexcept
 };
 
 void draw(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const ModelData &p_model,
     const Transform &p_transform)
 {
@@ -86,12 +86,12 @@ void draw(
         p_transform.scale);
     for (const std::size_t &p_mesh_id : p_model.m_meshes)
     {
-        MeshDatabase::meshes_map[p_mesh_id].draw(p_shader_program_id);
+        MeshDatabase::meshes_map.at(p_mesh_id).draw(p_shader_program_id);
     }
 };
 
 void add_dirlight(
-    const std::size_t p_shader_id,
+    const GLuint p_shader_id,
     const bool p_enabled) noexcept
 {
     ShaderUtilities::setVec3(
@@ -122,7 +122,7 @@ void add_dirlight(
 };
 
 void add_pointlight(
-    const std::size_t p_shader_id,
+    const GLuint p_shader_id,
     const bool p_enabled) noexcept
 {
     ShaderUtilities::setVec3(
@@ -156,7 +156,7 @@ void add_pointlight(
 };
 
 void add_spotlight(
-    const std::size_t p_shader_id,
+    const GLuint p_shader_id,
     const bool p_enabled) noexcept
 {
     ShaderUtilities::setVec3(

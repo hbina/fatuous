@@ -1,43 +1,40 @@
-#include "akarin_database/shader_program_database.hpp"
-#include "akarin_database/shader_code_database.hpp"
+#include "akarin_database/shader/shader_program_database.hpp"
+#include "akarin_database/shader/shader_code_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "types/shader.hpp"
-
-#include "glad/glad.h"
 
 #include <ostream>
 #include <sstream>
 
-std::unordered_map<std::size_t, ShaderProgram> ShaderProgramDatabase::g_shaderprogram_map;
+std::unordered_map<GLuint, ShaderProgram> ShaderProgramDatabase::shader_program_map;
 
 void add_shader_program(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const ShaderProgram &p_shader_program) noexcept
 {
-    ShaderProgramDatabase::g_shaderprogram_map[p_shader_program_id] = p_shader_program;
+    ShaderProgramDatabase::shader_program_map[p_shader_program_id] = p_shader_program;
 };
 
 // Free function declarations
 
 void test_shader_program_compilation(
-    const std::size_t p_shader) noexcept;
+    const GLuint p_shader) noexcept;
 
 // Namespace functions definitions
 
 void ShaderProgramDatabase::clean_up() noexcept
 {
-    for (const auto &shader_program_id : g_shaderprogram_map)
+    for (const auto &shader_program_id : shader_program_map)
     {
         glDeleteProgram(shader_program_id.first);
     }
-    g_shaderprogram_map.clear();
+    shader_program_map.clear();
 };
 
-std::size_t
-ShaderProgramDatabase::link_shader_codes(
-    const std::vector<std::size_t> &p_shaders) noexcept
+GLuint ShaderProgramDatabase::link_shader_codes(
+    const std::vector<GLuint> &p_shaders) noexcept
 {
-    std::size_t shader_program_id = glCreateProgram();
+    GLuint shader_program_id = glCreateProgram();
     for (const auto shader_id : p_shaders)
     {
         glAttachShader(shader_program_id, shader_id);
@@ -50,7 +47,7 @@ ShaderProgramDatabase::link_shader_codes(
 };
 
 void ShaderProgramDatabase::set_shader_program_texture(
-    const std::size_t p_shader_program_id,
+    const GLuint p_shader_program_id,
     const std::vector<std::size_t> &textures) noexcept
 {
     // TODO :: This is not normalized data structure...please consider making it so.
@@ -95,7 +92,7 @@ void ShaderProgramDatabase::set_shader_program_texture(
 
 // Free functions definitions
 
-void test_shader_program_compilation(const std::size_t p_shader) noexcept
+void test_shader_program_compilation(const GLuint p_shader) noexcept
 {
     static constexpr auto info_log_size = 1024;
     int success;

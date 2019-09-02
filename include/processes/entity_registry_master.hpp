@@ -3,11 +3,11 @@
 
 #include <cstddef>
 
-namespace EntitySystemMaster
+namespace EntityRegistryMaster
 {
 void create_entity(const std::size_t) noexcept;
 void run(const float) noexcept;
 std::size_t get_entity_count() noexcept;
-}; // namespace EntitySystemMaster
+}; // namespace EntityRegistryMaster
 
 #endif

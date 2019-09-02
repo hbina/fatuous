@@ -1,8 +1,7 @@
-#include "akarin_database/model_database.hpp"
+#include "akarin_database/model/model_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "akarin_database/texture/texture_job.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "tools/akarin_profiler.hpp"
 #include "types/vertex.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -43,15 +42,14 @@ std::size_t process_mesh(
     const aiScene *) noexcept;
 std::unordered_map<std::size_t, ModelData> ModelDatabase::models_map;
 std::atomic<std::size_t> m_model_id_counter = 1;
+std::vector<std::future<void>> model_jobs;
 
 void ModelDatabase::add_model_job(
     const std::string &p_model_path) noexcept
 {
-    static std::future<void> parse_assimp_model = std::async(
+    model_jobs.push_back(std::async(
         std::launch::async,
         [p_model_path]() {
-            AkarinProfiler::mark_begin("add_model_job");
-
             const auto &find_model_iter = std::find_if(
                 ModelDatabase::models_map.cbegin(),
                 ModelDatabase::models_map.cend(),
@@ -61,7 +59,6 @@ void ModelDatabase::add_model_job(
             if (find_model_iter != ModelDatabase::models_map.cend())
             {
                 std::cout << "model:" << p_model_path << " already exists\n";
-                AkarinProfiler::mark_end("add_model_job");
                 return;
             }
 
@@ -70,7 +67,6 @@ void ModelDatabase::add_model_job(
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
             {
                 std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
-                AkarinProfiler::mark_end("add_model_job");
                 return;
             }
 
@@ -90,9 +86,7 @@ void ModelDatabase::add_model_job(
                 ModelData(
                     p_model_path,
                     meshes));
-
-            AkarinProfiler::mark_end("add_model_job");
-        });
+        }));
 };
 
 void process_node(

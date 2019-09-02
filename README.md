@@ -1,9 +1,41 @@
-# HBINA ECS 3D ENGINE
-
-Still WIP
-
-Make sure to recursively clone the repository to clone all the submodules
+# Akarin Engine
 
 Demo : https://www.youtube.com/watch?v=BbLW4ZJnaLM
 
-Wait...that's not a calculator!!?
+This project was supposed to be a simple calculator.
+Somehow, it became a freak-of-nature ala Frankenstein of an attempt at making a 3d engine.
+My current goal is to be able to implement all types of rendering techniques (mostly lighting, shadows, etc etc).
+
+After that, I might implement other stuff like physics, animation, sounds, scripts etc. etc. to make it a proper game engine.
+
+Regardless, I like LateX, so here is a more robust text about the project : [Akarin Engine Book](documentation/akarin_engine.tex)
+
+# Installation
+
+## Obtain the Source Code
+
+First, clone the project
+
+`git clone git@github.com:hbina/akarin_engine.git`
+
+Then you want to initialize the submodules:
+
+`git submodule init` then `git submodule update`.
+
+## Prerequisite
+
+### Linux
+
+Before installing, you will need the following packages.
+
+`sudo apt-get install cmake build-essential make xorg-dev libglu1-mesa-dev libc6-dbg gdb valgrind`
+
+## Compile
+
+First, let `cmake` generate the build files.
+
+`cd build` then `cmake ..`
+
+Then, you compile.
+
+`cmake --build . --config Debug --target akarin_engine -j 4`

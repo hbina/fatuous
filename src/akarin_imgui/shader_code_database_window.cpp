@@ -1,10 +1,9 @@
 #include "akarin_imgui/shader_code_database_window.hpp"
-#include "akarin_database/shader_code_database.hpp"
-
+#include "akarin_database/shader/shader_code_database.hpp"
 
 #include "imgui/imgui.h"
-#include "imgui/examples/imgui_impl_glfw.h"
-#include "imgui/examples/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <algorithm>
 #include <sstream>
@@ -28,14 +27,15 @@ void ShaderCodeDatabaseWindow::render() noexcept
     {
         ImGui::Text("List of ShaderCodes loaded:");
         std::for_each(
-            ShaderCodeDatabase::g_shadercode_map.cbegin(),
-            ShaderCodeDatabase::g_shadercode_map.cend(),
+            ShaderCodeDatabase::shader_code_map.cbegin(),
+            ShaderCodeDatabase::shader_code_map.cend(),
             [](const auto &p_shader_code_iter) {
                 std::ostringstream out;
+                out << p_shader_code_iter.first;
+                out << " : ";
                 out << p_shader_code_iter.second.m_shader_path << "\n";
                 ImGui::Text(
-                    "%lu : %s",
-                    p_shader_code_iter.first,
+                    "%s",
                     out.str().c_str());
             });
     }

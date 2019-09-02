@@ -1,8 +1,8 @@
 #include "akarin_imgui/akarin_imgui.hpp"
-#include "processes/ecs_master_process.hpp"
-#include "akarin_database/model_database.hpp"
-#include "akarin_database/shader_code_database.hpp"
-#include "akarin_database/shader_program_database.hpp"
+#include "processes/entity_registry_master.hpp"
+#include "akarin_database/model/model_database.hpp"
+#include "akarin_database/shader/shader_code_database.hpp"
+#include "akarin_database/shader/shader_program_database.hpp"
 #include "types/transform.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
 #include "akarin_imgui/entity_database_window.hpp"
@@ -12,8 +12,8 @@
 
 
 #include "imgui/imgui.h"
-#include "imgui/examples/imgui_impl_glfw.h"
-#include "imgui/examples/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <stdio.h>
 #include <iostream>

@@ -143,14 +143,14 @@ void create_gl_texture(const TextureJob &p_texture_job) noexcept
 Texture TextureDatabase::load_cube_texture(
     const std::array<std::string, 6> &faces) noexcept
 {
-    unsigned int texture_gl_id = 0;
+    GLuint texture_gl_id = 0;
     glGenTextures(1, &texture_gl_id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_gl_id);
 
     int texture_width, texture_height, texture_channels;
     for (std::size_t i = 0; i < faces.size(); i++)
     {
-        unsigned char *data = stbi_load(
+        GLvoid *data = stbi_load(
             faces[i].c_str(),
             &texture_width,
             &texture_height,
@@ -194,6 +194,6 @@ Texture TextureDatabase::load_cube_texture(
                 texture_gl_id,
                 TextureType::CUBE_MAP,
                 textures_folder_dir,
-                {texture_width, texture_height})));
+                {texture_width, texture_height, texture_channels})));
     return Texture(texture_id);
 };

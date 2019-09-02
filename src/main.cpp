@@ -1,12 +1,12 @@
 #include "systems/input_system.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
-#include "processes/ecs_master_process.hpp"
+#include "processes/entity_registry_master.hpp"
 #include "systems/skybox_system.hpp"
-#include "akarin_database/shader_program_database.hpp"
+#include "akarin_database/shader/shader_program_database.hpp"
 #include "processes/rendering_process.hpp"
 
 #include "entt/entt.hpp"
-#include "glad/include/glad/glad.h"
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
 #include <iostream>
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
         const float currentFrame = static_cast<float>(glfwGetTime());
         delta_time = currentFrame - last_frame;
         last_frame = currentFrame;
-        EntitySystemMaster::run(delta_time);
+        EntityRegistryMaster::run(delta_time);
         SkyboxSystem::render();
         AkarinImgui::render();
         glfwSwapBuffers(window);

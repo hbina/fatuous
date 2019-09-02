@@ -4,20 +4,21 @@
 #include "types/texture.hpp"
 #include "types/vertex.hpp"
 
+#include "glad/glad.h"
+
 #include <vector>
 #include <array>
 
-class MeshData
+struct MeshData
 {
-public:
-    unsigned int m_vao_gl_id = 0;
-    unsigned int m_vbo_gl_id = 0;
-    unsigned int m_ebo_gl_id = 0;
+    GLuint m_vao_gl_id = 0;
+    GLuint m_vbo_gl_id = 0;
+    GLuint m_ebo_gl_id = 0;
     const std::vector<Vertex> m_vertices;
     const std::vector<unsigned int> m_indices;
     const std::vector<std::size_t> m_textures;
 
-    MeshData() = default;
+    MeshData() = delete;
     MeshData(
         const unsigned int,
         const unsigned int,
@@ -26,7 +27,7 @@ public:
         const std::vector<unsigned int> &,
         const std::vector<std::size_t> &) noexcept;
 
-    void draw(const std::size_t) const;
+    void draw(const GLuint) const;
 };
 
 #endif

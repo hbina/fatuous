@@ -1,14 +1,13 @@
 #include "akarin_imgui/model_database_window.hpp"
-#include "akarin_database/model_database.hpp"
+#include "akarin_database/model/model_database.hpp"
 
 #include "akarin_database/mesh/mesh_database.hpp"
 
 #include "akarin_database/texture/texture_database.hpp"
 
-
 #include "imgui/imgui.h"
-#include "imgui/examples/imgui_impl_glfw.h"
-#include "imgui/examples/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <algorithm>
 #include <ostream>
@@ -41,7 +40,7 @@ void ModelDatabaseWindow::render() noexcept
                         p_modeldata_iter.second.m_meshes.cbegin(),
                         p_modeldata_iter.second.m_meshes.cend(),
                         [](const std::size_t &p_mesh_id) {
-                            const MeshData &mesh_iter = MeshDatabase::meshes_map[p_mesh_id];
+                            const MeshData &mesh_iter = MeshDatabase::meshes_map.at(p_mesh_id);
                             std::stringstream vao_id_ostr;
                             vao_id_ostr << "m_vao_id: ";
                             vao_id_ostr << mesh_iter.m_vao_gl_id;
@@ -74,15 +73,15 @@ void ModelDatabaseWindow::render() noexcept
                                             ImGui::Text("type: %s", ostr_texture_type.str().c_str());
 
                                             std::stringstream ostr_texture_size;
-                                            ostr_texture_size << texture_data.m_size[0] << " " << texture_data.m_size[1];
-                                            ImGui::Text("size: %s", ostr_texture_size.str().c_str());
+                                            ostr_texture_size << texture_data.m_dimension[0] << " " << texture_data.m_dimension[1] << ", " << texture_data.m_dimension[2];
+                                            ImGui::Text("dimension: %s", ostr_texture_size.str().c_str());
 
                                             // TODO :: Figure out how to resize the image properly, maintaing its aspect ratio etc etc
                                             ImGui::Image(
                                                 (ImTextureID)(intptr_t)texture_data.m_gl_id,
                                                 ImVec2(
-                                                    static_cast<float>(texture_data.m_size[0]),
-                                                    static_cast<float>(texture_data.m_size[1])));
+                                                    static_cast<float>(texture_data.m_dimension[0]),
+                                                    static_cast<float>(texture_data.m_dimension[1])));
                                         });
                                     ImGui::TreePop();
                                 }

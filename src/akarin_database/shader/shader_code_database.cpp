@@ -1,4 +1,4 @@
-#include "akarin_database/shader_code_database.hpp"
+#include "akarin_database/shader/shader_code_database.hpp"
 #include "types/texture.hpp"
 
 #include "glad/glad.h"
@@ -22,50 +22,51 @@ ShaderCode::ShaderCode(
       m_shader_text(p_shader_code_text),
       m_shader_type(p_shader_type){};
 
-constexpr std::size_t DEFAULT_SHADER_ID = 0;
+constexpr GLuint DEFAULT_SHADER_ID = 0;
 
-std::unordered_map<std::size_t, ShaderCode> ShaderCodeDatabase::g_shadercode_map;
+std::unordered_map<GLuint, ShaderCode> ShaderCodeDatabase::shader_code_map;
+
 
 void add_shader_code(
-    const std::size_t p_shader_code_id,
+    const GLuint p_shader_code_id,
     const ShaderCode &p_shader_code) noexcept
 {
-    ShaderCodeDatabase::g_shadercode_map[p_shader_code_id] = p_shader_code;
+    ShaderCodeDatabase::shader_code_map[p_shader_code_id] = p_shader_code;
 };
 
 // Operators declarations
 std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
 
 // Free function declarations
-ShaderCode
-read_shader_code_file(
+ShaderCode read_shader_code_file(
     const std::string &);
+
 void test_shader_code_compilation(
-    std::size_t, const ShaderType) noexcept;
-std::size_t
-compile_shader(
+    GLuint, const ShaderType) noexcept;
+
+GLuint compile_shader(
     const ShaderCode &) noexcept;
-ShaderType
-get_shader_extension_type(
+
+ShaderType get_shader_extension_type(
     const std::string &) noexcept;
 
 // Namespace function definitions
 
-std::size_t ShaderCodeDatabase::load_shader_code_file(
+GLuint ShaderCodeDatabase::load_shader_code_file(
     const std::string &p_shader_code_path) noexcept
 {
     const auto &find_iter = std::find_if(
-        ShaderCodeDatabase::g_shadercode_map.cbegin(),
-        ShaderCodeDatabase::g_shadercode_map.cend(),
+        ShaderCodeDatabase::shader_code_map.cbegin(),
+        ShaderCodeDatabase::shader_code_map.cend(),
         [p_shader_code_path](const auto &p_iter) -> bool {
             return p_iter.second.m_shader_path == p_shader_code_path;
         });
-    if (find_iter != ShaderCodeDatabase::g_shadercode_map.cend())
+    if (find_iter != ShaderCodeDatabase::shader_code_map.cend())
     {
         return (*find_iter).first;
     }
     const ShaderCode &shader_data = read_shader_code_file(p_shader_code_path);
-    std::size_t shader_id = compile_shader(shader_data);
+    GLuint shader_id = compile_shader(shader_data);
     if (shader_id != DEFAULT_SHADER_ID)
     {
         add_shader_code(shader_id, shader_data);
@@ -122,11 +123,10 @@ read_shader_code_file(
         get_shader_extension_type(p_shader_path));
 };
 
-std::size_t
-compile_shader(
+GLuint compile_shader(
     const ShaderCode &p_shader_code) noexcept
 {
-    std::size_t shader_id = 0;
+    GLuint shader_id = 0;
 
     switch (p_shader_code.m_shader_type)
     {
@@ -155,7 +155,7 @@ compile_shader(
     return shader_id;
 };
 
-void test_shader_code_compilation(std::size_t p_shader, const ShaderType p_type) noexcept
+void test_shader_code_compilation(GLuint p_shader, const ShaderType p_type) noexcept
 {
     static constexpr auto info_log_size = 1024;
     int success;
