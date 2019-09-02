@@ -1,0 +1,20 @@
+\documentclass[a4paper, 14pt]{extarticle}
+
+\begin{document}
+
+\section{Abstract}
+
+Diary about the progress of this project.
+
+\section{5:22pm 8/24/2019}
+
+Really needs to reconsider how MeshData, Textures and Models are stored.
+We are considering turning them into a kind of Database that only exposes its ID.
+Turning Meshes and Textures into a kind of database will have the added benefit of very few copying of large vertices vector.
+
+Additionally, rendering process also needs to be reconsidered.
+Now, instead of rendering each model, we should actually render each mesh.
+
+Furthermore, any kind of GL stuff that cannot be multithreaded away can easily be deferred as jobs into the database.
+
+\end{document}
