@@ -6,7 +6,7 @@
 namespace EntityRegistryMaster
 {
 void create_entity(const std::size_t) noexcept;
-void run(const float) noexcept;
+void run() noexcept;
 std::size_t get_entity_count() noexcept;
 }; // namespace EntityRegistryMaster
 

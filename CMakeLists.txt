@@ -25,7 +25,7 @@ add_executable(
 
     src/misc/shader_utilities.cpp
     src/misc/thread_pool.cpp
-    src/misc/akarin_profiler.cpp
+    src/misc/akarin_timer.cpp
 
     src/systems/input_system.cpp
     src/systems/skybox_system.cpp

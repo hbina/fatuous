@@ -7,11 +7,12 @@
 // 1. Average run time of markers
 // 2. All records of markers (to allow for other analysis) -- can be turned on/off
 
-namespace AkarinProfiler
+namespace AkarinTimer
 {
 void mark_begin(const char *) noexcept;
 void mark_end(const char *) noexcept;
-}; // namespace AkarinProfiler
+double get_delta_time() noexcept;
+}; // namespace AkarinTimer
 
 // Code by LPeter1997 from C++'s slack
 template <typename Fn>

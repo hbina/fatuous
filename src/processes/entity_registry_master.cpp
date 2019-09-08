@@ -3,7 +3,7 @@
 #include "systems/akarin_camera_system.hpp"
 #include "processes/rendering_process.hpp"
 #include "akarin_database/model/model_database.hpp"
-#include "types/swarm.hpp"
+#include "misc/akarin_timer.hpp"
 #include "systems/input_system.hpp"
 #include "processes/swarm_process.hpp"
 #include "types/transform.hpp"
@@ -25,13 +25,13 @@ entt::registry p_reg;
 float get_random_float(
     const float) noexcept;
 
-void EntityRegistryMaster::run(
-    const float p_time_elapsed) noexcept
+void EntityRegistryMaster::run() noexcept
 {
-    AkarinCameraSystem::process_keyboard(p_time_elapsed);
+    auto delta_time = AkarinTimer::get_delta_time();
+    AkarinCameraSystem::process_keyboard(delta_time);
     MeshDatabase::execute_jobs();
     TextureDatabase::execute_jobs();
-    SwarmSystem::update(p_reg, p_time_elapsed);
+    SwarmSystem::update(p_reg, delta_time);
     RenderingProcess::render(p_reg);
 };
 

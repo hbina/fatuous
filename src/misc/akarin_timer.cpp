@@ -1,4 +1,4 @@
-#include "misc/akarin_profiler.hpp"
+#include "misc/akarin_timer.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -11,13 +11,13 @@ std::unordered_map<const char *, double> chrono_timer_marks;
 
 double get_current_time() noexcept;
 
-void AkarinProfiler::mark_begin(
+void AkarinTimer::mark_begin(
     const char *p_mark) noexcept
 {
     chrono_timer_marks[p_mark] = get_current_time();
 };
 
-void AkarinProfiler::mark_end(
+void AkarinTimer::mark_end(
     const char *p_mark) noexcept
 {
     auto find_iter = std::find_if(
@@ -42,5 +42,14 @@ double get_current_time() noexcept
     static const auto start_time = std::chrono::high_resolution_clock::now();
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start_time;
+    return elapsed_seconds.count();
+};
+
+double AkarinTimer::get_delta_time() noexcept
+{
+    static auto start_time = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start_time;
+    start_time = end;
     return elapsed_seconds.count();
 };

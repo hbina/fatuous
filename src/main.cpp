@@ -15,9 +15,6 @@
 static constexpr std::uint32_t SRC_WIDTH = 1366;
 static constexpr std::uint32_t SRC_HEIGHT = 768;
 
-static float delta_time = 0.0f;
-static float last_frame = 0.0f;
-
 int main(int argc, char *argv[])
 {
     for (int arg_iter = 0; arg_iter < argc; arg_iter++)
@@ -73,10 +70,7 @@ int main(int argc, char *argv[])
         RenderingProcess::set_default_clear_color(AkarinImgui::get_slider_color());
         RenderingProcess::clear_screen();
         glfwPollEvents();
-        const float currentFrame = static_cast<float>(glfwGetTime());
-        delta_time = currentFrame - last_frame;
-        last_frame = currentFrame;
-        EntityRegistryMaster::run(delta_time);
+        EntityRegistryMaster::run();
         SkyboxSystem::render();
         AkarinImgui::render();
         glfwSwapBuffers(window);
