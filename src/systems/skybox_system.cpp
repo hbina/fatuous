@@ -86,6 +86,8 @@ void SkyboxSystem::render() noexcept
     }
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     ShaderUtilities::use(g_skybox_shader_id);
     const glm::mat4 &view = glm::mat4(glm::mat3(AkarinCameraSystem::get_view()));
     ShaderUtilities::setMat4(g_skybox_shader_id, "view", view);
@@ -96,6 +98,7 @@ void SkyboxSystem::render() noexcept
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     OpenGLSettings::update_depth_function();
+    OpenGLSettings::update_cull_face();
 };
 
 void init_skybox_vertices() noexcept

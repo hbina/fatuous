@@ -10,11 +10,11 @@ struct
     glm::vec3 m_up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 m_right = glm::vec3(-1.0f, 0.0f, 0.0f);
     glm::vec3 m_world_up = glm::vec3(0.0f, 1.0f, 0.0f);
-    double m_yaw = -90.0f;
-    double m_pitch = 0.0f;
-    double m_speed = 250.0f;
-    double m_sensitivity = 2.0f;
-    double m_zoom = 45.0f;
+    float m_yaw = -90.0f;
+    float m_pitch = 0.0f;
+    float m_speed = 250.0f;
+    float m_sensitivity = 2.0f;
+    float m_zoom = 45.0f;
 
     void update_camera_vectors() noexcept
     {
@@ -56,19 +56,19 @@ void AkarinCameraSystem::process_keyboard(const double p_delta_time) noexcept
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_UP) || AkarinGLFW::is_repeated(GLFW_KEY_UP))
     {
-        akarin_camera.m_pitch += p_delta_time * 100.0f;
+        akarin_camera.m_pitch += p_delta_time * 100.0;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_DOWN) || AkarinGLFW::is_repeated(GLFW_KEY_DOWN))
     {
-        akarin_camera.m_pitch -= p_delta_time * 100.0f;
+        akarin_camera.m_pitch -= p_delta_time * 100.0;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_RIGHT) || AkarinGLFW::is_repeated(GLFW_KEY_RIGHT))
     {
-        akarin_camera.m_yaw += p_delta_time * 100.0f;
+        akarin_camera.m_yaw += p_delta_time * 100.0;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_LEFT) || AkarinGLFW::is_repeated(GLFW_KEY_LEFT))
     {
-        akarin_camera.m_yaw -= p_delta_time * 100.0f;
+        akarin_camera.m_yaw -= p_delta_time * 100.0;
     }
 
     if (akarin_camera.m_pitch > 88.0f)
