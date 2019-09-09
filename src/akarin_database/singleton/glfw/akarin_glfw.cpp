@@ -1,7 +1,8 @@
 #include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
 
@@ -53,6 +54,14 @@ AkarinGLFW::AkarinGLFW()
                   << "\n";
         glfwTerminate();
     }
+
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io; // just to silence warnings
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    const char *glsl_version = "#version 450";
+    ImGui_ImplOpenGL3_Init(glsl_version);
 };
 
 AkarinGLFW &AkarinGLFW::get_instance()
@@ -77,6 +86,9 @@ void AkarinGLFW::swap_buffers() noexcept
 
 AkarinGLFW::~AkarinGLFW()
 {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
 };
 

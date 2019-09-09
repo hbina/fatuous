@@ -16,27 +16,6 @@
 #include <sstream>
 #include <string>
 
-struct Instance
-{
-    Instance()
-    {
-        ImGui::CreateContext();
-        ImGuiIO &io = ImGui::GetIO();
-        (void)io; // just to silence warnings
-        ImGui::StyleColorsDark();
-        ImGui_ImplGlfw_InitForOpenGL(AkarinGLFW::get_instance().window, true);
-        const char *glsl_version = "#version 450";
-        ImGui_ImplOpenGL3_Init(glsl_version);
-    };
-
-    ~Instance()
-    {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-    };
-};
-
 bool show_entity_database_window = false;
 bool show_model_database_window = false;
 bool show_lighting_database_window = false;
@@ -46,7 +25,6 @@ bool show_opengl_settings_window = false;
 
 void AkarinImgui::render() noexcept
 {
-    static Instance instance;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();

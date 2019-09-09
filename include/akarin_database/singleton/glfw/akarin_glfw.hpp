@@ -1,15 +1,14 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
 #include <unordered_map>
 #include <iostream>
 
-struct GLFWwindow;
-
 struct AkarinGLFW
 {
-    GLFWwindow *window;
     AkarinGLFW(const AkarinGLFW &) = delete;
 
     static bool alive() noexcept;
@@ -23,6 +22,7 @@ struct AkarinGLFW
     static const glm::vec2 get_mouse_offset() noexcept;
 
 private:
+    GLFWwindow *window;
     AkarinGLFW();
     ~AkarinGLFW();
     static void framebuffer_size_callback(GLFWwindow *, const int, const int);
