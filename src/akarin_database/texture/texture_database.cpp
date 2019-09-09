@@ -1,4 +1,5 @@
 #include "akarin_database/texture/texture_database.hpp"
+#include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"
 #include "stb/stb_image.h"
@@ -98,8 +99,7 @@ void create_gl_texture(const TextureJob &p_texture_job) noexcept
         }
         default:
         {
-            std::cerr << "encountered an unhandled texture format when loading p_texture_job.m_path:" << p_texture_job.m_path << " with texture_channels:" << texture_channels << "\n";
-            break;
+            UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
         }
         }
 
@@ -148,7 +148,7 @@ Texture TextureDatabase::load_cube_texture(
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_gl_id);
 
     int texture_width, texture_height, texture_channels;
-    for (std::size_t i = 0; i < faces.size(); i++)
+    for (GLenum i = 0; i < faces.size(); i++)
     {
         GLvoid *data = stbi_load(
             faces[i].c_str(),

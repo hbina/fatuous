@@ -1,4 +1,5 @@
 #include "misc/opengl_settings.hpp"
+#include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"
 
@@ -42,8 +43,7 @@ void OpenGLSettings::enable(const GLEnum p_enum, const bool p_enable) noexcept
     }
     default:
     {
-        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
-        std::exit(EXIT_FAILURE);
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     }
     };
 };
@@ -101,9 +101,7 @@ void OpenGLSettings::update_depth_function() noexcept
     };
     default:
     {
-        // TODO :: Make these a macro for ease of use.
-        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
-        std::exit(EXIT_FAILURE);
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     };
     }
 };
@@ -152,8 +150,7 @@ void OpenGLSettings::update_cull_face() noexcept
     };
     default:
     {
-        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
-        std::exit(EXIT_FAILURE);
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     };
     }
 };

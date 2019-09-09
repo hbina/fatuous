@@ -1,4 +1,5 @@
 #include "akarin_database/texture/texture_data.hpp"
+#include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"
 
@@ -38,7 +39,7 @@ std::ostream &operator<<(std::ostream &p_os, const TextureType p_texture_type)
     };
     default:
     {
-        p_os << "TextureType::ERROR";
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     };
     };
     return p_os;

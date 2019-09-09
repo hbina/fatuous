@@ -1,4 +1,5 @@
 #include "akarin_database/shader/shader_code_database.hpp"
+#include "misc/akarin_macros.hpp"
 #include "types/texture.hpp"
 
 #include "glad/glad.h"
@@ -25,7 +26,6 @@ ShaderCode::ShaderCode(
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
 std::unordered_map<GLuint, ShaderCode> ShaderCodeDatabase::shader_code_map;
-
 
 void add_shader_code(
     const GLuint p_shader_code_id,
@@ -187,8 +187,7 @@ std::ostream &operator<<(std::ostream &os, const ShaderType p_type) noexcept
     };
     default:
     {
-        std::cerr << "Impossible situation -- abort program now"
-                  << "\n";
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     }
     };
     return os;
