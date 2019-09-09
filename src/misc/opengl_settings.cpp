@@ -5,8 +5,13 @@
 #include <iostream>
 
 bool changed = true;
+
+// Depth stuff
 bool enable_depth_buffer = true;
-DepthFun current_depth_buffer_function = DepthFun::LESS;
+DepthFun current_depth_buffer_func = DepthFun::LESS;
+
+bool enable_cull_face = true;
+CullFace current_cull_face = CullFace::BACK;
 
 void OpenGLSettings::update() noexcept
 {
@@ -15,9 +20,7 @@ void OpenGLSettings::update() noexcept
     {
         changed = false;
         // TODO :: Make these its own thing
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-
+        update_cull_face();
         update_depth_function();
     }
 };
@@ -32,9 +35,15 @@ void OpenGLSettings::enable(const GLEnum p_enum, const bool p_enable) noexcept
         enable_depth_buffer = p_enable;
         break;
     }
+    case GLEnum::CULL_FACE:
+    {
+        enable_cull_face = p_enable;
+        break;
+    }
     default:
     {
-        std::cerr << "unhandled switch case at line " << __LINE__ << __FILE__ << std::endl;
+        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
+        std::exit(EXIT_FAILURE);
     }
     };
 };
@@ -48,7 +57,7 @@ void OpenGLSettings::update_depth_function() noexcept
     }
 
     glEnable(GL_DEPTH_TEST);
-    switch (current_depth_buffer_function)
+    switch (current_depth_buffer_func)
     {
     case DepthFun::ALWAYS:
     {
@@ -92,15 +101,61 @@ void OpenGLSettings::update_depth_function() noexcept
     };
     default:
     {
+        // TODO :: Make these a macro for ease of use.
         std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
+        std::exit(EXIT_FAILURE);
     };
     }
 };
 
 void OpenGLSettings::set_depth_function(const DepthFun p_func_type) noexcept
 {
+    if (p_func_type == current_depth_buffer_func)
+        return;
     changed = true;
-    current_depth_buffer_function = p_func_type;
+    current_depth_buffer_func = p_func_type;
+};
+
+void OpenGLSettings::set_cull_face(const CullFace p_cull_face) noexcept
+{
+    if (p_cull_face == current_cull_face)
+        return;
+    changed = true;
+    current_cull_face = p_cull_face;
+};
+
+void OpenGLSettings::update_cull_face() noexcept
+{
+    if (!enable_cull_face)
+    {
+        glDisable(GL_CULL_FACE);
+        return;
+    }
+
+    glEnable(GL_CULL_FACE);
+    switch (current_cull_face)
+    {
+    case CullFace::BACK:
+    {
+        glCullFace(GL_BACK);
+        break;
+    };
+    case CullFace::FRONT:
+    {
+        glCullFace(GL_FRONT);
+        break;
+    };
+    case CullFace::FRONT_AND_BACK:
+    {
+        glCullFace(GL_FRONT_AND_BACK);
+        break;
+    };
+    default:
+    {
+        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
+        std::exit(EXIT_FAILURE);
+    };
+    }
 };
 
 GLbitfield get_clear_mask()

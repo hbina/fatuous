@@ -68,6 +68,7 @@ GLuint g_skybox_shader_id = 0;
 unsigned int g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
 Texture g_skybox_texture_id;
 
+// SkyBox should not be affected by OpenGLSettings
 void init_skybox_vertices() noexcept;
 
 void SkyboxSystem::render() noexcept
