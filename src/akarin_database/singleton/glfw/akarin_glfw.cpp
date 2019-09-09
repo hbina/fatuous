@@ -83,7 +83,7 @@ AkarinGLFW::~AkarinGLFW()
 // Static functions
 
 std::unordered_map<char, char> keyboard_keys;
-glm::vec<2, double> mouse_position_offset;
+glm::vec2 mouse_position_offset;
 
 void AkarinGLFW::key_callback(
     GLFWwindow *window,
@@ -116,18 +116,20 @@ void AkarinGLFW::mouse_callback(
     const double p_ypos)
 {
     static bool first_mouse_callback = true;
-    static glm::vec<2, double> last_mouse_position;
+    const float xpos_f = static_cast<float>(p_xpos);
+    const float ypos_f = static_cast<float>(p_ypos);
+    static glm::vec2 last_mouse_position;
     if (first_mouse_callback)
     {
-        last_mouse_position = glm::vec<2, double>(p_xpos, p_ypos);
+        last_mouse_position = glm::vec2(xpos_f, ypos_f);
         first_mouse_callback = false;
     }
 
-    mouse_position_offset.x = p_xpos - last_mouse_position.x;
-    mouse_position_offset.y = last_mouse_position.y - p_ypos;
+    mouse_position_offset.x = xpos_f - last_mouse_position.x;
+    mouse_position_offset.y = last_mouse_position.y - ypos_f;
 
-    last_mouse_position.x = p_xpos;
-    last_mouse_position.y = p_ypos;
+    last_mouse_position.x = xpos_f;
+    last_mouse_position.y = ypos_f;
 };
 
 bool AkarinGLFW::is_pressed(const int key) noexcept
@@ -145,9 +147,9 @@ bool AkarinGLFW::is_released(const int key) noexcept
     return keyboard_keys[static_cast<char>(key)] == GLFW_RELEASE;
 };
 
-const double AkarinGLFW::get_window_size_ratio() noexcept
+const float AkarinGLFW::get_window_size_ratio() noexcept
 {
-    return window_dimension.x / window_dimension.y;
+    return static_cast<float>(window_dimension.x / window_dimension.y);
 };
 
 const glm::vec2 AkarinGLFW::get_mouse_offset() noexcept

@@ -34,10 +34,10 @@ struct
     };
 } akarin_camera;
 
-void AkarinCameraSystem::process_keyboard(const double p_delta_time) noexcept
+void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
 {
     // TODO :: Make this our enum.
-    float velocity = static_cast<float>(akarin_camera.m_speed * p_delta_time);
+    float velocity = akarin_camera.m_speed * p_delta_time;
     if (AkarinGLFW::is_pressed(GLFW_KEY_W) || AkarinGLFW::is_repeated(GLFW_KEY_W))
     {
         akarin_camera.m_position += akarin_camera.m_front * velocity;
@@ -56,19 +56,19 @@ void AkarinCameraSystem::process_keyboard(const double p_delta_time) noexcept
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_UP) || AkarinGLFW::is_repeated(GLFW_KEY_UP))
     {
-        akarin_camera.m_pitch += p_delta_time * 100.0;
+        akarin_camera.m_pitch += p_delta_time * 100.0f;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_DOWN) || AkarinGLFW::is_repeated(GLFW_KEY_DOWN))
     {
-        akarin_camera.m_pitch -= p_delta_time * 100.0;
+        akarin_camera.m_pitch -= p_delta_time * 100.0f;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_RIGHT) || AkarinGLFW::is_repeated(GLFW_KEY_RIGHT))
     {
-        akarin_camera.m_yaw += p_delta_time * 100.0;
+        akarin_camera.m_yaw += p_delta_time * 100.0f;
     }
     if (AkarinGLFW::is_pressed(GLFW_KEY_LEFT) || AkarinGLFW::is_repeated(GLFW_KEY_LEFT))
     {
-        akarin_camera.m_yaw -= p_delta_time * 100.0;
+        akarin_camera.m_yaw -= p_delta_time * 100.0f;
     }
 
     if (akarin_camera.m_pitch > 88.0f)
@@ -81,8 +81,8 @@ void AkarinCameraSystem::process_keyboard(const double p_delta_time) noexcept
 glm::mat4 AkarinCameraSystem::get_projection() noexcept
 {
     return glm::perspective(
-        static_cast<float>(glm::radians(akarin_camera.m_zoom)),
-        static_cast<float>(AkarinGLFW::get_window_size_ratio()), // TODO :: Temporary, later will make them all doubles
+        glm::radians(akarin_camera.m_zoom),
+        AkarinGLFW::get_window_size_ratio(), // TODO :: Temporary, later will make them all doubles
         0.1f,
         20000.0f); // TODO :: Make projection part fo the camera member variables
 }

@@ -19,7 +19,7 @@ struct AkarinGLFW
     static bool is_pressed(const int) noexcept;
     static bool is_repeated(const int) noexcept;
     static bool is_released(const int) noexcept;
-    static const double get_window_size_ratio() noexcept;
+    static const float get_window_size_ratio() noexcept;
     static const glm::vec2 get_mouse_offset() noexcept;
 
 private:

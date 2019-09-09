@@ -11,7 +11,7 @@ struct ProjectionView
 
 namespace AkarinCameraSystem
 {
-void process_keyboard(const double) noexcept;
+void process_keyboard(const float) noexcept;
 glm::mat4 get_projection() noexcept;
 glm::mat4 get_view() noexcept;
 glm::vec3 get_position() noexcept;

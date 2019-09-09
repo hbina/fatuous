@@ -11,7 +11,7 @@ namespace AkarinTimer
 {
 void mark_begin(const char *) noexcept;
 void mark_end(const char *) noexcept;
-double get_delta_time() noexcept;
+float get_delta_time() noexcept;
 }; // namespace AkarinTimer
 
 // Code by LPeter1997 from C++'s slack
@@ -21,7 +21,7 @@ auto measure_function(Fn fun)
     auto start = std::chrono::high_resolution_clock::now();
     fun();
     auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsedTime = end - start;
+    std::chrono::duration<float> elapsedTime = end - start;
     return elapsedTime.count();
 }
 
