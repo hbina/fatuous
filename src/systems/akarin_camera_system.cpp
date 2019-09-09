@@ -3,7 +3,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
 
-struct
+// Should have its own ImGui window
+struct AkarinCamera
 {
     glm::vec3 m_position = glm::vec3(0.0f, 0.0f, 50.0f);
     glm::vec3 m_front = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -15,8 +16,11 @@ struct
     float m_speed = 250.0f;
     float m_sensitivity = 2.0f;
     float m_zoom = 45.0f;
+    float clip_near = 0.1f;
+    float clip_far = 10000.0f;
 
-    void update_camera_vectors() noexcept
+    void
+    update_camera_vectors() noexcept
     {
         glm::vec3 front;
         front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
@@ -82,9 +86,9 @@ glm::mat4 AkarinCameraSystem::get_projection() noexcept
 {
     return glm::perspective(
         glm::radians(akarin_camera.m_zoom),
-        AkarinGLFW::get_window_size_ratio(), // TODO :: Temporary, later will make them all doubles
-        0.1f,
-        20000.0f); // TODO :: Make projection part fo the camera member variables
+        AkarinGLFW::get_window_size_ratio(),
+        akarin_camera.clip_near,
+        akarin_camera.clip_far);
 }
 
 glm::mat4 AkarinCameraSystem::get_view() noexcept
