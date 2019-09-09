@@ -6,31 +6,22 @@
 #include <ostream>
 #include <sstream>
 
-std::unordered_map<GLuint, ShaderProgram> ShaderProgramDatabase::shader_program_map;
-
-void add_shader_program(
-    const GLuint p_shader_program_id,
-    const ShaderProgram &p_shader_program) noexcept
+ShaderProgramDatabase &ShaderProgramDatabase::get_instance() noexcept
 {
-    ShaderProgramDatabase::shader_program_map[p_shader_program_id] = p_shader_program;
+    static ShaderProgramDatabase instance;
+    return instance;
 };
 
-// Free function declarations
-
-void test_shader_program_compilation(
-    const GLuint p_shader) noexcept;
-
-// Namespace functions definitions
-
-// TODO :: Use RAII instead of this.
-void ShaderProgramDatabase::clean_up() noexcept
+ShaderProgramDatabase::~ShaderProgramDatabase() noexcept
 {
-    for (const auto &shader_program_id : shader_program_map)
+    for (const auto &shader_program_id : map)
     {
         glDeleteProgram(shader_program_id.first);
     }
-    shader_program_map.clear();
 };
+
+void test_shader_program_compilation(
+    const GLuint p_shader) noexcept;
 
 GLuint ShaderProgramDatabase::link_shader_codes(
     const std::vector<GLuint> &p_shaders) noexcept
@@ -43,7 +34,7 @@ GLuint ShaderProgramDatabase::link_shader_codes(
         test_shader_program_compilation(shader_program_id);
         glDeleteShader(shader_id);
     }
-    add_shader_program(shader_program_id, ShaderProgram(p_shaders));
+    get_instance().map[shader_program_id] = ShaderProgram(p_shaders);
     return shader_program_id;
 };
 

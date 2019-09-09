@@ -1,6 +1,5 @@
 #include "systems/akarin_camera_system.hpp"
-#include "systems/input_system.hpp"
-
+#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
 
@@ -37,36 +36,37 @@ struct
 
 void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
 {
+    // TODO :: Make this our enum.
     float velocity = akarin_camera.m_speed * p_delta_time;
-    if (InputSystem::is_pressed(GLFW_KEY_W) || InputSystem::is_repeated(GLFW_KEY_W))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_W) || AkarinGLFW::is_repeated(GLFW_KEY_W))
     {
         akarin_camera.m_position += akarin_camera.m_front * velocity;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_S) || InputSystem::is_repeated(GLFW_KEY_S))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_S) || AkarinGLFW::is_repeated(GLFW_KEY_S))
     {
         akarin_camera.m_position -= akarin_camera.m_front * velocity;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_A) || InputSystem::is_repeated(GLFW_KEY_A))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_A) || AkarinGLFW::is_repeated(GLFW_KEY_A))
     {
         akarin_camera.m_position -= akarin_camera.m_right * velocity;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_D) || InputSystem::is_repeated(GLFW_KEY_D))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_D) || AkarinGLFW::is_repeated(GLFW_KEY_D))
     {
         akarin_camera.m_position += akarin_camera.m_right * velocity;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_UP) || InputSystem::is_repeated(GLFW_KEY_UP))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_UP) || AkarinGLFW::is_repeated(GLFW_KEY_UP))
     {
         akarin_camera.m_pitch += p_delta_time * 100.0f;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_DOWN) || InputSystem::is_repeated(GLFW_KEY_DOWN))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_DOWN) || AkarinGLFW::is_repeated(GLFW_KEY_DOWN))
     {
         akarin_camera.m_pitch -= p_delta_time * 100.0f;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_RIGHT) || InputSystem::is_repeated(GLFW_KEY_RIGHT))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_RIGHT) || AkarinGLFW::is_repeated(GLFW_KEY_RIGHT))
     {
         akarin_camera.m_yaw += p_delta_time * 100.0f;
     }
-    if (InputSystem::is_pressed(GLFW_KEY_LEFT) || InputSystem::is_repeated(GLFW_KEY_LEFT))
+    if (AkarinGLFW::is_pressed(GLFW_KEY_LEFT) || AkarinGLFW::is_repeated(GLFW_KEY_LEFT))
     {
         akarin_camera.m_yaw -= p_delta_time * 100.0f;
     }
@@ -82,7 +82,7 @@ glm::mat4 AkarinCameraSystem::get_projection() noexcept
 {
     return glm::perspective(
         glm::radians(akarin_camera.m_zoom),
-        InputSystem::get_window_size_ratio(),
+        static_cast<float>(AkarinGLFW::get_window_size_ratio()), // TODO :: Temporary, later will make them all doubles
         0.1f,
         20000.0f); // TODO :: Make projection part fo the camera member variables
 }

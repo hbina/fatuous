@@ -1,9 +1,5 @@
 #include "akarin_imgui/akarin_imgui.hpp"
-#include "processes/entity_registry_master.hpp"
-#include "akarin_database/model/model_database.hpp"
-#include "akarin_database/shader/shader_code_database.hpp"
-#include "akarin_database/shader/shader_program_database.hpp"
-#include "types/transform.hpp"
+#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
 #include "akarin_imgui/entity_database_window.hpp"
 #include "akarin_imgui/model_database_window.hpp"
@@ -20,16 +16,25 @@
 #include <sstream>
 #include <string>
 
-// Use RAII
-void AkarinImgui::init(GLFWwindow *p_window) noexcept
+struct Instance
 {
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io; // just to silence warnings
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(p_window, true);
-    const char *glsl_version = "#version 450";
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    Instance()
+    {
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io; // just to silence warnings
+        ImGui::StyleColorsDark();
+        ImGui_ImplGlfw_InitForOpenGL(AkarinGLFW::get_instance().window, true);
+        const char *glsl_version = "#version 450";
+        ImGui_ImplOpenGL3_Init(glsl_version);
+    };
+
+    ~Instance()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    };
 };
 
 bool show_entity_database_window = false;
@@ -41,6 +46,7 @@ bool show_opengl_settings_window = false;
 
 void AkarinImgui::render() noexcept
 {
+    static Instance instance;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -72,12 +78,4 @@ void AkarinImgui::render() noexcept
         OpenGLSettingsWindow::render();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-};
-
-// Use RAII
-void AkarinImgui::clean_up() noexcept
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 };

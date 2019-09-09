@@ -11,6 +11,7 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "misc/opengl_settings.hpp"
+#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 
 #include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -34,7 +35,7 @@ void add_spotlight(
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
-    static GLuint p_shader_id = ShaderProgramDatabase::link_shader_codes(
+    static GLuint p_shader_id = ShaderProgramDatabase::get_instance().link_shader_codes(
         {ShaderCodeDatabase::load_shader_code_file("./shaders/model.vs"),
          ShaderCodeDatabase::load_shader_code_file("./shaders/model.fs")});
     auto entity_view = p_reg.view<ModelData, Transform>();
@@ -62,6 +63,7 @@ void RenderingProcess::render(
     }
     SkyboxSystem::render();
     AkarinImgui::render();
+    AkarinGLFW::get_instance().swap_buffers();
 };
 
 void draw(

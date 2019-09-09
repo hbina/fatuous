@@ -28,7 +28,6 @@ add_executable(
     src/misc/akarin_timer.cpp
     src/misc/opengl_settings.cpp
 
-    src/systems/input_system.cpp
     src/systems/skybox_system.cpp
     src/systems/akarin_camera_system.cpp
     
@@ -42,7 +41,9 @@ add_executable(
     src/akarin_database/mesh/mesh_job.cpp
     src/akarin_database/mesh/mesh_data.cpp
     src/akarin_database/mesh/mesh_database.cpp
-
+    
+    src/akarin_database/singleton/glfw/akarin_glfw.cpp
+    
     src/akarin_database/shader/shader_code_database.cpp
     src/akarin_database/shader/shader_program_database.cpp
     

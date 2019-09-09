@@ -26,8 +26,8 @@ void ShaderProgramDatabaseWindow::render() noexcept
     {
         ImGui::Text("List of ShaderPrograms loaded:");
         std::for_each(
-            ShaderProgramDatabase::shader_program_map.cbegin(),
-            ShaderProgramDatabase::shader_program_map.cend(),
+            ShaderProgramDatabase::get_instance().map.cbegin(),
+            ShaderProgramDatabase::get_instance().map.cend(),
             [](const std::pair<const GLuint, ShaderProgram> &p_shader_program_iter) {
                 std::ostringstream out;
                 out << p_shader_program_iter.first;

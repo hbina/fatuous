@@ -14,6 +14,10 @@ void OpenGLSettings::update() noexcept
     if (changed)
     {
         changed = false;
+        // TODO :: Make these its own thing
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
         update_depth_function();
     }
 };
