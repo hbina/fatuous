@@ -30,7 +30,7 @@ void OpenGLSettingsWindow::render() noexcept
 
         ImGui::Checkbox("Enable##depth_testing", &enable_depth_testing);
         OpenGLSettings::enable(GLEnum::DEPTH_TEST, enable_depth_testing);
-        static int item_current = 0;
+        static int item_current = 2;
         ImGui::Combo(
             "Depth Test Function",
             &item_current,

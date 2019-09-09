@@ -73,17 +73,6 @@ void AkarinImgui::render() noexcept
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 };
 
-std::array<float, 4> clear_color;
-
-glm::vec4 AkarinImgui::get_slider_color() noexcept
-{
-    return glm::vec4(
-        clear_color[0],
-        clear_color[1],
-        clear_color[2],
-        clear_color[3]);
-};
-
 void AkarinImgui::clean_up() noexcept
 {
     ImGui_ImplOpenGL3_Shutdown();

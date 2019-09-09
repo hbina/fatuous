@@ -7,8 +7,10 @@
 #include "types/transform.hpp"
 #include "misc/shader_utilities.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
+#include "akarin_imgui/akarin_imgui.hpp"
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
+#include "misc/opengl_settings.hpp"
 
 #include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -36,6 +38,8 @@ void RenderingProcess::render(
         {ShaderCodeDatabase::load_shader_code_file("./shaders/model.vs"),
          ShaderCodeDatabase::load_shader_code_file("./shaders/model.fs")});
     auto entity_view = p_reg.view<ModelData, Transform>();
+    OpenGLSettings::gl_clear();
+    OpenGLSettings::update();
     ShaderUtilities::use(p_shader_id);
     for (const entt::entity &entity : entity_view)
     {
@@ -56,22 +60,8 @@ void RenderingProcess::render(
             entity_view.get<ModelData>(entity),
             entity_view.get<Transform>(entity));
     }
-};
-
-glm::vec4 default_clear_color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-void RenderingProcess::set_default_clear_color(const glm::vec4 &p_vec) noexcept
-{
-    default_clear_color = p_vec;
-};
-
-void RenderingProcess::clear_screen() noexcept
-{
-    glClearColor(
-        default_clear_color.r,
-        default_clear_color.g,
-        default_clear_color.b,
-        default_clear_color.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    SkyboxSystem::render();
+    AkarinImgui::render();
 };
 
 void draw(

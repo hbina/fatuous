@@ -1,9 +1,7 @@
 #include "systems/input_system.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
 #include "processes/entity_registry_master.hpp"
-#include "systems/skybox_system.hpp"
 #include "akarin_database/shader/shader_program_database.hpp"
-#include "processes/rendering_process.hpp"
 
 #include "entt/entt.hpp"
 #include "glad/glad.h"
@@ -60,19 +58,15 @@ int main(int argc, char *argv[])
                   << "\n";
         return -1;
     }
-    glEnable(GL_DEPTH_TEST);
+
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
     AkarinImgui::init(window);
     while (!glfwWindowShouldClose(window))
     {
-        RenderingProcess::set_default_clear_color(AkarinImgui::get_slider_color());
-        RenderingProcess::clear_screen();
         glfwPollEvents();
         EntityRegistryMaster::run();
-        SkyboxSystem::render();
-        AkarinImgui::render();
         glfwSwapBuffers(window);
         std::flush(std::cout);
     }

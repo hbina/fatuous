@@ -4,16 +4,29 @@
 
 #include <iostream>
 
+bool changed = true;
 bool enable_depth_buffer = true;
+DepthFun current_depth_buffer_function = DepthFun::LESS;
+
+void OpenGLSettings::update() noexcept
+{
+    // Not sure if OpenGsL likes it when we just change whenever?
+    if (changed)
+    {
+        changed = false;
+        update_depth_function();
+    }
+};
 
 void OpenGLSettings::enable(const GLEnum p_enum, const bool p_enable) noexcept
 {
+    changed = true;
     switch (p_enum)
     {
     case GLEnum::DEPTH_TEST:
     {
         enable_depth_buffer = p_enable;
-        p_enable ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+        break;
     }
     default:
     {
@@ -22,15 +35,16 @@ void OpenGLSettings::enable(const GLEnum p_enum, const bool p_enable) noexcept
     };
 };
 
-void OpenGLSettings::update() noexcept {
-    // Not sure if OpenGL likes it when we just change whenever?
-    // changed = false;
-};
-
-void OpenGLSettings::set_depth_function(const DepthFun p_func_type) noexcept
+void OpenGLSettings::update_depth_function() noexcept
 {
+    if (!enable_depth_buffer)
+    {
+        glDisable(GL_DEPTH_TEST);
+        return;
+    }
 
-    switch (p_func_type)
+    glEnable(GL_DEPTH_TEST);
+    switch (current_depth_buffer_function)
     {
     case DepthFun::ALWAYS:
     {
@@ -74,18 +88,27 @@ void OpenGLSettings::set_depth_function(const DepthFun p_func_type) noexcept
     };
     default:
     {
-        std::cerr << "unhandled switch case " << __LINE__ << std::endl;
+        std::cerr << "unhandled switch case " << __LINE__ << __FILE__ << std::endl;
     };
     }
 };
 
-// TODO :: Must be cleared depending on the settings.
+void OpenGLSettings::set_depth_function(const DepthFun p_func_type) noexcept
+{
+    changed = true;
+    current_depth_buffer_function = p_func_type;
+};
+
 GLbitfield get_clear_mask()
 {
-    return GL_COLOR_BUFFER_BIT | (GL_DEPTH_BUFFER_BIT & enable_depth_buffer);
+    GLbitfield result = GL_COLOR_BUFFER_BIT;
+    if (enable_depth_buffer)
+        result |= GL_DEPTH_BUFFER_BIT;
+    return result;
 };
 
 void OpenGLSettings::gl_clear() noexcept
 {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(get_clear_mask());
 }

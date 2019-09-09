@@ -7,8 +7,6 @@
 namespace RenderingProcess
 {
 void render(entt::registry &) noexcept;
-void set_default_clear_color(const glm::vec4 &) noexcept;
-void clear_screen() noexcept;
 }; // namespace RenderingProcess
 
 #endif

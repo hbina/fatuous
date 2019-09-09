@@ -3,6 +3,7 @@
 #include "akarin_database/texture/texture_database.hpp"
 #include "akarin_database/shader/shader_code_database.hpp"
 #include "akarin_database/shader/shader_program_database.hpp"
+#include "misc/opengl_settings.hpp"
 #include "misc/shader_utilities.hpp"
 
 #include "glad/glad.h"
@@ -82,7 +83,7 @@ void SkyboxSystem::render() noexcept
         init_skybox_vertices();
         initialized = true;
     }
-
+    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     ShaderUtilities::use(g_skybox_shader_id);
     const glm::mat4 &view = glm::mat4(glm::mat3(AkarinCameraSystem::get_view()));
@@ -93,7 +94,7 @@ void SkyboxSystem::render() noexcept
     glBindTexture(GL_TEXTURE_CUBE_MAP, TextureDatabase::textures_map[g_skybox_texture_id.m_id].m_gl_id);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    glDepthFunc(GL_LESS);
+    OpenGLSettings::update_depth_function();
 };
 
 void init_skybox_vertices() noexcept

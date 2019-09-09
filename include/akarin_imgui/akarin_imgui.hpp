@@ -11,7 +11,6 @@ namespace AkarinImgui
 void init(GLFWwindow *) noexcept;
 void render() noexcept;
 void clean_up() noexcept;
-glm::vec4 get_slider_color() noexcept;
 }; // namespace AkarinImgui
 
 #endif
