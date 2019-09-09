@@ -21,37 +21,37 @@ void LightingDatabaseWindow::render() noexcept
 
     if (ImGui::CollapsingHeader("Directional Light Properties"))
     {
-        ImGui::Checkbox("Enable Directional Light", &enable_directional_light);
-        ImGui::SliderFloat("shininess#A", &directional_light.shininess, 0.0f, 128.0f);
-        ImGui::SliderFloat3("direction#A", directional_light.direction.data(), -1.0f, 1.0f);
-        ImGui::ColorEdit3("ambient#A", directional_light.ambient.data());
-        ImGui::ColorEdit3("diffuse#A", directional_light.diffuse.data());
-        ImGui::ColorEdit3("specular#A", directional_light.specular.data());
+        ImGui::Checkbox("Enable##directional_light", &enable_directional_light);
+        ImGui::SliderFloat("shininess##directional_light", &directional_light.shininess, 0.0f, 128.0f);
+        ImGui::SliderFloat3("direction##directional_light", directional_light.direction.data(), -1.0f, 1.0f);
+        ImGui::ColorEdit3("ambient##directional_light", directional_light.ambient.data());
+        ImGui::ColorEdit3("diffuse##directional_light", directional_light.diffuse.data());
+        ImGui::ColorEdit3("specular##directional_light", directional_light.specular.data());
     }
 
     if (ImGui::CollapsingHeader("Point Light Properties"))
     {
-        ImGui::Checkbox("Enable Point Light", &enable_point_light);
-        ImGui::SliderFloat3("position#B", point_light.position.data(), -500.0f, 500.0f);
-        ImGui::SliderFloat("constant#B", &point_light.constant, 0.1f, 1.0f);
-        ImGui::SliderFloat("linear#B", &point_light.linear, 0.01f, 0.10f);
-        ImGui::SliderFloat("quadratic#B", &point_light.quadratic, 0.001f, 0.010f);
-        ImGui::ColorEdit3("ambient#B", point_light.ambient.data());
-        ImGui::ColorEdit3("diffuse#B", point_light.diffuse.data());
-        ImGui::ColorEdit3("specular#B", point_light.specular.data());
+        ImGui::Checkbox("Enable##point_light", &enable_point_light);
+        ImGui::SliderFloat3("position##point_light", point_light.position.data(), -500.0f, 500.0f);
+        ImGui::SliderFloat("constant##point_light", &point_light.constant, 0.1f, 1.0f);
+        ImGui::SliderFloat("linear##point_light", &point_light.linear, 0.01f, 0.10f);
+        ImGui::SliderFloat("quadratic##point_light", &point_light.quadratic, 0.001f, 0.010f);
+        ImGui::ColorEdit3("ambient##point_light", point_light.ambient.data());
+        ImGui::ColorEdit3("diffuse##point_light", point_light.diffuse.data());
+        ImGui::ColorEdit3("specular##point_light", point_light.specular.data());
     }
 
     if (ImGui::CollapsingHeader("Spot Light Properties"))
     {
-        ImGui::Checkbox("Enable Spot Light", &enable_spot_light);
-        ImGui::InputFloat("cutOff#C", &spot_light.cutOff);
-        ImGui::InputFloat("outerCutOff#C", &spot_light.outerCutOff);
-        ImGui::InputFloat("constant#C", &spot_light.constant);
-        ImGui::InputFloat("linear#C", &spot_light.linear);
-        ImGui::InputFloat("quadratic#C", &spot_light.quadratic);
-        ImGui::ColorEdit3("ambient#C", spot_light.ambient.data());
-        ImGui::ColorEdit3("diffuse#C", spot_light.diffuse.data());
-        ImGui::ColorEdit3("specular#C", spot_light.specular.data());
+        ImGui::Checkbox("Enable##spot_light", &enable_spot_light);
+        ImGui::InputFloat("cutOff##spot_light", &spot_light.cutOff);
+        ImGui::InputFloat("outerCutOff##spot_light", &spot_light.outerCutOff);
+        ImGui::InputFloat("constant##spot_light", &spot_light.constant);
+        ImGui::InputFloat("linear##spot_light", &spot_light.linear);
+        ImGui::InputFloat("quadratic##spot_light", &spot_light.quadratic);
+        ImGui::ColorEdit3("ambient##spot_light", spot_light.ambient.data());
+        ImGui::ColorEdit3("diffuse##spot_light", spot_light.diffuse.data());
+        ImGui::ColorEdit3("specular##spot_light", spot_light.specular.data());
     }
 
     ImGui::End();

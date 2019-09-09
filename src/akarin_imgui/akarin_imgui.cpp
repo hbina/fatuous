@@ -9,7 +9,7 @@
 #include "akarin_imgui/model_database_window.hpp"
 #include "akarin_imgui/shader_code_database_window.hpp"
 #include "akarin_imgui/shader_program_database_window.hpp"
-
+#include "akarin_imgui/opengl_settings_window.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -36,6 +36,7 @@ bool show_model_database_window = false;
 bool show_lighting_database_window = false;
 bool show_shadercode_database_window = false;
 bool show_shaderprogram_database_window = false;
+bool show_opengl_settings_window = false;
 
 void AkarinImgui::render() noexcept
 {
@@ -51,6 +52,7 @@ void AkarinImgui::render() noexcept
             ImGui::MenuItem("Show LightingDatabaseWindow", nullptr, &show_lighting_database_window);
             ImGui::MenuItem("Show ShaderCodeDatabaseWindow", nullptr, &show_shadercode_database_window);
             ImGui::MenuItem("Show ShaderProgramDatabaseWindow", nullptr, &show_shaderprogram_database_window);
+            ImGui::MenuItem("Show OpenGLSettingsWindow", nullptr, &show_opengl_settings_window);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -65,6 +67,8 @@ void AkarinImgui::render() noexcept
         ShaderCodeDatabaseWindow::render();
     if (show_shaderprogram_database_window)
         ShaderProgramDatabaseWindow::render();
+    if (show_opengl_settings_window)
+        OpenGLSettingsWindow::render();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 };

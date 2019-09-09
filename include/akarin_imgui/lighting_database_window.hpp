@@ -5,6 +5,7 @@
 
 #include <array>
 
+// Move this out to a shader class or something
 struct DirectionalLight
 {
     float shininess = 32.0f;

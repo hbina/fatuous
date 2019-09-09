@@ -26,6 +26,7 @@ add_executable(
     src/misc/shader_utilities.cpp
     src/misc/thread_pool.cpp
     src/misc/akarin_timer.cpp
+    src/misc/opengl_settings.cpp
 
     src/systems/input_system.cpp
     src/systems/skybox_system.cpp
@@ -54,7 +55,8 @@ add_executable(
     src/akarin_imgui/lighting_database_window.cpp
     src/akarin_imgui/entity_database_window.cpp
     src/akarin_imgui/shader_code_database_window.cpp
-    src/akarin_imgui/shader_program_database_window.cpp)
+    src/akarin_imgui/shader_program_database_window.cpp
+    src/akarin_imgui/opengl_settings_window.cpp)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)

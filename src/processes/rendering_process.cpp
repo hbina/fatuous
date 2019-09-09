@@ -39,6 +39,7 @@ void RenderingProcess::render(
     ShaderUtilities::use(p_shader_id);
     for (const entt::entity &entity : entity_view)
     {
+        // TODO :: This should instead query the database.
         // Lighting stuff
         add_dirlight(
             p_shader_id,
