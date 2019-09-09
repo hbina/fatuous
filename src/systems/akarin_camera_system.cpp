@@ -10,11 +10,11 @@ struct
     glm::vec3 m_up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 m_right = glm::vec3(-1.0f, 0.0f, 0.0f);
     glm::vec3 m_world_up = glm::vec3(0.0f, 1.0f, 0.0f);
-    float m_yaw = -90.0f;
-    float m_pitch = 0.0f;
-    float m_speed = 250.0f;
-    float m_sensitivity = 2.0f;
-    float m_zoom = 45.0f;
+    double m_yaw = -90.0f;
+    double m_pitch = 0.0f;
+    double m_speed = 250.0f;
+    double m_sensitivity = 2.0f;
+    double m_zoom = 45.0f;
 
     void update_camera_vectors() noexcept
     {
@@ -34,10 +34,10 @@ struct
     };
 } akarin_camera;
 
-void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
+void AkarinCameraSystem::process_keyboard(const double p_delta_time) noexcept
 {
     // TODO :: Make this our enum.
-    float velocity = akarin_camera.m_speed * p_delta_time;
+    float velocity = static_cast<float>(akarin_camera.m_speed * p_delta_time);
     if (AkarinGLFW::is_pressed(GLFW_KEY_W) || AkarinGLFW::is_repeated(GLFW_KEY_W))
     {
         akarin_camera.m_position += akarin_camera.m_front * velocity;
@@ -81,7 +81,7 @@ void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
 glm::mat4 AkarinCameraSystem::get_projection() noexcept
 {
     return glm::perspective(
-        glm::radians(akarin_camera.m_zoom),
+        static_cast<float>(glm::radians(akarin_camera.m_zoom)),
         static_cast<float>(AkarinGLFW::get_window_size_ratio()), // TODO :: Temporary, later will make them all doubles
         0.1f,
         20000.0f); // TODO :: Make projection part fo the camera member variables

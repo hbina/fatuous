@@ -8,11 +8,11 @@
 void update_position(
     Transform &,
     const Swarm &,
-    const float);
+    const double);
 
 void SwarmSystem::update(
     entt::registry &p_reg,
-    const float p_delta_time)
+    const double p_delta_time)
 {
     auto swarm_view = p_reg.view<Swarm, Transform>();
 
@@ -28,10 +28,10 @@ void SwarmSystem::update(
 void update_position(
     Transform &p_transform,
     const Swarm &p_swarm,
-    const float p_delta_time)
+    const double p_delta_time)
 {
     const glm::vec3 distance = AkarinCameraSystem::get_position() - p_transform.position;
     const glm::vec3 direction = glm::normalize(distance);
-    const glm::vec3 new_position = p_transform.position + (direction * p_swarm.value * p_delta_time);
+    const glm::vec3 new_position = p_transform.position + (direction * p_swarm.value * static_cast<float>(p_delta_time));
     p_transform.position = new_position;
 };

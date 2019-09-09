@@ -9,7 +9,7 @@ namespace SwarmSystem
 {
 void update(
     entt::registry &,
-    const float);
+    const double);
 };
 
 #endif
