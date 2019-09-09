@@ -20,6 +20,7 @@
 #include <sstream>
 #include <string>
 
+// Use RAII
 void AkarinImgui::init(GLFWwindow *p_window) noexcept
 {
     ImGui::CreateContext();
@@ -73,6 +74,7 @@ void AkarinImgui::render() noexcept
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 };
 
+// Use RAII
 void AkarinImgui::clean_up() noexcept
 {
     ImGui_ImplOpenGL3_Shutdown();

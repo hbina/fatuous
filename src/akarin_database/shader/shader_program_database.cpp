@@ -22,6 +22,7 @@ void test_shader_program_compilation(
 
 // Namespace functions definitions
 
+// TODO :: Use RAII instead of this.
 void ShaderProgramDatabase::clean_up() noexcept
 {
     for (const auto &shader_program_id : shader_program_map)
