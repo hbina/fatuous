@@ -13,7 +13,7 @@
 struct ShaderProgramDatabase
 {
 
-    std::unordered_map<GLuint, ShaderProgram> ShaderProgramDatabase::map;
+    std::unordered_map<GLuint, ShaderProgram> map;
 
     static ShaderProgramDatabase &get_instance() noexcept;
 
