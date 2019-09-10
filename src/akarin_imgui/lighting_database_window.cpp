@@ -1,6 +1,6 @@
 #include "akarin_imgui/lighting_database_window.hpp"
 
-
+/**
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -56,3 +56,4 @@ void LightingDatabaseWindow::render() noexcept
 
     ImGui::End();
 };
+*/

@@ -31,6 +31,8 @@ add_executable(
     src/systems/skybox_system.cpp
     src/systems/akarin_camera_system.cpp
     
+    src/akarin_database/lighting/lighting_database.cpp
+    
     src/akarin_database/texture/texture.cpp
     src/akarin_database/texture/texture_data.cpp
     src/akarin_database/texture/texture_database.cpp

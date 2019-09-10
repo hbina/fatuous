@@ -46,6 +46,7 @@ void RenderingProcess::render(
     {
         // TODO :: This should instead query the database.
         // Lighting stuff
+        /**
         add_dirlight(
             p_shader_id,
             LightingDatabaseWindow::enable_directional_light);
@@ -55,6 +56,7 @@ void RenderingProcess::render(
         add_spotlight(
             p_shader_id,
             LightingDatabaseWindow::enable_spot_light);
+        **/
         // Draw
         draw(
             p_shader_id,
@@ -83,6 +85,7 @@ void draw(
     }
 };
 
+/**
 void add_dirlight(
     const GLuint p_shader_id,
     const bool p_enabled) noexcept
@@ -193,3 +196,4 @@ void add_spotlight(
         "spot_light.outerCutOff",
         glm::cos(glm::radians(LightingDatabaseWindow::spot_light.outerCutOff)));
 };
+*/

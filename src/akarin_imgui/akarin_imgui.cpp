@@ -47,7 +47,7 @@ void AkarinImgui::render() noexcept
     if (show_model_database_window)
         ModelDatabaseWindow::render();
     if (show_lighting_database_window)
-        LightingDatabaseWindow::render();
+        // LightingDatabaseWindow::render();
     if (show_shadercode_database_window)
         ShaderCodeDatabaseWindow::render();
     if (show_shaderprogram_database_window)
