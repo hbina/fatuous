@@ -20,24 +20,24 @@ void ShaderCodeDatabaseWindow::render() noexcept
         ImGui::InputText("path:", shader_code_text, 64);
         if (ImGui::Button("Load ShaderCode"))
         {
+            // TODO :: Dummy, fix later. Add a combo
             ShaderCodeDatabase::load_shader_file(shader_code_text, ShaderType::VERTEX);
         }
     }
     if (ImGui::CollapsingHeader("ShaderCodes List"))
     {
         ImGui::Text("List of ShaderCodes loaded:");
-        std::for_each(
-            ShaderCodeDatabase::shader_code_map.cbegin(),
-            ShaderCodeDatabase::shader_code_map.cend(),
-            [](const auto &p_shader_code_iter) {
-                std::ostringstream out;
-                out << p_shader_code_iter.first;
-                out << " : ";
-                out << p_shader_code_iter.second.m_shader_path << "\n";
-                ImGui::Text(
-                    "%s",
-                    out.str().c_str());
-            });
+
+        for (const auto &p_iter : ShaderCodeDatabase::map)
+        {
+            std::ostringstream out;
+            out << p_iter.first;
+            out << " : ";
+            out << p_iter.second.m_filepath << "\n";
+            ImGui::Text(
+                "%s",
+                out.str().c_str());
+        };
     }
     ImGui::End();
 };

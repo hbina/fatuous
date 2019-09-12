@@ -16,18 +16,20 @@ enum class ShaderType
 
 struct ShaderCode
 {
-    std::string m_shader_path;
-    std::string m_shader_text;
-    ShaderType m_shader_type;
+    std::string m_filepath;
+    std::string m_content;
+    ShaderType m_type;
 
     ShaderCode();
-    ShaderCode(const std::string &, const std::string &, const ShaderType);
+    ShaderCode(
+        const std::string &,
+         const std::string &, const ShaderType);
 };
 
 namespace ShaderCodeDatabase
 {
 
-extern std::unordered_map<GLuint, ShaderCode> shader_code_map;
+extern std::unordered_map<GLuint, ShaderCode> map;
 
 GLuint
 load_shader_file(

@@ -12,26 +12,25 @@
 #include <sstream>
 #include <fstream>
 
-ShaderCode::ShaderCode()
-    : m_shader_type(ShaderType::ERROR){};
+ShaderCode::ShaderCode() = default;
 
 ShaderCode::ShaderCode(
     const std::string &p_filepath,
     const std::string &p_content,
     const ShaderType p_type)
-    : m_shader_path(p_filepath),
-      m_shader_text(p_content),
-      m_shader_type(p_type){};
+    : m_filepath(p_filepath),
+      m_content(p_content),
+      m_type(p_type){};
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
-std::unordered_map<GLuint, ShaderCode> ShaderCodeDatabase::shader_code_map;
+std::unordered_map<GLuint, ShaderCode> ShaderCodeDatabase::map;
 
 void add_shader_code(
     const GLuint p_shader_code_id,
     const ShaderCode &p_shader_code) noexcept
 {
-    ShaderCodeDatabase::shader_code_map[p_shader_code_id] = p_shader_code;
+    ShaderCodeDatabase::map[p_shader_code_id] = p_shader_code;
 };
 
 // Operators declarations
@@ -58,12 +57,12 @@ GLuint ShaderCodeDatabase::load_shader_file(
     const ShaderType p_type) noexcept
 {
     const auto &find_iter = std::find_if(
-        ShaderCodeDatabase::shader_code_map.cbegin(),
-        ShaderCodeDatabase::shader_code_map.cend(),
+        ShaderCodeDatabase::map.cbegin(),
+        ShaderCodeDatabase::map.cend(),
         [p_filepath](const auto &p_iter) -> bool {
-            return p_iter.second.m_shader_path == p_filepath;
+            return p_iter.second.m_filepath == p_filepath;
         });
-    if (find_iter != ShaderCodeDatabase::shader_code_map.cend())
+    if (find_iter != ShaderCodeDatabase::map.cend())
     {
         return (*find_iter).first;
     }
@@ -127,7 +126,7 @@ GLuint compile_shader(
 {
     GLuint shader_id = 0;
 
-    switch (p_shader_code.m_shader_type)
+    switch (p_shader_code.m_type)
     {
     case ShaderType::VERTEX:
     {
@@ -147,10 +146,10 @@ GLuint compile_shader(
     };
     };
 
-    const char *shader_code_cstr = p_shader_code.m_shader_text.c_str();
+    const char *shader_code_cstr = p_shader_code.m_content.c_str();
     glShaderSource(shader_id, 1, &shader_code_cstr, nullptr);
     glCompileShader(shader_id);
-    test_shader_code_compilation(shader_id, p_shader_code.m_shader_type);
+    test_shader_code_compilation(shader_id, p_shader_code.m_type);
     return shader_id;
 };
 
