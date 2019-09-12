@@ -12,7 +12,8 @@
 #include <sstream>
 #include <fstream>
 
-ShaderCode::ShaderCode() = default;
+ShaderCode::ShaderCode()
+    : m_type(ShaderType::ERROR){};
 
 ShaderCode::ShaderCode(
     const std::string &p_filepath,

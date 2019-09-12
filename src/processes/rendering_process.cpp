@@ -37,10 +37,10 @@ void RenderingProcess::render(
 {
     static GLuint p_shader_id = ShaderProgramDatabase::get_instance().link_shader_codes(
         {ShaderCodeDatabase::load_shader_file(
-             "./shaders/model.vs",
+             "./shaders/vertex/model.glsl",
              ShaderType::VERTEX),
          ShaderCodeDatabase::load_shader_file(
-             "./shaders/model.fs",
+             "./shaders/fragment/model.glsl",
              ShaderType::FRAGMENT)});
     auto entity_view = p_reg.view<ModelData, Transform>();
     OpenGLSettings::gl_clear();
