@@ -49,6 +49,9 @@ uniform DirectionalLight directional_light;
 uniform PointLight point_light;
 uniform SpotLight spot_light;
 uniform Material material;
+uniform samplerCube depth_map;
+uniform float far_plane;
+uniform vec3 light_pos;
 
 // function prototypes
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 view_direction);
@@ -56,6 +59,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos,
                     vec3 view_direction);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
                    vec3 view_direction);
+float ShadowCalculation(vec3 fragPos);
 
 void main() {
   vec4 textureColour = texture(material.diffuse, TexCoords);
@@ -69,11 +73,11 @@ void main() {
 
   // vec3 norm = normalize(Normal);
   vec3 view_direction = normalize(camera_position - FragPos);
-
+  float shadow = ShadowCalculation(FragPos);
   vec3 result = CalcDirLight(directional_light, normal, view_direction);
   result += CalcPointLight(point_light, normal, FragPos, view_direction);
   result += CalcSpotLight(spot_light, normal, FragPos, view_direction);
-
+  result * = (1 - shadow);
   FragColor = vec4(result, 1.0);
 }
 
@@ -149,4 +153,22 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
   diffuse *= attenuation * intensity;
   specular *= attenuation * intensity;
   return (ambient + diffuse + specular);
+}
+
+float ShadowCalculation(vec3 fragPos) {
+  // get vector between fragment position and light position
+  vec3 fragToLight = fragPos - light_pos;
+  // use the light to fragment vector to sample from the depth map
+  float closestDepth = texture(depth_map, fragToLight).r;
+  // it is currently in linear range between [0,1]. Re-transform back to
+  // original value
+  closestDepth *= far_plane;
+  // now get current linear depth as the length between the fragment and light
+  // position
+  float currentDepth = length(fragToLight);
+  // now test for shadows
+  float bias = 0.05;
+  float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+  return shadow;
 }

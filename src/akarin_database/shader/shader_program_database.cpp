@@ -30,11 +30,10 @@ GLuint ShaderProgramDatabase::link_shader_codes(
     for (const auto shader_id : p_shaders)
     {
         glAttachShader(shader_program_id, shader_id);
-        glLinkProgram(shader_program_id);
-        test_shader_program_compilation(shader_program_id);
-        glDeleteShader(shader_id);
     }
+    glLinkProgram(shader_program_id);
     get_instance().map[shader_program_id] = ShaderProgram(p_shaders);
+    test_shader_program_compilation(shader_program_id);
     return shader_program_id;
 };
 
@@ -76,7 +75,6 @@ void ShaderProgramDatabase::set_shader_program_texture(
             continue;
         }
         };
-
         glBindTexture(GL_TEXTURE_2D, TextureDatabase::textures_map[textures[i]].m_gl_id);
     }
     // TODO :: Temporary solution...need to figure out how deal with this crap
@@ -87,14 +85,19 @@ void ShaderProgramDatabase::set_shader_program_texture(
 void test_shader_program_compilation(const GLuint p_shader) noexcept
 {
     static constexpr auto info_log_size = 1024;
-    int success;
-    char info_log[info_log_size];
-    glGetShaderiv(p_shader, GL_COMPILE_STATUS, &success);
+    GLint success;
+    GLchar info_log[info_log_size];
+    glGetProgramiv(p_shader, GL_LINK_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(p_shader, info_log_size, nullptr, info_log);
+        glGetProgramInfoLog(p_shader, info_log_size, nullptr, info_log);
         std::cerr << "p_shader:" << p_shader << " shader program compilation failed"
                   << "\n";
-        std::cout << "error:" << info_log << "\n";
+        for (const auto &p_iter : ShaderProgramDatabase::get_instance().map[p_shader].m_shader_ids)
+        {
+            std::cerr << "filepath: " << ShaderCodeDatabase::map[p_iter].m_filepath << "\n";
+            std::cerr << "type: " << ShaderCodeDatabase::map[p_iter].m_type << "\n";
+        }
+        std::cout << info_log << "\n";
     }
 };

@@ -11,8 +11,12 @@ enum class ShaderType
 {
     VERTEX,
     FRAGMENT,
+    GEOMETRY,
     ERROR
 };
+
+// Operators declarations
+std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
 
 struct ShaderCode
 {
@@ -23,7 +27,7 @@ struct ShaderCode
     ShaderCode();
     ShaderCode(
         const std::string &,
-         const std::string &, const ShaderType);
+        const std::string &, const ShaderType);
 };
 
 namespace ShaderCodeDatabase
@@ -31,8 +35,7 @@ namespace ShaderCodeDatabase
 
 extern std::unordered_map<GLuint, ShaderCode> map;
 
-GLuint
-load_shader_file(
+GLuint load_shader_file(
     const std::string &,
     const ShaderType) noexcept;
 }; // namespace ShaderCodeDatabase
