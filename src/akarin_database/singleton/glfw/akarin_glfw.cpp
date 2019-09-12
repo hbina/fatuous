@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-glm::vec<2, int> AkarinGLFW::window_dimension = glm::vec<2, int>(1366, 768);
+glm::vec2 AkarinGLFW::window_dimension(1366, 768);
 
 AkarinGLFW::AkarinGLFW()
 {
@@ -159,9 +159,9 @@ bool AkarinGLFW::is_released(const int key) noexcept
     return keyboard_keys[static_cast<char>(key)] == GLFW_RELEASE;
 };
 
-const float AkarinGLFW::get_window_size_ratio() noexcept
+float AkarinGLFW::get_window_size_ratio() noexcept
 {
-    return static_cast<float>(window_dimension.x / window_dimension.y);
+    return window_dimension.x / window_dimension.y;
 };
 
 const glm::vec2 AkarinGLFW::get_mouse_offset() noexcept
