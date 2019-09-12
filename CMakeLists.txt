@@ -46,6 +46,8 @@ add_executable(
     
     src/akarin_database/shader/shader_code_database.cpp
     src/akarin_database/shader/shader_program_database.cpp
+
+    src/akarin_database/lighting/lighting_database.cpp
     
     src/processes/entity_registry_master.cpp
     src/processes/rendering_process.cpp

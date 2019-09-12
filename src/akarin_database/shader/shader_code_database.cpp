@@ -34,9 +34,6 @@ void add_shader_code(
     ShaderCodeDatabase::map[p_shader_code_id] = p_shader_code;
 };
 
-// Operators declarations
-std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
-
 // Free function declarations
 ShaderCode read_shader_code_file(
     const std::string &,
@@ -47,9 +44,6 @@ void test_shader_code_compilation(
 
 GLuint compile_shader(
     const ShaderCode &) noexcept;
-
-ShaderType get_shader_extension_type(
-    const std::string &) noexcept;
 
 // Namespace function definitions
 
@@ -78,26 +72,7 @@ GLuint ShaderCodeDatabase::load_shader_file(
 
 // Free functions definitions
 
-ShaderType
-get_shader_extension_type(
-    const std::string &p_extension) noexcept
-{
-    std::string type_string = p_extension.substr(p_extension.find_last_of('.'), p_extension.size());
-    if (type_string == ".vs")
-    {
-        return ShaderType::VERTEX;
-    }
-    else if (type_string == ".fs")
-    {
-        return ShaderType::FRAGMENT;
-    }
-    std::cerr << "unsupported shader file extension -- please abort"
-              << "\n";
-    return ShaderType::VERTEX;
-};
-
-ShaderCode
-read_shader_code_file(
+ShaderCode read_shader_code_file(
     const std::string &p_shader_path,
     const ShaderType p_type)
 {
@@ -139,6 +114,11 @@ GLuint compile_shader(
         shader_id = glCreateShader(GL_FRAGMENT_SHADER);
         break;
     };
+    case ShaderType::GEOMETRY:
+    {
+        shader_id = glCreateShader(GL_GEOMETRY_SHADER);
+        break;
+    }
     default:
     {
         std::cerr << "unable to compile shader"
@@ -157,8 +137,8 @@ GLuint compile_shader(
 void test_shader_code_compilation(GLuint p_shader, const ShaderType p_type) noexcept
 {
     static constexpr auto info_log_size = 1024;
-    int success;
-    char info_log[info_log_size];
+    GLint success;
+    GLchar info_log[info_log_size];
     glGetShaderiv(p_shader, GL_LINK_STATUS, &success);
     if (!success)
     {
@@ -182,6 +162,11 @@ std::ostream &operator<<(std::ostream &os, const ShaderType p_type) noexcept
     case ShaderType::FRAGMENT:
     {
         os << "ShaderType::FRAGMENT";
+        break;
+    };
+    case ShaderType::GEOMETRY:
+    {
+        os << "ShaderType::GEOMETRY";
         break;
     };
     default:

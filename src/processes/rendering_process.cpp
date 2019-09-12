@@ -1,6 +1,8 @@
 #include "processes/rendering_process.hpp"
 #include "akarin_database/shader/shader_program_database.hpp"
 #include "akarin_database/shader/shader_code_database.hpp"
+#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/lighting/lighting_database.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
 #include "types/shader.hpp"
@@ -11,7 +13,6 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "misc/opengl_settings.hpp"
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 
 #include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -22,49 +23,25 @@ void draw(
     const GLuint,
     const ModelData &,
     const Transform &);
-void add_dirlight(
-    const GLuint,
-    const bool) noexcept;
-void add_pointlight(
-    const GLuint,
-    const bool) noexcept;
-void add_spotlight(
-    const GLuint,
-    const bool) noexcept;
+
+void prepare_shadow(
+    entt::registry &p_reg) noexcept;
+
+void render_normal(
+    entt::registry &p_reg) noexcept;
+
+glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+float near_plane = 1.0f;
+float far_plane = 20000.0f;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
-    static GLuint p_shader_id = ShaderProgramDatabase::get_instance().link_shader_codes(
-        {ShaderCodeDatabase::load_shader_file(
-             "./shaders/vertex/model.glsl",
-             ShaderType::VERTEX),
-         ShaderCodeDatabase::load_shader_file(
-             "./shaders/fragment/model.glsl",
-             ShaderType::FRAGMENT)});
-    auto entity_view = p_reg.view<ModelData, Transform>();
-    OpenGLSettings::gl_clear();
     OpenGLSettings::update();
-    ShaderUtilities::use(p_shader_id);
-    for (const entt::entity &entity : entity_view)
-    {
-        // TODO :: This should instead query the database.
-        // Lighting stuff
-        add_dirlight(
-            p_shader_id,
-            LightingDatabaseWindow::enable_directional_light);
-        add_pointlight(
-            p_shader_id,
-            LightingDatabaseWindow::enable_point_light);
-        add_spotlight(
-            p_shader_id,
-            LightingDatabaseWindow::enable_spot_light);
-        // Draw
-        draw(
-            p_shader_id,
-            entity_view.get<ModelData>(entity),
-            entity_view.get<Transform>(entity));
-    }
+
+    prepare_shadow(p_reg);
+    render_normal(p_reg);
+
     SkyboxSystem::render();
     AkarinImgui::render();
     AkarinGLFW::get_instance().swap_buffers();
@@ -87,113 +64,117 @@ void draw(
     }
 };
 
-void add_dirlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+void render_normal(
+    entt::registry &p_reg) noexcept
 {
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "camera_position",
-        AkarinCameraSystem::get_position());
-    // TODO :: Shininess is actually part of Directional Light, as such, we need a separate Material helper class
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "material.shininess",
-        LightingDatabaseWindow::directional_light.shininess);
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.direction",
-        LightingDatabaseWindow::directional_light.direction);
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.ambient",
-        p_enabled ? LightingDatabaseWindow::directional_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::directional_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.specular",
-        p_enabled ? LightingDatabaseWindow::directional_light.specular : std::array<float, 3>{0, 0, 0});
+    static GLuint model_shader = 0;
+    static bool init = false;
+    if (!init)
+    {
+        init = true;
+        model_shader = ShaderProgramDatabase::get_instance().link_shader_codes(
+            {ShaderCodeDatabase::load_shader_file(
+                 "./shaders/vertex/model.glsl",
+                 ShaderType::VERTEX),
+             ShaderCodeDatabase::load_shader_file(
+                 "./shaders/fragment/model.glsl",
+                 ShaderType::FRAGMENT)});
+        ShaderUtilities::setInt(model_shader, "depth_map", 1);
+        ShaderUtilities::setFloat(model_shader, "far_plane", far_plane);
+    }
+    ShaderUtilities::use(model_shader);
+    LightingDb::prepare_light(model_shader);
+    OpenGLSettings::gl_clear();
+    ShaderUtilities::setVec3(model_shader, "light_pos", lightPos);
+    auto entity_view = p_reg.view<ModelData, Transform>();
+    for (const entt::entity &entity : entity_view)
+    {
+        draw(
+            model_shader,
+            entity_view.get<ModelData>(entity),
+            entity_view.get<Transform>(entity));
+    }
 };
 
-void add_pointlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+void prepare_shadow(
+    entt::registry &p_reg) noexcept
 {
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.position",
-        AkarinCameraSystem::get_position());
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.ambient",
-        p_enabled ? LightingDatabaseWindow::point_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::point_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.specular",
-        p_enabled ? LightingDatabaseWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.constant",
-        LightingDatabaseWindow::point_light.constant);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.linear",
-        LightingDatabaseWindow::point_light.linear);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.quadratic",
-        LightingDatabaseWindow::point_light.quadratic);
-};
+    static GLuint depthMapFBO;
+    static GLuint depth_shader = 0;
+    static bool init = false;
+    if (!init)
+    {
+        init = true;
 
-void add_spotlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
-{
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.position",
-        AkarinCameraSystem::get_position());
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.direction",
-        AkarinCameraSystem::get_front());
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.ambient",
-        p_enabled ? LightingDatabaseWindow::spot_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::spot_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.specular",
-        p_enabled ? LightingDatabaseWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.constant",
-        1.0f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.linear",
-        0.09f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.quadratic",
-        0.032f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.cutOff",
-        glm::cos(glm::radians(LightingDatabaseWindow::spot_light.cutOff)));
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.outerCutOff",
-        glm::cos(glm::radians(LightingDatabaseWindow::spot_light.outerCutOff)));
+        depth_shader = ShaderProgramDatabase::get_instance().link_shader_codes(
+            {ShaderCodeDatabase::load_shader_file(
+                 "./shaders/vertex/omnishadow.glsl",
+                 ShaderType::VERTEX),
+             ShaderCodeDatabase::load_shader_file(
+                 "./shaders/fragment/omnishadow.glsl",
+                 ShaderType::FRAGMENT),
+             ShaderCodeDatabase::load_shader_file(
+                 "./shaders/geometry/omnishadow.glsl",
+                 ShaderType::GEOMETRY)});
+
+        // generate the cubemap
+        glGenFramebuffers(1, &depthMapFBO);
+        unsigned int depthCubemap;
+        glGenTextures(1, &depthCubemap);
+
+        // generate the single cubemap faces as 2d depth-valued texture images
+        const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+        for (unsigned int i = 0; i < 6; ++i)
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+                         SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+        // Set the texture parameters
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        // Pass the cubemap as the depth buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    // Variables required to render a shadow
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+    lightPos.z = sin(glfwGetTime() * 0.01) * 1000.0;
+
+    // Create depth cubemap transformation matrices
+    glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+    std::vector<glm::mat4> shadowTransforms;
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+    // Render scene to depth cubemap
+    OpenGLSettings::gl_clear();
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    ShaderUtilities::use(depth_shader);
+    for (unsigned int i = 0; i < 6; ++i)
+        ShaderUtilities::setMat4(depth_shader, "shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+    ShaderUtilities::setFloat(depth_shader, "far_plane", far_plane);
+    ShaderUtilities::setVec3(depth_shader, "light_pos", lightPos);
+    auto entity_view = p_reg.view<ModelData, Transform>();
+    ShaderUtilities::use(depth_shader);
+    for (const entt::entity &entity : entity_view)
+    {
+        draw(
+            depth_shader,
+            entity_view.get<ModelData>(entity),
+            entity_view.get<Transform>(entity));
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };

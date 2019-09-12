@@ -48,10 +48,7 @@ void EntityRegistryMaster::create_entity(
 
     p_reg.assign<Transform>(
         new_entity,
-        glm::vec3(
-            get_random_float(100.0f) - 50.0f,
-            get_random_float(100.0f) - 50.0f,
-            get_random_float(100.0f) - 50.0f),
+        glm::vec3(0.0f),
         glm::vec3(1.0f));
     p_reg.assign<Swarm>(
         new_entity,
