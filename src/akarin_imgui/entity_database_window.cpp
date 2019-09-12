@@ -4,7 +4,6 @@
 #include "types/model_data.hpp"
 #include "types/transform.hpp"
 
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -21,27 +20,25 @@ void EntityDatabaseWindow::render() noexcept
     ImGui::Begin("Entity Window");
     if (ImGui::BeginCombo("Model Selection", current_selection.c_str()))
     {
-        std::for_each(
-            ModelDatabase::models_map.cbegin(),
-            ModelDatabase::models_map.cend(),
-            [](const std::pair<const std::size_t, ModelData> &p_modeldata_iter) {
-                if (ImGui::Selectable(p_modeldata_iter.second.m_path.c_str()))
-                {
-                    selected_model_id = p_modeldata_iter.first;
-                    current_selection = p_modeldata_iter.second.m_path;
-                }
-                if (selected_model_id == p_modeldata_iter.first)
-                {
-                    ImGui::SetItemDefaultFocus();
-                }
-            });
+        for (const auto &p_modeldata_iter : ModelDatabase::models_map)
+        {
+            if (ImGui::Selectable(p_modeldata_iter.second.m_path.c_str()))
+            {
+                selected_model_id = p_modeldata_iter.first;
+                current_selection = p_modeldata_iter.second.m_path;
+            }
+            if (selected_model_id == p_modeldata_iter.first)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        };
         ImGui::EndCombo();
     }
     if (ImGui::Button("Create entity"))
     {
         if (selected_model_id == 0)
         {
-                }
+        }
         else
         {
             EntityRegistryMaster::create_entity(static_cast<std::size_t>(selected_model_id));

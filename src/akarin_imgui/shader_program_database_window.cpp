@@ -25,23 +25,19 @@ void ShaderProgramDatabaseWindow::render() noexcept
     if (ImGui::CollapsingHeader("ShaderPrograms List"))
     {
         ImGui::Text("List of ShaderPrograms loaded:");
-        std::for_each(
-            ShaderProgramDatabase::get_instance().map.cbegin(),
-            ShaderProgramDatabase::get_instance().map.cend(),
-            [](const std::pair<const GLuint, ShaderProgram> &p_shader_program_iter) {
-                std::ostringstream out;
-                out << p_shader_program_iter.first;
-                out << " : ";
-                std::for_each(
-                    p_shader_program_iter.second.m_shader_ids.cbegin(),
-                    p_shader_program_iter.second.m_shader_ids.end(),
-                    [&out](const auto &p_shader_code_id_iter) {
-                        out << p_shader_code_id_iter << ", ";
-                    });
-                ImGui::Text(
-                    "%s",
-                    out.str().c_str());
-            });
+        for (const auto &p_shader_program_iter : ShaderProgramDatabase::get_instance().map)
+        {
+            std::ostringstream out;
+            out << p_shader_program_iter.first;
+            out << " : ";
+            for (const auto &p_shader_code_id_iter : p_shader_program_iter.second.m_shader_ids)
+            {
+                out << p_shader_code_id_iter << ", ";
+            };
+            ImGui::Text(
+                "%s",
+                out.str().c_str());
+        };
     }
     ImGui::End();
 };
