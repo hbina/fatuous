@@ -36,8 +36,12 @@ void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
     static GLuint p_shader_id = ShaderProgramDatabase::get_instance().link_shader_codes(
-        {ShaderCodeDatabase::load_shader_code_file("./shaders/model.vs"),
-         ShaderCodeDatabase::load_shader_code_file("./shaders/model.fs")});
+        {ShaderCodeDatabase::load_shader_file(
+             "./shaders/model.vs",
+             ShaderType::VERTEX),
+         ShaderCodeDatabase::load_shader_file(
+             "./shaders/model.fs",
+             ShaderType::FRAGMENT)});
     auto entity_view = p_reg.view<ModelData, Transform>();
     OpenGLSettings::gl_clear();
     OpenGLSettings::update();

@@ -10,7 +10,9 @@ struct ModelData
     std::vector<std::size_t> m_meshes;
 
     ModelData() = default;
-    ModelData(const std::string &, const std::vector<std::size_t> &);
+    ModelData(
+        const std::string &,
+        const std::vector<std::size_t> &);
 };
 
 #endif

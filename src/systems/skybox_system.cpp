@@ -66,7 +66,7 @@ const std::array<std::string, 6> faces{
 
 GLuint g_skybox_shader_id = 0;
 unsigned int g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
-Texture g_skybox_texture_id;
+Texture g_skybox_texture_id = 0;
 
 // SkyBox should not be affected by OpenGLSettings
 void init_skybox_vertices() noexcept;
@@ -77,8 +77,12 @@ void SkyboxSystem::render() noexcept
     if (!initialized)
     {
         g_skybox_shader_id = ShaderProgramDatabase::link_shader_codes(
-            {ShaderCodeDatabase::load_shader_code_file("./shaders/skybox.vs"),
-             ShaderCodeDatabase::load_shader_code_file("./shaders/skybox.fs")});
+            {ShaderCodeDatabase::load_shader_file(
+                 "./shaders/vertex/skybox.glsl",
+                 ShaderType::VERTEX),
+             ShaderCodeDatabase::load_shader_file(
+                 "./shaders/fragment/skybox.glsl",
+                 ShaderType::FRAGMENT)});
         g_skybox_texture_id = TextureDatabase::load_cube_texture(faces);
 
         init_skybox_vertices();

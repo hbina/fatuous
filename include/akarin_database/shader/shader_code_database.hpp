@@ -30,8 +30,9 @@ namespace ShaderCodeDatabase
 extern std::unordered_map<GLuint, ShaderCode> shader_code_map;
 
 GLuint
-load_shader_code_file(
-    const std::string &) noexcept;
+load_shader_file(
+    const std::string &,
+    const ShaderType) noexcept;
 }; // namespace ShaderCodeDatabase
 
 #endif

@@ -16,12 +16,12 @@ ShaderCode::ShaderCode()
     : m_shader_type(ShaderType::ERROR){};
 
 ShaderCode::ShaderCode(
-    const std::string &p_shader_code_path,
-    const std::string &p_shader_code_text,
-    const ShaderType p_shader_type)
-    : m_shader_path(p_shader_code_path),
-      m_shader_text(p_shader_code_text),
-      m_shader_type(p_shader_type){};
+    const std::string &p_filepath,
+    const std::string &p_content,
+    const ShaderType p_type)
+    : m_shader_path(p_filepath),
+      m_shader_text(p_content),
+      m_shader_type(p_type){};
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
@@ -39,7 +39,8 @@ std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
 
 // Free function declarations
 ShaderCode read_shader_code_file(
-    const std::string &);
+    const std::string &,
+    const ShaderType);
 
 void test_shader_code_compilation(
     GLuint, const ShaderType) noexcept;
@@ -52,20 +53,21 @@ ShaderType get_shader_extension_type(
 
 // Namespace function definitions
 
-GLuint ShaderCodeDatabase::load_shader_code_file(
-    const std::string &p_shader_code_path) noexcept
+GLuint ShaderCodeDatabase::load_shader_file(
+    const std::string &p_filepath,
+    const ShaderType p_type) noexcept
 {
     const auto &find_iter = std::find_if(
         ShaderCodeDatabase::shader_code_map.cbegin(),
         ShaderCodeDatabase::shader_code_map.cend(),
-        [p_shader_code_path](const auto &p_iter) -> bool {
-            return p_iter.second.m_shader_path == p_shader_code_path;
+        [p_filepath](const auto &p_iter) -> bool {
+            return p_iter.second.m_shader_path == p_filepath;
         });
     if (find_iter != ShaderCodeDatabase::shader_code_map.cend())
     {
         return (*find_iter).first;
     }
-    const ShaderCode &shader_data = read_shader_code_file(p_shader_code_path);
+    const ShaderCode &shader_data = read_shader_code_file(p_filepath, p_type);
     GLuint shader_id = compile_shader(shader_data);
     if (shader_id != DEFAULT_SHADER_ID)
     {
@@ -96,7 +98,8 @@ get_shader_extension_type(
 
 ShaderCode
 read_shader_code_file(
-    const std::string &p_shader_path)
+    const std::string &p_shader_path,
+    const ShaderType p_type)
 {
     std::string shader_code;
     std::ifstream shader_file_istream;
@@ -112,15 +115,11 @@ read_shader_code_file(
     catch (std::ifstream::failure e)
     {
         std::cerr << "p_shader files could not be loaded p_shader_path:" << p_shader_path << "\n";
-        return ShaderCode(
-            p_shader_path,
-            "error",
-            ShaderType::ERROR);
     }
     return ShaderCode(
         p_shader_path,
         shader_code,
-        get_shader_extension_type(p_shader_path));
+        p_type);
 };
 
 GLuint compile_shader(

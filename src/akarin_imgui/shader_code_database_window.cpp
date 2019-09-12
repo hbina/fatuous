@@ -20,7 +20,7 @@ void ShaderCodeDatabaseWindow::render() noexcept
         ImGui::InputText("path:", shader_code_text, 64);
         if (ImGui::Button("Load ShaderCode"))
         {
-            ShaderCodeDatabase::load_shader_code_file(shader_code_text);
+            ShaderCodeDatabase::load_shader_file(shader_code_text, ShaderType::VERTEX);
         }
     }
     if (ImGui::CollapsingHeader("ShaderCodes List"))
