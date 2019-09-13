@@ -60,7 +60,7 @@ void TextureDatabase::execute_jobs() noexcept
 
 void create_gl_texture(const TextureJob &p_texture_job) noexcept
 {
-    unsigned int texture_gl_id;
+    GLuint texture_gl_id;
     glGenTextures(1, &texture_gl_id);
 
     int texture_width = 0;

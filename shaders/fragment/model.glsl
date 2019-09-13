@@ -55,11 +55,11 @@ uniform vec3 light_pos;
 
 // function prototypes
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 view_direction);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos,
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 frag_pos,
                     vec3 view_direction);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
                    vec3 view_direction);
-float ShadowCalculation(vec3 fragPos);
+float ShadowCalculation(vec3 frag_pos);
 
 void main() {
   vec4 textureColour = texture(material.diffuse, TexCoords);
@@ -101,9 +101,9 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 view_direction) {
 }
 
 // calculates the color when using a point light.
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos,
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 frag_pos,
                     vec3 view_direction) {
-  vec3 light_direction = normalize(light.position - fragPos);
+  vec3 light_direction = normalize(light.position - frag_pos);
   // diffuse shading
   float diff = max(dot(normal, light_direction), 0.0);
   // specular shading
@@ -111,8 +111,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos,
   float spec =
       pow(max(dot(view_direction, reflect_direction), 0.0), material.shininess);
   // attenuation
-  float distance = length(light.position - fragPos);
-  float attenuation = 1.0 / (light.constant + light.linear * distance +
+  float distance = length(light.position - frag_pos);
+  float attenuation = 50.0 / (light.constant + light.linear * distance +
                              light.quadratic * (distance * distance));
   // combine results
   vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
@@ -127,9 +127,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos,
 }
 
 // calculates the color when using a spot light.
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
                    vec3 view_direction) {
-  vec3 light_direction = normalize(light.position - fragPos);
+  vec3 light_direction = normalize(light.position - frag_pos);
   // diffuse shading
   float diff = max(dot(normal, light_direction), 0.0);
   // specular shading
@@ -137,8 +137,8 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
   float spec =
       pow(max(dot(view_direction, reflect_direction), 0.0), material.shininess);
   // attenuation
-  float distance = length(light.position - fragPos);
-  float attenuation = 1.0 / (light.constant + light.linear * distance +
+  float distance = length(light.position - frag_pos);
+  float attenuation = 50.0 / (light.constant + light.linear * distance +
                              light.quadratic * (distance * distance));
   // spotlight intensity
   float theta = dot(light_direction, normalize(-light.direction));
@@ -156,9 +156,9 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos,
   return (ambient + diffuse + specular);
 }
 
-float ShadowCalculation(vec3 fragPos) {
+float ShadowCalculation(vec3 frag_pos) {
   // get vector between fragment position and light position
-  vec3 fragToLight = fragPos - light_pos;
+  vec3 fragToLight = frag_pos - light_pos;
   // use the light to fragment vector to sample from the depth map
   float closestDepth = texture(depth_map, fragToLight).r;
   // it is currently in linear range between [0,1]. Re-transform back to
@@ -168,7 +168,7 @@ float ShadowCalculation(vec3 fragPos) {
   // position
   float currentDepth = length(fragToLight);
   // now test for shadows
-  float bias = 0.1;
+  float bias = 0.05;
   float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
   return shadow;

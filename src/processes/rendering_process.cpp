@@ -31,15 +31,22 @@ void prepare_shadow(
 void render_normal(
     entt::registry &p_reg) noexcept;
 
-glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+void render_cube() noexcept;
+
+glm::vec3 lightPos;
 float near_plane = 1.0f;
 float far_plane = 25.0f;
+GLuint depth_cube_map = 0;
+constexpr unsigned int SHADOW_WIDTH = 500, SHADOW_HEIGHT = 500;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
     OpenGLSettings::update();
-
+    lightPos = glm::vec3(
+        LightingDatabaseWindow::point_light.position[0],
+        LightingDatabaseWindow::point_light.position[1],
+        LightingDatabaseWindow::point_light.position[2]);
     prepare_shadow(p_reg);
     render_normal(p_reg);
 
@@ -84,14 +91,16 @@ void render_normal(
              ShaderCodeDatabase::load_shader_file(
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
-        ShaderUtilities::setInt(model_shader, "depth_map", 1);
-        ShaderUtilities::setFloat(model_shader, "far_plane", far_plane);
     }
     ShaderUtilities::use(model_shader);
     LightingDb::prepare_light(model_shader);
     OpenGLSettings::gl_clear();
+    ShaderUtilities::setInt(model_shader, "depth_map", 4);
+    ShaderUtilities::setFloat(model_shader, "far_plane", far_plane);
     ShaderUtilities::setVec3(model_shader, "light_pos", lightPos);
     auto entity_view = p_reg.view<ModelData, Transform>();
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
     for (const entt::entity &entity : entity_view)
     {
         draw(
@@ -124,11 +133,9 @@ void prepare_shadow(
 
         // generate the cubemap
         glGenFramebuffers(1, &depth_map_fbo);
-        unsigned int depth_cube_map;
         glGenTextures(1, &depth_cube_map);
 
         // generate the single cubemap faces as 2d depth-valued texture images
-        const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
         glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
         for (unsigned int i = 0; i < 6; ++i)
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
@@ -150,17 +157,16 @@ void prepare_shadow(
     }
 
     // Variables required to render a shadow
-    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
     // Create depth cubemap transformation matrices
-    glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
-    std::vector<glm::mat4> shadowTransforms;
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    glm::mat4 shadow_projection = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+    std::vector<glm::mat4> shadow_transforms;
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
     // Render scene to depth cubemap
     OpenGLSettings::gl_clear();
@@ -168,11 +174,10 @@ void prepare_shadow(
     glBindFramebuffer(GL_FRAMEBUFFER, depth_map_fbo);
     ShaderUtilities::use(depth_shader);
     for (unsigned int i = 0; i < 6; ++i)
-        ShaderUtilities::setMat4(depth_shader, "shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+        ShaderUtilities::setMat4(depth_shader, "shadowMatrices[" + std::to_string(i) + "]", shadow_transforms[i]);
     ShaderUtilities::setFloat(depth_shader, "far_plane", far_plane);
     ShaderUtilities::setVec3(depth_shader, "light_pos", lightPos);
     auto entity_view = p_reg.view<ModelData, Transform>();
-    ShaderUtilities::use(depth_shader);
     for (const entt::entity &entity : entity_view)
     {
         draw(

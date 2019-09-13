@@ -38,9 +38,9 @@ void MeshDatabase::execute_jobs() noexcept
 
 void execute_job(const MeshJob &p_mesh_job) noexcept
 {
-    unsigned int mesh_vao_gl_id = 0;
-    unsigned int mesh_vbo_gl_id = 0;
-    unsigned int mesh_ebo_gl_id = 0;
+    GLuint mesh_vao_gl_id = 0;
+    GLuint mesh_vbo_gl_id = 0;
+    GLuint mesh_ebo_gl_id = 0;
 
     glGenVertexArrays(1, &mesh_vao_gl_id);
     glGenBuffers(1, &mesh_vbo_gl_id);
@@ -48,6 +48,7 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
 
     glBindVertexArray(mesh_vao_gl_id);
     glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo_gl_id);
+
     glBufferData(
         GL_ARRAY_BUFFER,
         p_mesh_job.m_vertices.size() * sizeof(Vertex),
@@ -63,15 +64,19 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
     // vertex positions
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+
     // vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
+
     // vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, tex_coord));
+
     // vertex tangent
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, tangent));
+
     // vertex bitangent
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, bitangent));

@@ -9,7 +9,7 @@
 struct DirectionalLight
 {
     float shininess = 32.0f;
-    std::array<float, 3> direction = {1.0f, 0.0f, 0.0f};
+    std::array<float, 3> direction = {0.0f, 1.0f, 0.0f};
     std::array<float, 3> ambient = {0.1f, 0.1f, 0.1f};
     std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
     std::array<float, 3> specular = {0.1f, 0.1f, 0.1f};
