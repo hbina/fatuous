@@ -17,7 +17,8 @@ void ShaderUtilities::transform_shader(
     const glm::mat4 &p_projection,
     const glm::mat4 &p_view,
     const glm::vec3 &p_position,
-    const glm::vec3 &p_scale) noexcept
+    const glm::vec3 &p_scale,
+    const bool draw_depth) noexcept
 
 {
     glm::mat4 model = glm::mat4(1.0f);
@@ -25,7 +26,8 @@ void ShaderUtilities::transform_shader(
     model = glm::scale(model, p_scale);
     // TODO :: Add rotation to Transform
     ShaderUtilities::setMat4(shader_program_id, "model", model);
-    ShaderUtilities::setMat4(shader_program_id, "projection_view_model", p_projection * p_view * model);
+    if (!draw_depth)
+        ShaderUtilities::setMat4(shader_program_id, "projection_view_model", p_projection * p_view * model);
 };
 
 void ShaderUtilities::setBool(
