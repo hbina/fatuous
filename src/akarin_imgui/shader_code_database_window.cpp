@@ -10,7 +10,7 @@
 #include <ostream>
 #include <string>
 
-void ShaderCodeDatabaseWindow::render() noexcept
+void ShaderCodeDbWindow::render() noexcept
 {
     ImGui::Begin("ShaderCode System");
     if (ImGui::CollapsingHeader("Load ShaderCodes"))

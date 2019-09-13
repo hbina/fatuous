@@ -42,9 +42,9 @@ void RenderingProcess::render(
 {
     OpenGLSettings::update();
     lightPos = glm::vec3(
-        LightingDatabaseWindow::point_light.position[0],
-        LightingDatabaseWindow::point_light.position[1],
-        LightingDatabaseWindow::point_light.position[2]);
+        LightingDbWindow::point_light.position[0],
+        LightingDbWindow::point_light.position[1],
+        LightingDbWindow::point_light.position[2]);
     prepare_shadow(p_reg);
     render_normal(p_reg);
 
@@ -99,11 +99,11 @@ void render_normal(
     ShaderUtilities::setFloat(
         model_shader,
         "shadow_bias",
-        LightingDatabaseWindow::shadow_bias);
+        LightingDbWindow::shadow_bias);
     ShaderUtilities::setInt(
         model_shader,
         "enable_shadow",
-        LightingDatabaseWindow::enable_shadow);
+        LightingDbWindow::enable_shadow);
     ShaderUtilities::setVec3(
         model_shader,
         "camera_position",

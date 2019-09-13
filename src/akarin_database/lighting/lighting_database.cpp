@@ -18,13 +18,13 @@ void LightingDb::prepare_light(
 {
     add_dirlight(
         p_shader_id,
-        LightingDatabaseWindow::enable_directional_light);
+        LightingDbWindow::enable_directional_light);
     add_pointlight(
         p_shader_id,
-        LightingDatabaseWindow::enable_point_light);
+        LightingDbWindow::enable_point_light);
     add_spotlight(
         p_shader_id,
-        LightingDatabaseWindow::enable_spot_light);
+        LightingDbWindow::enable_spot_light);
 };
 
 void add_dirlight(
@@ -35,23 +35,23 @@ void add_dirlight(
     ShaderUtilities::setFloat(
         p_shader_id,
         "material.shininess",
-        LightingDatabaseWindow::directional_light.shininess);
+        LightingDbWindow::directional_light.shininess);
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.direction",
-        LightingDatabaseWindow::directional_light.direction);
+        LightingDbWindow::directional_light.direction);
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.ambient",
-        p_enabled ? LightingDatabaseWindow::directional_light.ambient : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.ambient : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::directional_light.diffuse : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.diffuse : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.specular",
-        p_enabled ? LightingDatabaseWindow::directional_light.specular : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.specular : std::array<float, 3>{0, 0, 0});
 };
 
 void add_pointlight(
@@ -61,31 +61,31 @@ void add_pointlight(
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.position",
-        LightingDatabaseWindow::point_light.position);
+        LightingDbWindow::point_light.position);
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.ambient",
-        p_enabled ? LightingDatabaseWindow::point_light.ambient : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.ambient : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::point_light.diffuse : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.diffuse : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.specular",
-        p_enabled ? LightingDatabaseWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.constant",
-        LightingDatabaseWindow::point_light.constant);
+        LightingDbWindow::point_light.constant);
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.linear",
-        LightingDatabaseWindow::point_light.linear);
+        LightingDbWindow::point_light.linear);
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.quadratic",
-        LightingDatabaseWindow::point_light.quadratic);
+        LightingDbWindow::point_light.quadratic);
 };
 
 void add_spotlight(
@@ -103,15 +103,15 @@ void add_spotlight(
     ShaderUtilities::setVec3(
         p_shader_id,
         "spot_light.ambient",
-        p_enabled ? LightingDatabaseWindow::spot_light.ambient : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::spot_light.ambient : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "spot_light.diffuse",
-        p_enabled ? LightingDatabaseWindow::spot_light.diffuse : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::spot_light.diffuse : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "spot_light.specular",
-        p_enabled ? LightingDatabaseWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setFloat(
         p_shader_id,
         "spot_light.constant",
@@ -127,9 +127,9 @@ void add_spotlight(
     ShaderUtilities::setFloat(
         p_shader_id,
         "spot_light.cutOff",
-        glm::cos(glm::radians(LightingDatabaseWindow::spot_light.cutOff)));
+        glm::cos(glm::radians(LightingDbWindow::spot_light.cutOff)));
     ShaderUtilities::setFloat(
         p_shader_id,
         "spot_light.outerCutOff",
-        glm::cos(glm::radians(LightingDatabaseWindow::spot_light.outerCutOff)));
+        glm::cos(glm::radians(LightingDbWindow::spot_light.outerCutOff)));
 };

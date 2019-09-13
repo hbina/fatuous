@@ -38,7 +38,7 @@ struct SpotLight
     std::array<float, 3> specular = {1.0f, 1.0f, 1.0f};
 };
 
-namespace LightingDatabaseWindow
+namespace LightingDbWindow
 {
 extern bool enable_shadow;
 extern float shadow_bias;
@@ -51,5 +51,5 @@ extern PointLight point_light;
 extern SpotLight spot_light;
 
 void render() noexcept;
-}; // namespace LightingDatabaseWindow
+}; // namespace LightingDbWindow
 #endif

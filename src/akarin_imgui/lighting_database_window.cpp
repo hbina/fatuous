@@ -6,18 +6,18 @@
 
 #include <array>
 
-float LightingDatabaseWindow::shadow_bias = 0.1;
+float LightingDbWindow::shadow_bias = 0.1;
 
-bool LightingDatabaseWindow::enable_shadow = true;
-bool LightingDatabaseWindow::enable_directional_light = true;
-bool LightingDatabaseWindow::enable_point_light = true;
-bool LightingDatabaseWindow::enable_spot_light = true;
+bool LightingDbWindow::enable_shadow = true;
+bool LightingDbWindow::enable_directional_light = true;
+bool LightingDbWindow::enable_point_light = true;
+bool LightingDbWindow::enable_spot_light = true;
 
-DirectionalLight LightingDatabaseWindow::directional_light;
-PointLight LightingDatabaseWindow::point_light;
-SpotLight LightingDatabaseWindow::spot_light;
+DirectionalLight LightingDbWindow::directional_light;
+PointLight LightingDbWindow::point_light;
+SpotLight LightingDbWindow::spot_light;
 
-void LightingDatabaseWindow::render() noexcept
+void LightingDbWindow::render() noexcept
 {
     ImGui::Begin("Lighting System");
     ImGui::Checkbox("Enable Shadow", &enable_shadow);

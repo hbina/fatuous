@@ -9,7 +9,7 @@
 #include <sstream>
 #include <algorithm>
 
-void ShaderProgramDatabaseWindow::render() noexcept
+void ShaderProgramDbWindow::render() noexcept
 {
     ImGui::Begin("ShaderProgram System");
     if (ImGui::CollapsingHeader("Link ShaderCodes"))

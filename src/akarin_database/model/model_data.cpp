@@ -1,4 +1,4 @@
-#include "types/model_data.hpp"
+#include "akarin_database/model/model_data.hpp"
 
 ModelData::ModelData(
     const std::string &m_path,

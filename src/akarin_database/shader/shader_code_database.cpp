@@ -1,6 +1,6 @@
 #include "akarin_database/shader/shader_code_database.hpp"
 #include "misc/akarin_macros.hpp"
-#include "types/texture.hpp"
+#include "akarin_database/texture/texture.hpp"
 
 #include "glad/glad.h"
 

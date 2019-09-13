@@ -3,7 +3,7 @@
 
 #include "akarin_database/texture/texture_data.hpp"
 #include "akarin_database/texture/texture_job.hpp"
-#include "types/texture.hpp"
+#include "akarin_database/texture/texture.hpp"
 
 #include <array>
 #include <string>
