@@ -27,7 +27,9 @@ struct MeshData
         const std::vector<unsigned int> &,
         const std::vector<std::size_t> &) noexcept;
 
-    void draw(const GLuint) const;
+    void draw(
+        const GLuint,
+        const bool) const;
 };
 
 #endif

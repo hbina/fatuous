@@ -19,10 +19,12 @@ MeshData::MeshData(
       m_textures(p_textures){};
 
 void MeshData::draw(
-    const GLuint p_shader_id) const
+    const GLuint p_shader_id,
+    bool draw_depth = false) const
 {
     glBindVertexArray(m_vao_gl_id);
-    ShaderProgramDb::set_shader_program_texture(p_shader_id, m_textures);
+    if (!draw_depth)
+        ShaderProgramDb::set_shader_program_texture(p_shader_id, m_textures);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

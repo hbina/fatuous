@@ -22,7 +22,8 @@
 void draw(
     const GLuint,
     const ModelData &,
-    const Transform &);
+    const Transform &,
+    bool draw_depth = false);
 
 void prepare_shadow(
     entt::registry &p_reg) noexcept;
@@ -50,17 +51,21 @@ void RenderingProcess::render(
 void draw(
     const GLuint p_shader_id,
     const ModelData &p_model,
-    const Transform &p_transform)
+    const Transform &p_transform,
+    const bool draw_depth)
 {
     ShaderUtilities::transform_shader(
         p_shader_id,
         AkarinCameraSystem::get_projection(),
         AkarinCameraSystem::get_view(),
         p_transform.position,
-        p_transform.scale);
+        p_transform.scale,
+        draw_depth);
     for (const std::size_t &p_mesh_id : p_model.m_meshes)
     {
-        MeshDatabase::meshes_map.at(p_mesh_id).draw(p_shader_id);
+        MeshDatabase::meshes_map.at(p_mesh_id).draw(
+            p_shader_id,
+            draw_depth);
     }
 };
 
@@ -173,7 +178,8 @@ void prepare_shadow(
         draw(
             depth_shader,
             entity_view.get<ModelData>(entity),
-            entity_view.get<Transform>(entity));
+            entity_view.get<Transform>(entity),
+            true);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };

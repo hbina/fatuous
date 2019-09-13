@@ -17,7 +17,8 @@ void transform_shader(
     const glm::mat4 &,
     const glm::mat4 &,
     const glm::vec3 &,
-    const glm::vec3 &p_scale) noexcept;
+    const glm::vec3 &,
+    const bool draw_depth = false) noexcept;
 
 void setBool(
     const GLuint,

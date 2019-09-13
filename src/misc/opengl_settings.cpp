@@ -166,6 +166,9 @@ GLbitfield get_clear_mask()
 
 void OpenGLSettings::gl_clear() noexcept
 {
+    glViewport(0, 0,
+               AkarinGLFW::window_dimension.x,
+               AkarinGLFW::window_dimension.y);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(get_clear_mask());
 }
