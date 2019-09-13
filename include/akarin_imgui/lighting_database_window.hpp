@@ -18,6 +18,7 @@ struct DirectionalLight
 struct PointLight
 {
     std::array<float, 3> position = {1.0f, 1.0f, 1.0f};
+    float attenuation_value = 25.0f;
     float constant = 0.5f;
     float linear = 0.01f;
     float quadratic = 0.03f;
@@ -30,6 +31,7 @@ struct SpotLight
 {
     float cutOff = 12.5f;
     float outerCutOff = 15.0f;
+    float attenuation_value = 25.0f;
     float constant = 0.5f;
     float linear = 0.01f;
     float quadratic = 0.003f;
@@ -40,7 +42,12 @@ struct SpotLight
 
 namespace LightingDbWindow
 {
+
+// Shadow
 extern bool enable_shadow;
+extern float near_plane;
+extern float far_plane;
+
 extern float shadow_bias;
 extern bool enable_directional_light;
 extern bool enable_point_light;

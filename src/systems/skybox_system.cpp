@@ -101,8 +101,7 @@ void SkyboxSystem::render() noexcept
     glBindTexture(GL_TEXTURE_CUBE_MAP, TextureDb::textures_map[g_skybox_texture_id.m_id].m_gl_id);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    OpenGLSettings::update_depth_function();
-    OpenGLSettings::update_cull_face();
+    OpenGLSettings::refresh_settings();
 };
 
 void init_skybox_vertices() noexcept
