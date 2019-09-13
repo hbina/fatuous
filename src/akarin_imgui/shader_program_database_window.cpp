@@ -19,13 +19,13 @@ void ShaderProgramDatabaseWindow::render() noexcept
         ImGui::InputText("id:", shader_code_text, 64);
         if (ImGui::Button("Load ShaderProgram"))
         {
-            ShaderProgramDatabase::link_shader_codes({}); // TODO :: Implement this
+            ShaderProgramDb::link_shader_codes({}); // TODO :: Implement this
         }
     }
     if (ImGui::CollapsingHeader("ShaderPrograms List"))
     {
         ImGui::Text("List of ShaderPrograms loaded:");
-        for (const auto &p_shader_program_iter : ShaderProgramDatabase::get_instance().map)
+        for (const auto &p_shader_program_iter : ShaderProgramDb::get_instance().map)
         {
             std::ostringstream out;
             out << p_shader_program_iter.first;

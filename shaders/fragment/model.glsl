@@ -75,9 +75,10 @@ void main() {
   vec3 view_direction = normalize(camera_position - FragPos);
   float shadow = ShadowCalculation(FragPos);
   vec3 result = CalcDirLight(directional_light, normal, view_direction);
-  result += CalcPointLight(point_light, normal, FragPos, view_direction);
-  result += CalcSpotLight(spot_light, normal, FragPos, view_direction);
-  result * = (1 - shadow);
+  result += (1.0 - shadow) *
+            CalcPointLight(point_light, normal, FragPos, view_direction);
+  result += (1.0 - shadow) *
+            CalcSpotLight(spot_light, normal, FragPos, view_direction);
   FragColor = vec4(result, 1.0);
 }
 

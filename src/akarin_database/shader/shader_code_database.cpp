@@ -139,7 +139,7 @@ void test_shader_code_compilation(GLuint p_shader, const ShaderType p_type) noex
     static constexpr auto info_log_size = 1024;
     GLint success;
     GLchar info_log[info_log_size];
-    glGetShaderiv(p_shader, GL_LINK_STATUS, &success);
+    glGetShaderiv(p_shader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
         glGetShaderInfoLog(p_shader, info_log_size, nullptr, info_log);

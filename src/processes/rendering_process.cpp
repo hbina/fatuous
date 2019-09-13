@@ -32,7 +32,7 @@ void render_normal(
 
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 float near_plane = 1.0f;
-float far_plane = 20000.0f;
+float far_plane = 25.0f;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
@@ -48,19 +48,19 @@ void RenderingProcess::render(
 };
 
 void draw(
-    const GLuint p_shader_program_id,
+    const GLuint p_shader_id,
     const ModelData &p_model,
     const Transform &p_transform)
 {
     ShaderUtilities::transform_shader(
-        p_shader_program_id,
+        p_shader_id,
         AkarinCameraSystem::get_projection(),
         AkarinCameraSystem::get_view(),
         p_transform.position,
         p_transform.scale);
     for (const std::size_t &p_mesh_id : p_model.m_meshes)
     {
-        MeshDatabase::meshes_map.at(p_mesh_id).draw(p_shader_program_id);
+        MeshDatabase::meshes_map.at(p_mesh_id).draw(p_shader_id);
     }
 };
 
@@ -72,7 +72,7 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderProgramDatabase::get_instance().link_shader_codes(
+        model_shader = ShaderProgramDb::get_instance().link_shader_codes(
             {ShaderCodeDatabase::load_shader_file(
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
@@ -99,14 +99,14 @@ void render_normal(
 void prepare_shadow(
     entt::registry &p_reg) noexcept
 {
-    static GLuint depthMapFBO;
+    static GLuint depth_map_fbo;
     static GLuint depth_shader = 0;
     static bool init = false;
     if (!init)
     {
         init = true;
 
-        depth_shader = ShaderProgramDatabase::get_instance().link_shader_codes(
+        depth_shader = ShaderProgramDb::get_instance().link_shader_codes(
             {ShaderCodeDatabase::load_shader_file(
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
@@ -118,13 +118,13 @@ void prepare_shadow(
                  ShaderType::GEOMETRY)});
 
         // generate the cubemap
-        glGenFramebuffers(1, &depthMapFBO);
-        unsigned int depthCubemap;
-        glGenTextures(1, &depthCubemap);
+        glGenFramebuffers(1, &depth_map_fbo);
+        unsigned int depth_cube_map;
+        glGenTextures(1, &depth_cube_map);
 
         // generate the single cubemap faces as 2d depth-valued texture images
         const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-        glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
         for (unsigned int i = 0; i < 6; ++i)
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
                          SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
@@ -137,8 +137,8 @@ void prepare_shadow(
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
         // Pass the cubemap as the depth buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, depth_map_fbo);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_cube_map, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -146,7 +146,6 @@ void prepare_shadow(
 
     // Variables required to render a shadow
     const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-    lightPos.z = sin(glfwGetTime() * 0.01) * 1000.0;
 
     // Create depth cubemap transformation matrices
     glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
@@ -161,7 +160,7 @@ void prepare_shadow(
     // Render scene to depth cubemap
     OpenGLSettings::gl_clear();
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, depth_map_fbo);
     ShaderUtilities::use(depth_shader);
     for (unsigned int i = 0; i < 6; ++i)
         ShaderUtilities::setMat4(depth_shader, "shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);

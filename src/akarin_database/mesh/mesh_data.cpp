@@ -22,7 +22,7 @@ void MeshData::draw(
     const GLuint p_shader_id) const
 {
     glBindVertexArray(m_vao_gl_id);
-    ShaderProgramDatabase::set_shader_program_texture(p_shader_id, m_textures);
+    ShaderProgramDb::set_shader_program_texture(p_shader_id, m_textures);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
