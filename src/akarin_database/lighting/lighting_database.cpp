@@ -3,8 +3,6 @@
 #include "misc/shader_utilities.hpp"
 #include "systems/akarin_camera_system.hpp"
 
-#include "glad/glad.h"
-
 void add_dirlight(
     const GLuint,
     const bool) noexcept;
@@ -15,7 +13,8 @@ void add_spotlight(
     const GLuint,
     const bool) noexcept;
 
-void LightingDb::prepare_light(const std::size_t p_shader_id)
+void LightingDb::prepare_light(
+    const GLuint p_shader_id) noexcept
 {
     add_dirlight(
         p_shader_id,
@@ -32,10 +31,6 @@ void add_dirlight(
     const GLuint p_shader_id,
     const bool p_enabled) noexcept
 {
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "camera_position",
-        AkarinCameraSystem::get_position());
     // TODO :: Shininess is actually part of Directional Light, as such, we need a separate Material helper class
     ShaderUtilities::setFloat(
         p_shader_id,
