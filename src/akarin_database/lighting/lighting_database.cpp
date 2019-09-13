@@ -76,6 +76,10 @@ void add_pointlight(
         p_enabled ? LightingDbWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setFloat(
         p_shader_id,
+        "point_light.attenuation_value",
+        LightingDbWindow::point_light.attenuation_value);
+    ShaderUtilities::setFloat(
+        p_shader_id,
         "point_light.constant",
         LightingDbWindow::point_light.constant);
     ShaderUtilities::setFloat(
@@ -112,6 +116,10 @@ void add_spotlight(
         p_shader_id,
         "spot_light.specular",
         p_enabled ? LightingDbWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
+    ShaderUtilities::setFloat(
+        p_shader_id,
+        "point_light.attenuation_value",
+        LightingDbWindow::point_light.attenuation_value);
     ShaderUtilities::setFloat(
         p_shader_id,
         "spot_light.constant",

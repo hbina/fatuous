@@ -32,10 +32,8 @@ void render_normal(
     entt::registry &) noexcept;
 
 glm::vec3 lightPos;
-float near_plane = 1.0f;
-float far_plane = 1000.0f;
 GLuint depth_cube_map = 0;
-constexpr unsigned int SHADOW_WIDTH = 300, SHADOW_HEIGHT = 300;
+constexpr GLsizei SHADOW_WIDTH = 500, SHADOW_HEIGHT = 500;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
@@ -94,8 +92,11 @@ void render_normal(
     ShaderUtilities::use(model_shader);
     LightingDb::prepare_light(model_shader);
     ShaderUtilities::setInt(model_shader, "depth_map", 4);
-    ShaderUtilities::setFloat(model_shader, "far_plane", far_plane);
     ShaderUtilities::setVec3(model_shader, "light_pos", lightPos);
+    ShaderUtilities::setFloat(
+        model_shader,
+        "far_plane",
+        LightingDbWindow::far_plane);
     ShaderUtilities::setFloat(
         model_shader,
         "shadow_bias",
@@ -148,9 +149,12 @@ void prepare_shadow(
         // generate the single cubemap faces as 2d depth-valued texture images
         glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
         for (unsigned int i = 0; i < 6; ++i)
+        {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-                         SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-
+                         SHADOW_WIDTH,
+                         SHADOW_HEIGHT,
+                         0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+        }
         // Set the texture parameters
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -167,7 +171,11 @@ void prepare_shadow(
     }
 
     // Create depth cubemap transformation matrices
-    glm::mat4 shadow_projection = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+    glm::mat4 shadow_projection = glm::perspective(
+        glm::radians(90.0f),
+        static_cast<float>(SHADOW_WIDTH) / static_cast<float>(SHADOW_HEIGHT),
+        LightingDbWindow::near_plane,
+        LightingDbWindow::far_plane);
     std::vector<glm::mat4> shadow_transforms;
     shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
     shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -186,8 +194,11 @@ void prepare_shadow(
     ShaderUtilities::use(depth_shader);
     for (unsigned int i = 0; i < 6; ++i)
         ShaderUtilities::setMat4(depth_shader, "shadow_matrices[" + std::to_string(i) + "]", shadow_transforms[i]);
-    ShaderUtilities::setFloat(depth_shader, "far_plane", far_plane);
     ShaderUtilities::setVec3(depth_shader, "light_pos", lightPos);
+    ShaderUtilities::setFloat(
+        depth_shader,
+        "far_plane",
+        LightingDbWindow::far_plane);
     ShaderUtilities::setVec3(
         depth_shader,
         "camera_position",
@@ -202,6 +213,5 @@ void prepare_shadow(
             true);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    OpenGLSettings::update_depth_function();
-    OpenGLSettings::update_cull_face();
+    OpenGLSettings::refresh_settings();
 };

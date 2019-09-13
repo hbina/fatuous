@@ -18,6 +18,7 @@ struct DirectionalLight {
 
 struct PointLight {
   vec3 position;
+  float attenuation_value;
   float constant;
   float linear;
   float quadratic;
@@ -31,6 +32,7 @@ struct SpotLight {
   vec3 direction;
   float cutOff;
   float outerCutOff;
+  float attenuation_value;
   float constant;
   float linear;
   float quadratic;
@@ -110,7 +112,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 frag_pos,
       pow(max(dot(view_direction, reflect_direction), 0.0), material.shininess);
   // attenuation
   float distance = length(light.position - frag_pos);
-  float attenuation = 50.0 / (light.constant + light.linear * distance +
+  float attenuation = light.attenuation_value / (light.constant + light.linear * distance +
                               light.quadratic * (distance * distance));
   // combine results
   vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
@@ -136,7 +138,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
       pow(max(dot(view_direction, reflect_direction), 0.0), material.shininess);
   // attenuation
   float distance = length(light.position - frag_pos);
-  float attenuation = 50.0 / (light.constant + light.linear * distance +
+  float attenuation = light.attenuation_value / (light.constant + light.linear * distance +
                               light.quadratic * (distance * distance));
   // spotlight intensity
   float theta = dot(light_direction, normalize(-light.direction));

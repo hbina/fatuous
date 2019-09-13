@@ -8,6 +8,9 @@
 
 bool changed = true;
 
+void update_cull_face() noexcept;
+void update_depth_function() noexcept;
+
 // Depth stuff
 bool enable_depth_buffer = true;
 DepthFun current_depth_buffer_func = DepthFun::LESS;
@@ -49,7 +52,7 @@ void OpenGLSettings::enable(const GLEnum p_enum, const bool p_enable) noexcept
     };
 };
 
-void OpenGLSettings::update_depth_function() noexcept
+void update_depth_function() noexcept
 {
     if (!enable_depth_buffer)
     {
@@ -123,7 +126,7 @@ void OpenGLSettings::set_cull_face(const CullFace p_cull_face) noexcept
     current_cull_face = p_cull_face;
 };
 
-void OpenGLSettings::update_cull_face() noexcept
+void update_cull_face() noexcept
 {
     if (!enable_cull_face)
     {
@@ -164,11 +167,17 @@ GLbitfield get_clear_mask()
     return result;
 };
 
+void OpenGLSettings::refresh_settings() noexcept
+{
+    update_depth_function();
+    update_cull_face();
+};
+
 void OpenGLSettings::gl_clear() noexcept
 {
     glViewport(0, 0,
-               AkarinGLFW::window_dimension.x,
-               AkarinGLFW::window_dimension.y);
+               static_cast<GLsizei>(AkarinGLFW::window_dimension.x),
+               static_cast<GLsizei>(AkarinGLFW::window_dimension.y));
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(get_clear_mask());
 }

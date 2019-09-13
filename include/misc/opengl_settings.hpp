@@ -33,12 +33,12 @@ void update() noexcept;
 
 // Depth test
 void set_depth_function(const DepthFun) noexcept;
-void update_depth_function() noexcept;
 
 // Cullface
 void set_cull_face(const CullFace) noexcept;
-void update_cull_face() noexcept;
 
+// Exposed functions
+void refresh_settings() noexcept;
 void gl_clear() noexcept;
 
 }; // namespace OpenGLSettings
