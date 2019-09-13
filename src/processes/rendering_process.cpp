@@ -61,6 +61,10 @@ void draw(
     const Transform &p_transform,
     const bool draw_depth)
 {
+    ShaderUtilities::setVec3(
+        p_shader_id,
+        "camera_position",
+        AkarinCameraSystem::get_position());
     ShaderUtilities::transform_shader(
         p_shader_id,
         AkarinCameraSystem::get_projection(),
@@ -113,7 +117,7 @@ void render_normal(
 void prepare_shadow(
     entt::registry &p_reg) noexcept
 {
-    static GLuint depth_map_fbo;
+    static GLuint depth_map_fbo = 0;
     static GLuint depth_shader = 0;
     static bool init = false;
     if (!init)
@@ -155,8 +159,6 @@ void prepare_shadow(
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-
-    // Variables required to render a shadow
 
     // Create depth cubemap transformation matrices
     glm::mat4 shadow_projection = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
