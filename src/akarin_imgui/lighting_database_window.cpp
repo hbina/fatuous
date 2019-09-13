@@ -1,12 +1,14 @@
 #include "akarin_imgui/lighting_database_window.hpp"
 
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
 #include <array>
 
+float LightingDatabaseWindow::shadow_bias = 0.1;
+
+bool LightingDatabaseWindow::enable_shadow = true;
 bool LightingDatabaseWindow::enable_directional_light = true;
 bool LightingDatabaseWindow::enable_point_light = true;
 bool LightingDatabaseWindow::enable_spot_light = true;
@@ -18,7 +20,8 @@ SpotLight LightingDatabaseWindow::spot_light;
 void LightingDatabaseWindow::render() noexcept
 {
     ImGui::Begin("Lighting System");
-
+    ImGui::Checkbox("Enable Shadow", &enable_shadow);
+    ImGui::SliderFloat("shadow_bias", &shadow_bias, 0.0f, 1.0f);
     if (ImGui::CollapsingHeader("Directional Light Properties"))
     {
         ImGui::Checkbox("Enable##directional_light", &enable_directional_light);

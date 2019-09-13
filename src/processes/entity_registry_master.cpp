@@ -24,8 +24,8 @@ void EntityRegistryMaster::run() noexcept
 {
     auto delta_time = AkarinTimer::get_delta_time();
     AkarinCameraSystem::process_keyboard(delta_time);
-    MeshDatabase::execute_jobs();
-    TextureDatabase::execute_jobs();
+    MeshDb::execute_jobs();
+    TextureDb::execute_jobs();
     SwarmSystem::update(p_reg, delta_time);
     RenderingProcess::render(p_reg);
 };
@@ -41,7 +41,7 @@ void EntityRegistryMaster::create_entity(
     entt::entity new_entity = p_reg.create();
     p_reg.assign<ModelData>(
         new_entity,
-        ModelDatabase::models_map[p_model_id]);
+        ModelDb::models_map[p_model_id]);
 
     p_reg.assign<Transform>(
         new_entity,

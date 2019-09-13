@@ -9,7 +9,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace TextureDatabase
+namespace TextureDb
 {
 
 extern std::unordered_map<std::size_t, TextureData> textures_map;
@@ -23,5 +23,5 @@ std::size_t add_texture_job(
 
 void execute_jobs() noexcept;
 
-}; // namespace TextureDatabase
+}; // namespace TextureDb
 #endif

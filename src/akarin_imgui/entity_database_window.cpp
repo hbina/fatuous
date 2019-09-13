@@ -20,7 +20,7 @@ void EntityDatabaseWindow::render() noexcept
     ImGui::Begin("Entity Window");
     if (ImGui::BeginCombo("Model Selection", current_selection.c_str()))
     {
-        for (const auto &p_modeldata_iter : ModelDatabase::models_map)
+        for (const auto &p_modeldata_iter : ModelDb::models_map)
         {
             if (ImGui::Selectable(p_modeldata_iter.second.m_path.c_str()))
             {

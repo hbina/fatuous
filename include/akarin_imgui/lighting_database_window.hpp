@@ -40,6 +40,8 @@ struct SpotLight
 
 namespace LightingDatabaseWindow
 {
+extern bool enable_shadow;
+extern float shadow_bias;
 extern bool enable_directional_light;
 extern bool enable_point_light;
 extern bool enable_spot_light;

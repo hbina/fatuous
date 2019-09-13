@@ -6,7 +6,7 @@
 
 #include <unordered_map>
 
-namespace MeshDatabase
+namespace MeshDb
 {
 // TODO :: Must check if hash conflicts
 extern std::unordered_map<std::size_t, MeshData> meshes_map;
@@ -18,6 +18,6 @@ std::size_t add_mesh_job(
 
 void execute_jobs() noexcept;
 
-}; // namespace MeshDatabase
+}; // namespace MeshDb
 
 #endif
