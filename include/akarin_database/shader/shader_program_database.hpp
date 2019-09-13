@@ -10,12 +10,12 @@
 #include <vector>
 #include <unordered_map>
 
-struct ShaderProgramDatabase
+struct ShaderProgramDb
 {
 
     std::unordered_map<GLuint, ShaderProgram> map;
 
-    static ShaderProgramDatabase &get_instance() noexcept;
+    static ShaderProgramDb &get_instance() noexcept;
 
     static GLuint link_shader_codes(
         const std::vector<GLuint> &p_shaders) noexcept;
@@ -28,8 +28,8 @@ struct ShaderProgramDatabase
         const std::size_t) noexcept;
 
 private:
-    ShaderProgramDatabase() = default;
-    ~ShaderProgramDatabase();
+    ShaderProgramDb() = default;
+    ~ShaderProgramDb();
 };
 
 #endif

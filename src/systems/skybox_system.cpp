@@ -76,7 +76,7 @@ void SkyboxSystem::render() noexcept
     static bool initialized = false;
     if (!initialized)
     {
-        g_skybox_shader_id = ShaderProgramDatabase::link_shader_codes(
+        g_skybox_shader_id = ShaderProgramDb::link_shader_codes(
             {ShaderCodeDatabase::load_shader_file(
                  "./shaders/vertex/skybox.glsl",
                  ShaderType::VERTEX),

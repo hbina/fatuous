@@ -6,13 +6,13 @@
 #include <ostream>
 #include <sstream>
 
-ShaderProgramDatabase &ShaderProgramDatabase::get_instance() noexcept
+ShaderProgramDb &ShaderProgramDb::get_instance() noexcept
 {
-    static ShaderProgramDatabase instance;
+    static ShaderProgramDb instance;
     return instance;
 };
 
-ShaderProgramDatabase::~ShaderProgramDatabase() noexcept
+ShaderProgramDb::~ShaderProgramDb() noexcept
 {
     for (const auto &shader_program_id : map)
     {
@@ -23,7 +23,7 @@ ShaderProgramDatabase::~ShaderProgramDatabase() noexcept
 void test_shader_program_compilation(
     const GLuint p_shader) noexcept;
 
-GLuint ShaderProgramDatabase::link_shader_codes(
+GLuint ShaderProgramDb::link_shader_codes(
     const std::vector<GLuint> &p_shaders) noexcept
 {
     GLuint shader_program_id = glCreateProgram();
@@ -37,7 +37,7 @@ GLuint ShaderProgramDatabase::link_shader_codes(
     return shader_program_id;
 };
 
-void ShaderProgramDatabase::set_shader_program_texture(
+void ShaderProgramDb::set_shader_program_texture(
     const GLuint p_shader_program_id,
     const std::vector<std::size_t> &textures) noexcept
 {
@@ -93,8 +93,9 @@ void test_shader_program_compilation(const GLuint p_shader) noexcept
         glGetProgramInfoLog(p_shader, info_log_size, nullptr, info_log);
         std::cerr << "p_shader:" << p_shader << " shader program compilation failed"
                   << "\n";
-        for (const auto &p_iter : ShaderProgramDatabase::get_instance().map[p_shader].m_shader_ids)
+        for (const auto &p_iter : ShaderProgramDb::get_instance().map[p_shader].m_shader_ids)
         {
+            std::cerr << "id: " << p_iter << "\n";
             std::cerr << "filepath: " << ShaderCodeDatabase::map[p_iter].m_filepath << "\n";
             std::cerr << "type: " << ShaderCodeDatabase::map[p_iter].m_type << "\n";
         }
