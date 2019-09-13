@@ -66,7 +66,7 @@ void add_pointlight(
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.position",
-        AkarinCameraSystem::get_position());
+        LightingDatabaseWindow::point_light.position);
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.ambient",

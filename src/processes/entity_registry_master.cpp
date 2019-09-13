@@ -20,9 +20,6 @@
 
 entt::registry p_reg;
 
-float get_random_float(
-    const float) noexcept;
-
 void EntityRegistryMaster::run() noexcept
 {
     auto delta_time = AkarinTimer::get_delta_time();
@@ -50,13 +47,4 @@ void EntityRegistryMaster::create_entity(
         new_entity,
         glm::vec3(0.0f),
         glm::vec3(1.0f));
-    p_reg.assign<Swarm>(
-        new_entity,
-        get_random_float(0.0f));
-};
-
-float get_random_float(
-    const float p_value) noexcept
-{
-    return p_value * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
 };

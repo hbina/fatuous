@@ -65,7 +65,7 @@ const std::array<std::string, 6> faces{
     "./resources/skybox/back.jpg"};
 
 GLuint g_skybox_shader_id = 0;
-unsigned int g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
+GLuint g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
 Texture g_skybox_texture_id = 0;
 
 // SkyBox should not be affected by OpenGLSettings

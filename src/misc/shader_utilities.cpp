@@ -13,7 +13,7 @@ void ShaderUtilities::use(
 };
 
 void ShaderUtilities::transform_shader(
-    const GLuint shader_program_id,
+    const GLuint shader_id,
     const glm::mat4 &p_projection,
     const glm::mat4 &p_view,
     const glm::vec3 &p_position,
@@ -25,9 +25,9 @@ void ShaderUtilities::transform_shader(
     model = glm::translate(model, p_position);
     model = glm::scale(model, p_scale);
     // TODO :: Add rotation to Transform
-    ShaderUtilities::setMat4(shader_program_id, "model", model);
+    ShaderUtilities::setMat4(shader_id, "model", model);
     if (!draw_depth)
-        ShaderUtilities::setMat4(shader_program_id, "projection_view_model", p_projection * p_view * model);
+        ShaderUtilities::setMat4(shader_id, "projection_view_model", p_projection * p_view * model);
 };
 
 void ShaderUtilities::setBool(
