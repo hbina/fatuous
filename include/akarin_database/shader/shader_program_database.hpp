@@ -2,7 +2,7 @@
 #define SHADER_PROGRAM_SYSTEM_HPP
 
 #include "akarin_database/shader/shader_program.hpp"
-#include "types/texture.hpp"
+#include "akarin_database/texture/texture.hpp"
 
 #include "glad/glad.h"
 

@@ -33,10 +33,10 @@ void AkarinImgui::render() noexcept
         if (ImGui::BeginMenu("Windows"))
         {
             ImGui::MenuItem("Show EntityDatabaseWindow", nullptr, &show_entity_database_window);
-            ImGui::MenuItem("Show ModelDatabaseWindow", nullptr, &show_model_database_window);
-            ImGui::MenuItem("Show LightingDatabaseWindow", nullptr, &show_lighting_database_window);
-            ImGui::MenuItem("Show ShaderCodeDatabaseWindow", nullptr, &show_shadercode_database_window);
-            ImGui::MenuItem("Show ShaderProgramDatabaseWindow", nullptr, &show_shaderprogram_database_window);
+            ImGui::MenuItem("Show ModelDbWindow", nullptr, &show_model_database_window);
+            ImGui::MenuItem("Show LightingDbWindow", nullptr, &show_lighting_database_window);
+            ImGui::MenuItem("Show ShaderCodeDbWindow", nullptr, &show_shadercode_database_window);
+            ImGui::MenuItem("Show ShaderProgramDbWindow", nullptr, &show_shaderprogram_database_window);
             ImGui::MenuItem("Show OpenGLSettingsWindow", nullptr, &show_opengl_settings_window);
             ImGui::EndMenu();
         }
@@ -45,13 +45,13 @@ void AkarinImgui::render() noexcept
     if (show_entity_database_window)
         EntityDatabaseWindow::render();
     if (show_model_database_window)
-        ModelDatabaseWindow::render();
+        ModelDbWindow::render();
     if (show_lighting_database_window)
-        LightingDatabaseWindow::render();
+        LightingDbWindow::render();
     if (show_shadercode_database_window)
-        ShaderCodeDatabaseWindow::render();
+        ShaderCodeDbWindow::render();
     if (show_shaderprogram_database_window)
-        ShaderProgramDatabaseWindow::render();
+        ShaderProgramDbWindow::render();
     if (show_opengl_settings_window)
         OpenGLSettingsWindow::render();
     ImGui::Render();

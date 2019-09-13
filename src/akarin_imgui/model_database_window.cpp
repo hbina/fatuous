@@ -13,7 +13,7 @@
 #include <ostream>
 #include <sstream>
 
-void ModelDatabaseWindow::render() noexcept
+void ModelDbWindow::render() noexcept
 {
     ImGui::Begin("ModelData System");
     if (ImGui::CollapsingHeader("Load Models"))

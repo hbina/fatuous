@@ -1,7 +1,7 @@
 #ifndef MODEL_DATABASE_WINDOW_HPP
 #define MODEL_DATABASE_WINDOW_HPP
 
-namespace ModelDatabaseWindow
+namespace ModelDbWindow
 {
 void render() noexcept;
 };
