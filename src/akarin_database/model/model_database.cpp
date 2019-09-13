@@ -40,23 +40,23 @@ std::size_t process_mesh(
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
-std::unordered_map<std::size_t, ModelData> ModelDatabase::models_map;
+std::unordered_map<std::size_t, ModelData> ModelDb::models_map;
 std::atomic<std::size_t> m_model_id_counter = 1;
 std::vector<std::future<void>> model_jobs;
 
-void ModelDatabase::add_model_job(
+void ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
 {
     model_jobs.push_back(std::async(
         std::launch::async,
         [p_model_path]() {
             const auto &find_model_iter = std::find_if(
-                ModelDatabase::models_map.cbegin(),
-                ModelDatabase::models_map.cend(),
+                ModelDb::models_map.cbegin(),
+                ModelDb::models_map.cend(),
                 [p_model_path](const std::pair<const std::size_t, ModelData> &p_model_iter) -> bool {
                     return p_model_iter.second.m_path == p_model_path;
                 });
-            if (find_model_iter != ModelDatabase::models_map.cend())
+            if (find_model_iter != ModelDb::models_map.cend())
             {
                 std::cout << "model:" << p_model_path << " already exists\n";
                 return;
@@ -181,7 +181,7 @@ std::size_t process_mesh(
     std::vector<std::size_t> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
     textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
 
-    return MeshDatabase::add_mesh_job(vertices, indices, textures);
+    return MeshDb::add_mesh_job(vertices, indices, textures);
 };
 
 std::vector<std::size_t> load_material_textures(
@@ -198,7 +198,7 @@ std::vector<std::size_t> load_material_textures(
         p_ai_material->GetTexture(p_ai_texture_type, texture_iter, &str);
         const std::string texture_path = std::string(str.C_Str());
         textures.push_back(
-            TextureDatabase::add_texture_job(
+            TextureDb::add_texture_job(
                 p_model_root_directory + '/' + texture_path, p_texture_type));
     }
     return textures;
@@ -208,5 +208,5 @@ void add_model(
     const ModelData &p_modeldata) noexcept
 {
     std::size_t model_id = m_model_id_counter++;
-    ModelDatabase::models_map[model_id] = p_modeldata;
+    ModelDb::models_map[model_id] = p_modeldata;
 };

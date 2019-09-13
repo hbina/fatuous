@@ -5,11 +5,11 @@ uniform vec3 light_pos;
 uniform float far_plane;
 
 void main() {
-  float lightDistance = length(FragPos.xyz - light_pos);
+  float light_distance = length(FragPos.xyz - light_pos);
 
   // map to [0;1] range by dividing by far_plane
-  lightDistance = lightDistance / far_plane;
+  light_distance = light_distance / far_plane;
 
   // write this as modified depth
-  gl_FragDepth = lightDistance;
+  gl_FragDepth = light_distance;
 }

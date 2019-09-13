@@ -30,7 +30,7 @@ struct ShaderCode
         const std::string &, const ShaderType);
 };
 
-namespace ShaderCodeDatabase
+namespace ShaderCodeDb
 {
 
 extern std::unordered_map<GLuint, ShaderCode> map;
@@ -38,6 +38,6 @@ extern std::unordered_map<GLuint, ShaderCode> map;
 GLuint load_shader_file(
     const std::string &,
     const ShaderType) noexcept;
-}; // namespace ShaderCodeDatabase
+}; // namespace ShaderCodeDb
 
 #endif

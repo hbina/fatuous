@@ -21,14 +21,14 @@ void ShaderCodeDatabaseWindow::render() noexcept
         if (ImGui::Button("Load ShaderCode"))
         {
             // TODO :: Dummy, fix later. Add a combo
-            ShaderCodeDatabase::load_shader_file(shader_code_text, ShaderType::VERTEX);
+            ShaderCodeDb::load_shader_file(shader_code_text, ShaderType::VERTEX);
         }
     }
     if (ImGui::CollapsingHeader("ShaderCodes List"))
     {
         ImGui::Text("List of ShaderCodes loaded:");
 
-        for (const auto &p_iter : ShaderCodeDatabase::map)
+        for (const auto &p_iter : ShaderCodeDb::map)
         {
             std::ostringstream out;
             out << p_iter.first;

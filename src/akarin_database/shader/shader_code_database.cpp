@@ -25,13 +25,13 @@ ShaderCode::ShaderCode(
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
-std::unordered_map<GLuint, ShaderCode> ShaderCodeDatabase::map;
+std::unordered_map<GLuint, ShaderCode> ShaderCodeDb::map;
 
 void add_shader_code(
     const GLuint p_shader_code_id,
     const ShaderCode &p_shader_code) noexcept
 {
-    ShaderCodeDatabase::map[p_shader_code_id] = p_shader_code;
+    ShaderCodeDb::map[p_shader_code_id] = p_shader_code;
 };
 
 // Free function declarations
@@ -47,17 +47,17 @@ GLuint compile_shader(
 
 // Namespace function definitions
 
-GLuint ShaderCodeDatabase::load_shader_file(
+GLuint ShaderCodeDb::load_shader_file(
     const std::string &p_filepath,
     const ShaderType p_type) noexcept
 {
     const auto &find_iter = std::find_if(
-        ShaderCodeDatabase::map.cbegin(),
-        ShaderCodeDatabase::map.cend(),
+        ShaderCodeDb::map.cbegin(),
+        ShaderCodeDb::map.cend(),
         [p_filepath](const auto &p_iter) -> bool {
             return p_iter.second.m_filepath == p_filepath;
         });
-    if (find_iter != ShaderCodeDatabase::map.cend())
+    if (find_iter != ShaderCodeDb::map.cend())
     {
         return (*find_iter).first;
     }

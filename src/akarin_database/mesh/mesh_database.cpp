@@ -7,7 +7,7 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<std::size_t, MeshData> MeshDatabase::meshes_map;
+std::unordered_map<std::size_t, MeshData> MeshDb::meshes_map;
 
 std::mutex mesh_job_mutex;
 std::atomic<std::size_t> mesh_id_counter = 1;
@@ -15,7 +15,7 @@ std::vector<MeshJob> mesh_jobs;
 
 void execute_job(const MeshJob &) noexcept;
 
-std::size_t MeshDatabase::add_mesh_job(
+std::size_t MeshDb::add_mesh_job(
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
     const std::vector<std::size_t> &p_textures) noexcept
@@ -26,7 +26,7 @@ std::size_t MeshDatabase::add_mesh_job(
     return mesh_id;
 };
 
-void MeshDatabase::execute_jobs() noexcept
+void MeshDb::execute_jobs() noexcept
 {
     std::lock_guard<std::mutex> lock(mesh_job_mutex);
     for (const MeshJob &mesh_job : mesh_jobs)
@@ -83,7 +83,7 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
 
     glBindVertexArray(0);
 
-    MeshDatabase::meshes_map.emplace(
+    MeshDb::meshes_map.emplace(
         std::make_pair(
             p_mesh_job.m_id,
             MeshData(

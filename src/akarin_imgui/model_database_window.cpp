@@ -22,12 +22,12 @@ void ModelDatabaseWindow::render() noexcept
         ImGui::InputText("path:", model_path_text, 64);
         if (ImGui::Button("Load ModelData"))
         {
-            ModelDatabase::add_model_job(std::string(model_path_text));
+            ModelDb::add_model_job(std::string(model_path_text));
         }
     }
     if (ImGui::CollapsingHeader("Models List"))
     {
-        for (const auto &p_modeldata_iter : ModelDatabase::models_map)
+        for (const auto &p_modeldata_iter : ModelDb::models_map)
         {
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
@@ -36,7 +36,7 @@ void ModelDatabaseWindow::render() noexcept
             {
                 for (const std::size_t &p_mesh_id : p_modeldata_iter.second.m_meshes)
                 {
-                    const MeshData &mesh_iter = MeshDatabase::meshes_map.at(p_mesh_id);
+                    const MeshData &mesh_iter = MeshDb::meshes_map.at(p_mesh_id);
                     std::stringstream vao_id_ostr;
                     vao_id_ostr << "m_vao_id: ";
                     vao_id_ostr << mesh_iter.m_vao_gl_id;
@@ -53,7 +53,7 @@ void ModelDatabaseWindow::render() noexcept
                             for (const std::size_t &p_texture_id : mesh_iter.m_textures)
                             {
                                 // TODO :: Refactor a bunch of this
-                                const TextureData &texture_data = TextureDatabase::textures_map[p_texture_id];
+                                const TextureData &texture_data = TextureDb::textures_map[p_texture_id];
                                 std::stringstream ostr_texture_gl_id;
                                 ostr_texture_gl_id << texture_data.m_gl_id;
                                 ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());

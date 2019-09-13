@@ -77,13 +77,13 @@ void SkyboxSystem::render() noexcept
     if (!initialized)
     {
         g_skybox_shader_id = ShaderProgramDb::link_shader_codes(
-            {ShaderCodeDatabase::load_shader_file(
+            {ShaderCodeDb::load_shader_file(
                  "./shaders/vertex/skybox.glsl",
                  ShaderType::VERTEX),
-             ShaderCodeDatabase::load_shader_file(
+             ShaderCodeDb::load_shader_file(
                  "./shaders/fragment/skybox.glsl",
                  ShaderType::FRAGMENT)});
-        g_skybox_texture_id = TextureDatabase::load_cube_texture(faces);
+        g_skybox_texture_id = TextureDb::load_cube_texture(faces);
 
         init_skybox_vertices();
         initialized = true;
@@ -98,7 +98,7 @@ void SkyboxSystem::render() noexcept
     ShaderUtilities::setMat4(g_skybox_shader_id, "projection", AkarinCameraSystem::get_projection());
     glBindVertexArray(g_skybox_vao_id);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, TextureDatabase::textures_map[g_skybox_texture_id.m_id].m_gl_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, TextureDb::textures_map[g_skybox_texture_id.m_id].m_gl_id);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     OpenGLSettings::update_depth_function();
