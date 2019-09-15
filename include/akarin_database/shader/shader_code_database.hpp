@@ -1,5 +1,6 @@
-#ifndef SHADER_CODE_SYSTEM_HPP
-#define SHADER_CODE_SYSTEM_HPP
+#pragma once
+
+#include "akarin_database/shader/shader_code.hpp"
 
 #include "glad/glad.h"
 
@@ -7,28 +8,7 @@
 #include <vector>
 #include <unordered_map>
 
-enum class ShaderType
-{
-    VERTEX,
-    FRAGMENT,
-    GEOMETRY,
-    ERROR
-};
-
 // Operators declarations
-std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
-
-struct ShaderCode
-{
-    std::string m_filepath;
-    std::string m_content;
-    ShaderType m_type;
-
-    ShaderCode();
-    ShaderCode(
-        const std::string &,
-        const std::string &, const ShaderType);
-};
 
 namespace ShaderCodeDb
 {
@@ -39,5 +19,3 @@ GLuint load_shader_file(
     const std::string &,
     const ShaderType) noexcept;
 }; // namespace ShaderCodeDb
-
-#endif
