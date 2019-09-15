@@ -45,6 +45,7 @@ add_executable(
     src/akarin_database/singleton/glfw/akarin_glfw.cpp
     
     src/akarin_database/shader/shader_code.cpp
+    src/akarin_database/shader/vertex_shader.cpp
     src/akarin_database/shader/shader_program.cpp
     src/akarin_database/shader/shader_code_database.cpp
     src/akarin_database/shader/shader_program_database.cpp

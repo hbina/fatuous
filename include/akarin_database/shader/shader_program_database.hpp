@@ -3,6 +3,7 @@
 
 #include "akarin_database/shader/shader_program.hpp"
 #include "akarin_database/texture/texture.hpp"
+#include "akarin_database/shader/vertex_shader.hpp"
 
 #include "glad/glad.h"
 
