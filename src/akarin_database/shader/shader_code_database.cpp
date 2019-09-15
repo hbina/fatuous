@@ -1,6 +1,7 @@
 #include "akarin_database/shader/shader_code_database.hpp"
-#include "misc/akarin_macros.hpp"
+#include "akarin_database/shader/shader_code.hpp"
 #include "akarin_database/texture/texture.hpp"
+#include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"
 
@@ -11,17 +12,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-
-ShaderCode::ShaderCode()
-    : m_type(ShaderType::ERROR){};
-
-ShaderCode::ShaderCode(
-    const std::string &p_filepath,
-    const std::string &p_content,
-    const ShaderType p_type)
-    : m_filepath(p_filepath),
-      m_content(p_content),
-      m_type(p_type){};
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
@@ -146,33 +136,4 @@ void test_shader_code_compilation(GLuint p_shader, const ShaderType p_type) noex
         std::cerr << "p_shader:" << p_shader << " shader code compilation failed p_type:" << p_type << "\n";
         std::cerr << "error:" << info_log << "\n";
     }
-};
-
-// Operators
-
-std::ostream &operator<<(std::ostream &os, const ShaderType p_type) noexcept
-{
-    switch (p_type)
-    {
-    case ShaderType::VERTEX:
-    {
-        os << "ShaderType::VERTEX";
-        break;
-    };
-    case ShaderType::FRAGMENT:
-    {
-        os << "ShaderType::FRAGMENT";
-        break;
-    };
-    case ShaderType::GEOMETRY:
-    {
-        os << "ShaderType::GEOMETRY";
-        break;
-    };
-    default:
-    {
-        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
-    }
-    };
-    return os;
 };
