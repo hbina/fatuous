@@ -64,18 +64,15 @@ const std::array<std::string, 6> faces{
     "./resources/skybox/front.jpg",
     "./resources/skybox/back.jpg"};
 
-GLuint g_skybox_shader_id = 0;
-GLuint g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
-Texture g_skybox_texture_id = 0;
-
-// SkyBox should not be affected by OpenGLSettings
-void init_skybox_vertices() noexcept;
-
 void SkyboxSystem::render() noexcept
 {
+    static GLuint g_skybox_shader_id = 0;
+    static GLuint g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
+    static Texture g_skybox_texture_id = 0;
     static bool initialized = false;
     if (!initialized)
     {
+        initialized = true;
         g_skybox_shader_id = ShaderProgramDb::link_shader_codes(
             {ShaderCodeDb::load_shader_file(
                  "./shaders/vertex/skybox.glsl",
@@ -85,8 +82,13 @@ void SkyboxSystem::render() noexcept
                  ShaderType::FRAGMENT)});
         g_skybox_texture_id = TextureDb::load_cube_texture(faces);
 
-        init_skybox_vertices();
-        initialized = true;
+        glGenVertexArrays(1, &g_skybox_vao_id);
+        glGenBuffers(1, &g_skybox_vbo_id);
+        glBindVertexArray(g_skybox_vao_id);
+        glBindBuffer(GL_ARRAY_BUFFER, g_skybox_vbo_id);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(g_skybox_vertices), g_skybox_vertices.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     }
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -102,15 +104,4 @@ void SkyboxSystem::render() noexcept
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     OpenGLSettings::refresh_settings();
-};
-
-void init_skybox_vertices() noexcept
-{
-    glGenVertexArrays(1, &g_skybox_vao_id);
-    glGenBuffers(1, &g_skybox_vbo_id);
-    glBindVertexArray(g_skybox_vao_id);
-    glBindBuffer(GL_ARRAY_BUFFER, g_skybox_vbo_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_skybox_vertices), g_skybox_vertices.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 };
