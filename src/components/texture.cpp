@@ -1,4 +1,4 @@
-#include "akarin_database/texture/texture.hpp"
+#include "components/texture.hpp"
 
 Texture::Texture(
     const std::size_t p_id)

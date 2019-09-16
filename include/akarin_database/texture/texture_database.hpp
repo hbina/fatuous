@@ -1,9 +1,9 @@
 #ifndef TEXTURE_SYSTEM_HPP
 #define TEXTURE_SYSTEM_HPP
 
-#include "akarin_database/texture/texture_data.hpp"
-#include "akarin_database/texture/texture_job.hpp"
-#include "akarin_database/texture/texture.hpp"
+#include "components/texture_data.hpp"
+#include "components/texture_job.hpp"
+#include "components/texture.hpp"
 
 #include <array>
 #include <string>

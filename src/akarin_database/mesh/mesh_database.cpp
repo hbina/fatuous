@@ -1,5 +1,5 @@
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "akarin_database/mesh/mesh_job.hpp"
+#include "components/mesh_job.hpp"
 
 #include "glad/glad.h"
 

@@ -127,7 +127,9 @@ GLuint ShaderDb::link_shader_codes(
         glAttachShader(shader_program_id, shader_id);
     }
     glLinkProgram(shader_program_id);
-    program_map.at(shader_program_id) = ShaderProgram(p_shaders);
+    program_map.emplace(
+        shader_program_id,
+        ShaderProgram(p_shaders));
     test_shader_program_compilation(shader_program_id);
     return shader_program_id;
 };

@@ -1,8 +1,8 @@
 #ifndef MESH_DATABASE_HPP
 #define MESH_DATABASE_HPP
 
-#include "akarin_database/mesh/mesh_data.hpp"
-#include "types/vertex.hpp"
+#include "components/mesh_data.hpp"
+#include "components/vertex.hpp"
 
 #include <unordered_map>
 

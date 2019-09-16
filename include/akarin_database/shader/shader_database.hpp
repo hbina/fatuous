@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akarin_database/shader/shader_file.hpp"
+#include "components/shader_file.hpp"
 #include "akarin_database/shader/shader_program.hpp"
 
 #include "glad/glad.h"

@@ -1,7 +1,7 @@
 #ifndef INTERMEDIATE_MODEL_SYSTEM_TYPES_HPP
 #define INTERMEDIATE_MODEL_SYSTEM_TYPES_HPP
 
-#include "akarin_database/texture/texture_data.hpp"
+#include "components/texture_data.hpp"
 
 struct TextureJob
 {
@@ -9,7 +9,7 @@ struct TextureJob
   const std::string m_path;
   const TextureType m_type;
 
-  TextureJob() = default;
+  TextureJob() = delete;
   TextureJob(
       const std::size_t p_id,
       const std::string &p_path,

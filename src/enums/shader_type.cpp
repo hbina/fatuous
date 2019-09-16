@@ -1,4 +1,4 @@
-#include "akarin_database/shader/shader_type.hpp"
+#include "enums/shader_type.hpp"
 #include "misc/akarin_macros.hpp"
 
 std::ostream &operator<<(std::ostream &os, const ShaderType p_type) noexcept

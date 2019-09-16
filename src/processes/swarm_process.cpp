@@ -1,7 +1,7 @@
 #include "processes/swarm_process.hpp"
 #include "systems/akarin_camera_system.hpp"
-#include "types/position.hpp"
-#include "types/transform.hpp"
+#include "components/position.hpp"
+#include "components/transform.hpp"
 
 #include <iostream>
 

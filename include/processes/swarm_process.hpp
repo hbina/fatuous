@@ -1,7 +1,7 @@
 #ifndef SWARM_SYSTEM_HPP
 #define SWARM_SYSTEM_HPP
 
-#include "types/swarm.hpp"
+#include "components/swarm.hpp"
 
 #include "entt/entt.hpp"
 

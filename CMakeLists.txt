@@ -30,26 +30,24 @@ add_executable(
 
     src/systems/skybox_system.cpp
     src/systems/akarin_camera_system.cpp
+
+    src/enums/shader_type.cpp
+
+    src/components/model_data.cpp
+    src/components/shader_file.cpp
+    src/components/mesh_job.cpp
+    src/components/mesh_data.cpp
+    src/components/texture.cpp
+    src/components/texture_data.cpp
     
-    src/akarin_database/texture/texture.cpp
-    src/akarin_database/texture/texture_data.cpp
     src/akarin_database/texture/texture_database.cpp
-    
-    src/akarin_database/model/model_data.cpp
     src/akarin_database/model/model_database.cpp
-
-    src/akarin_database/mesh/mesh_job.cpp
-    src/akarin_database/mesh/mesh_data.cpp
     src/akarin_database/mesh/mesh_database.cpp
-    
-    src/akarin_database/singleton/glfw/akarin_glfw.cpp
-
-    src/akarin_database/shader/shader_type.cpp
-    src/akarin_database/shader/shader_file.cpp
     src/akarin_database/shader/shader_program.cpp
     src/akarin_database/shader/shader_database.cpp
-
     src/akarin_database/lighting/lighting_database.cpp
+    
+    src/akarin_database/singleton/glfw/akarin_glfw.cpp
     
     src/processes/entity_registry_master.cpp
     src/processes/rendering_process.cpp
