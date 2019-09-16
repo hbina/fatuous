@@ -1,5 +1,4 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#pragma once
 
 #include <iostream>
 
@@ -7,5 +6,3 @@ struct Shader
 {
     std::size_t shader_id;
 };
-
-#endif

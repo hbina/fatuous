@@ -1,5 +1,4 @@
-#ifndef MODEL_DATA_HPP
-#define MODEL_DATA_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -14,5 +13,3 @@ struct ModelData
         const std::string &,
         const std::vector<std::size_t> &);
 };
-
-#endif

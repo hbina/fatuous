@@ -1,5 +1,4 @@
-#ifndef VERTEX_HPP
-#define VERTEX_HPP
+#pragma once
 
 #include "glm/glm.hpp"
 
@@ -11,5 +10,3 @@ struct Vertex
     glm::vec3 tangent;
     glm::vec3 bitangent;
 };
-
-#endif

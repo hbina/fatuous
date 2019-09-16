@@ -1,5 +1,4 @@
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
+#pragma once
 
 #include <array>
 #include <string>
@@ -9,8 +8,6 @@ struct Texture
 {
   std::size_t m_id;
 
-  Texture() = default;
+  Texture() = delete;
   Texture(const std::size_t);
 };
-
-#endif

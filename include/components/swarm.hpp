@@ -1,9 +1,6 @@
-#ifndef SWARM_HPP
-#define SWARM_HPP
+#pragma once
 
 struct Swarm
 {
     float value;
 };
-
-#endif

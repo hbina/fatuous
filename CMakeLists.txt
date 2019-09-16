@@ -32,6 +32,7 @@ add_executable(
     src/systems/akarin_camera_system.cpp
 
     src/enums/shader_type.cpp
+    src/enums/texture_type.cpp
 
     src/components/model_data.cpp
     src/components/shader_file.cpp
@@ -39,6 +40,7 @@ add_executable(
     src/components/mesh_data.cpp
     src/components/texture.cpp
     src/components/texture_data.cpp
+    src/components/texture_job.cpp
     
     src/akarin_database/texture/texture_database.cpp
     src/akarin_database/model/model_database.cpp

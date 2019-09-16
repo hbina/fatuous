@@ -1,5 +1,4 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include "components/texture.hpp"
 #include "components/vertex.hpp"
@@ -31,5 +30,3 @@ struct MeshData
         const GLuint,
         const bool) const;
 };
-
-#endif
