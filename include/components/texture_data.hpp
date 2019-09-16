@@ -1,21 +1,12 @@
-#ifndef TEXTURE_DATA_HPP
-#define TEXTURE_DATA_HPP
+#pragma once
+
+#include "enums/texture_type.hpp"
 
 #include "glad/glad.h"
 
 #include <array>
 #include <string>
 #include <iostream>
-
-enum class TextureType
-{
-    CUBE_MAP,
-    SPECULAR,
-    DIFFUSE,
-    NORMAL,
-    HEIGHT,
-    ERROR
-};
 
 struct TextureData
 {
@@ -31,7 +22,3 @@ struct TextureData
                 const std::string &,
                 const std::array<int, 3> &);
 };
-
-std::ostream &operator<<(std::ostream &p_os, const TextureType p_texture_type);
-
-#endif

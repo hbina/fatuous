@@ -1,5 +1,4 @@
-#ifndef POSITION_HPP
-#define POSITION_HPP
+#pragma once
 
 #include "glm/glm.hpp"
 
@@ -7,5 +6,3 @@ struct Position
 {
     glm::vec3 position;
 };
-
-#endif

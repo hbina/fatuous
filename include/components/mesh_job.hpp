@@ -1,5 +1,4 @@
-#ifndef MESH_JOB_HPP
-#define MESH_JOB_HPP
+#pragma once
 
 #include "components/vertex.hpp"
 
@@ -12,11 +11,9 @@ struct MeshJob
     const std::vector<unsigned int> m_indices;
     const std::vector<std::size_t> m_textures;
 
-    MeshJob() = default;
+    MeshJob() = delete;
     MeshJob(const std::size_t,
             const std::vector<Vertex> &,
             const std::vector<unsigned int> &,
             const std::vector<std::size_t> &);
 };
-
-#endif
