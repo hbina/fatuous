@@ -1,8 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "akarin_database/texture/texture.hpp"
-#include "types/vertex.hpp"
+#include "components/texture.hpp"
+#include "components/vertex.hpp"
 
 #include "glad/glad.h"
 

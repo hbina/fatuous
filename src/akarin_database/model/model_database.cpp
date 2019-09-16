@@ -1,8 +1,8 @@
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
-#include "akarin_database/texture/texture_job.hpp"
+#include "components/texture_job.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "types/vertex.hpp"
+#include "components/vertex.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -208,5 +208,7 @@ void add_model(
     const ModelData &p_modeldata) noexcept
 {
     std::size_t model_id = m_model_id_counter++;
-    ModelDb::models_map[model_id] = p_modeldata;
+    ModelDb::models_map.emplace(
+        model_id,
+        p_modeldata);
 };

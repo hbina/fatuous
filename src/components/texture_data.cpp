@@ -1,4 +1,4 @@
-#include "akarin_database/texture/texture_data.hpp"
+#include "components/texture_data.hpp"
 #include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"

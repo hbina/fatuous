@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akarin_database/shader/shader_type.hpp"
+#include "enums/shader_type.hpp"
 
 #include <string>
 #include <ostream>

@@ -1,8 +1,8 @@
 #ifndef MODEL_SYSTEM_HPP
 #define MODEL_SYSTEM_HPP
 
-#include "akarin_database/texture/texture.hpp"
-#include "akarin_database/model/model_data.hpp"
+#include "components/texture.hpp"
+#include "components/model_data.hpp"
 
 #include <unordered_map>
 #include <iostream>

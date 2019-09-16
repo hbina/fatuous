@@ -1,4 +1,4 @@
-#include "akarin_database/shader/shader_file.hpp"
+#include "components/shader_file.hpp"
 #include "misc/akarin_macros.hpp"
 
 ShaderFile::ShaderFile(

@@ -4,12 +4,12 @@
 #include "akarin_database/model/model_database.hpp"
 #include "misc/akarin_timer.hpp"
 #include "processes/swarm_process.hpp"
-#include "types/transform.hpp"
+#include "components/transform.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
 #include "akarin_database/shader/shader_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "types/shader.hpp"
+#include "components/shader.hpp"
 
 #include "entt/entt.hpp"
 
@@ -40,7 +40,7 @@ void EntityRegistryMaster::create_entity(
     entt::entity new_entity = p_reg.create();
     p_reg.assign<ModelData>(
         new_entity,
-        ModelDb::models_map[p_model_id]);
+        ModelDb::models_map.at(p_model_id));
 
     p_reg.assign<Transform>(
         new_entity,

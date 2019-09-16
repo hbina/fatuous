@@ -1,7 +1,7 @@
 #ifndef MESH_JOB_HPP
 #define MESH_JOB_HPP
 
-#include "types/vertex.hpp"
+#include "components/vertex.hpp"
 
 #include <vector>
 
