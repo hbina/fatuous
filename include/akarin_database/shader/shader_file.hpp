@@ -1,26 +1,18 @@
 #pragma once
 
+#include "akarin_database/shader/shader_type.hpp"
+
 #include <string>
 #include <ostream>
 
-enum class ShaderType
-{
-    VERTEX,
-    FRAGMENT,
-    GEOMETRY,
-    ERROR
-};
-
-std::ostream &operator<<(std::ostream &, const ShaderType) noexcept;
-
-struct ShaderCode
+struct ShaderFile
 {
     std::string m_filepath;
     std::string m_content;
     ShaderType m_type;
 
-    ShaderCode();
-    ShaderCode(
+    ShaderFile() = delete;
+    ShaderFile(
         const std::string &,
         const std::string &, const ShaderType);
 };

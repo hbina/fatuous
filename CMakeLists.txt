@@ -43,11 +43,11 @@ add_executable(
     src/akarin_database/mesh/mesh_database.cpp
     
     src/akarin_database/singleton/glfw/akarin_glfw.cpp
-    
-    src/akarin_database/shader/shader_code.cpp
+
+    src/akarin_database/shader/shader_type.cpp
+    src/akarin_database/shader/shader_file.cpp
     src/akarin_database/shader/shader_program.cpp
-    src/akarin_database/shader/shader_code_database.cpp
-    src/akarin_database/shader/shader_program_database.cpp
+    src/akarin_database/shader/shader_database.cpp
 
     src/akarin_database/lighting/lighting_database.cpp
     

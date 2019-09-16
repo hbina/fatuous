@@ -1,6 +1,5 @@
 #include "processes/rendering_process.hpp"
-#include "akarin_database/shader/shader_program_database.hpp"
-#include "akarin_database/shader/shader_code_database.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 #include "akarin_database/singleton/glfw/akarin_glfw.hpp"
 #include "akarin_database/lighting/lighting_database.hpp"
 #include "akarin_database/model/model_database.hpp"
@@ -13,6 +12,7 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "misc/opengl_settings.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 
 #include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -80,11 +80,11 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderProgramDb::get_instance().link_shader_codes(
-            {ShaderCodeDb::load_shader_file(
+        model_shader = ShaderDb::get().link_shader_codes(
+            {ShaderDb::get().load_shader_file(
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
-             ShaderCodeDb::load_shader_file(
+             ShaderDb::get().load_shader_file(
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
     }
@@ -131,14 +131,14 @@ void prepare_shadow(
     {
         init = true;
 
-        depth_shader = ShaderProgramDb::get_instance().link_shader_codes(
-            {ShaderCodeDb::load_shader_file(
+        depth_shader = ShaderDb::get().link_shader_codes(
+            {ShaderDb::get().load_shader_file(
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
-             ShaderCodeDb::load_shader_file(
+             ShaderDb::get().load_shader_file(
                  "./shaders/fragment/omnishadow.glsl",
                  ShaderType::FRAGMENT),
-             ShaderCodeDb::load_shader_file(
+             ShaderDb::get().load_shader_file(
                  "./shaders/geometry/omnishadow.glsl",
                  ShaderType::GEOMETRY)});
 
