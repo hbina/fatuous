@@ -1,5 +1,5 @@
 #include "akarin_imgui/shader_program_database_window.hpp"
-#include "akarin_database/shader/shader_program_database.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -15,24 +15,24 @@ void ShaderProgramDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Link ShaderCodes"))
     {
         static char shader_code_text[64] = "";
-        ImGui::Text("IDs of ShaderCode, separated by space");
+        ImGui::Text("IDs of ShaderFile, separated by space");
         ImGui::InputText("id:", shader_code_text, 64);
         if (ImGui::Button("Load ShaderProgram"))
         {
-            ShaderProgramDb::link_shader_codes({}); // TODO :: Implement this
+            ShaderDb::get().link_shader_codes({}); // TODO :: Implement this
         }
     }
     if (ImGui::CollapsingHeader("ShaderPrograms List"))
     {
         ImGui::Text("List of ShaderPrograms loaded:");
-        for (const auto &p_shader_program_iter : ShaderProgramDb::get_instance().map)
+        for (const auto &prg_iter : ShaderDb::get().program_map)
         {
             std::ostringstream out;
-            out << p_shader_program_iter.first;
+            out << prg_iter.first;
             out << " : ";
-            for (const auto &p_shader_code_id_iter : p_shader_program_iter.second.m_shader_ids)
+            for (const auto &shr_iter : prg_iter.second.m_shader_ids)
             {
-                out << p_shader_code_id_iter << ", ";
+                out << shr_iter << ", ";
             };
             ImGui::Text(
                 "%s",

@@ -1,8 +1,7 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "akarin_database/texture/texture_database.hpp"
-#include "akarin_database/shader/shader_code_database.hpp"
-#include "akarin_database/shader/shader_program_database.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 #include "misc/opengl_settings.hpp"
 #include "misc/shader_utilities.hpp"
 
@@ -73,11 +72,11 @@ void SkyboxSystem::render() noexcept
     if (!initialized)
     {
         initialized = true;
-        g_skybox_shader_id = ShaderProgramDb::link_shader_codes(
-            {ShaderCodeDb::load_shader_file(
+        g_skybox_shader_id = ShaderDb::get().link_shader_codes(
+            {ShaderDb::get().load_shader_file(
                  "./shaders/vertex/skybox.glsl",
                  ShaderType::VERTEX),
-             ShaderCodeDb::load_shader_file(
+             ShaderDb::get().load_shader_file(
                  "./shaders/fragment/skybox.glsl",
                  ShaderType::FRAGMENT)});
         g_skybox_texture_id = TextureDb::load_cube_texture(faces);

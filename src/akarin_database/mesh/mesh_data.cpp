@@ -1,5 +1,5 @@
 #include "akarin_database/mesh/mesh_data.hpp"
-#include "akarin_database/shader/shader_program_database.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 
 #include "glad/glad.h"
 
@@ -24,7 +24,7 @@ void MeshData::draw(
 {
     glBindVertexArray(m_vao_gl_id);
     if (!draw_depth)
-        ShaderProgramDb::set_shader_program_texture(p_shader_id, m_textures);
+        ShaderDb::get().set_shader_program_texture(p_shader_id, m_textures);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
