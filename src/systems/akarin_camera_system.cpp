@@ -1,5 +1,5 @@
 #include "systems/akarin_camera_system.hpp"
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/glfw/akarin_glfw.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
 

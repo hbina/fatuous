@@ -1,6 +1,6 @@
 #include "processes/rendering_process.hpp"
 #include "akarin_database/shader/shader_database.hpp"
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/glfw/akarin_glfw.hpp"
 #include "akarin_database/lighting/lighting_database.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"

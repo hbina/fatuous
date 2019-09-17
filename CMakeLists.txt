@@ -49,7 +49,7 @@ add_executable(
     src/akarin_database/shader/shader_database.cpp
     src/akarin_database/lighting/lighting_database.cpp
     
-    src/akarin_database/singleton/glfw/akarin_glfw.cpp
+    src/akarin_database/glfw/akarin_glfw.cpp
     
     src/processes/entity_registry_master.cpp
     src/processes/rendering_process.cpp
