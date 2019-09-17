@@ -52,7 +52,7 @@ void ModelDbWindow::render() noexcept
                             for (const Texture &txt_iter : mesh_iter.m_textures)
                             {
                                 // TODO :: Refactor a bunch of this
-                                const TextureData &texture_data = TextureDb::textures_map.at(txt_iter.m_id);
+                                const TextureData &texture_data = TextureDb::textures_map.at(txt_iter.m_gl_id);
                                 std::stringstream ostr_texture_gl_id;
                                 ostr_texture_gl_id << texture_data.m_gl_id;
                                 ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());

@@ -16,7 +16,7 @@ struct TextureData
     std::array<int, 3> m_dimension;
 
     // TODO :: Make this =delete later and use operator[] instead...
-    TextureData() = default;
+    TextureData() = delete;
     TextureData(const GLuint,
                 const TextureType,
                 const std::string &,

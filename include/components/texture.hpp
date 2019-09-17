@@ -10,7 +10,7 @@
 
 struct Texture
 {
-  GLuint m_id;
+  GLuint m_gl_id;
   TextureType m_type;
 
   Texture() = delete;

@@ -19,9 +19,9 @@ struct Mesh
 
     Mesh() = delete;
     Mesh(
-        const unsigned int,
-        const unsigned int,
-        const unsigned int,
+        const GLuint,
+        const GLuint,
+        const GLuint,
         const std::vector<Vertex> &,
         const std::vector<unsigned int> &,
         const std::vector<Texture> &) noexcept;

@@ -24,7 +24,7 @@ void Mesh::draw(
 {
     glBindVertexArray(m_vao_gl_id);
     if (!draw_depth)
-        ShaderDb::get().set_shader_program_texture(p_shader_id, m_textures);
+        ShaderDb::set_shader_program_texture(p_shader_id, m_textures);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

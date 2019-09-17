@@ -2,7 +2,6 @@
 #define TEXTURE_SYSTEM_HPP
 
 #include "components/texture_data.hpp"
-#include "components/texture_job.hpp"
 #include "components/texture.hpp"
 
 #include <array>

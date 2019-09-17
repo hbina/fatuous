@@ -21,14 +21,14 @@ void ShaderDbWindow::render() noexcept
             if (ImGui::Button("Load Shader file"))
             {
                 // TODO :: Dummy, fix later. Add a combo
-                ShaderDb::get().load_shader_file(shader_code_text, ShaderType::VERTEX);
+                ShaderDb::load_shader_file(shader_code_text, ShaderType::VERTEX);
             }
         }
         if (ImGui::CollapsingHeader("Shader Files List"))
         {
             ImGui::Text("List of Shader files loaded:");
 
-            for (const auto &p_iter : ShaderDb::get().file_map)
+            for (const auto &p_iter : ShaderDb::file_map)
             {
                 std::ostringstream out;
                 out << p_iter.first;
@@ -50,18 +50,18 @@ void ShaderDbWindow::render() noexcept
             ImGui::InputText("id:", shader_code_text, 64);
             if (ImGui::Button("Load Shader Program"))
             {
-                ShaderDb::get().link_shader_codes({}); // TODO :: Implement this
+                ShaderDb::link_shader_codes({}); // TODO :: Implement this
             }
         }
         if (ImGui::CollapsingHeader("Shader Programs List"))
         {
             ImGui::Text("List of Shader programs loaded:");
-            for (const auto &prg_iter : ShaderDb::get().program_map)
+            for (const auto &prg_iter : ShaderDb::program_map)
             {
                 std::ostringstream out;
                 out << prg_iter.first;
                 out << " : ";
-                for (const auto &shr_iter : prg_iter.second.m_shader_ids)
+                for (const GLuint &shr_iter : prg_iter.second.m_shaders)
                 {
                     out << shr_iter << ", ";
                 };

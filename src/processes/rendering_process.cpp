@@ -80,11 +80,11 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        model_shader = ShaderDb::link_shader_codes(
+            {ShaderDb::load_shader_file(
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
     }
@@ -133,14 +133,14 @@ void prepare_shadow(
     {
         init = true;
 
-        depth_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        depth_shader = ShaderDb::link_shader_codes(
+            {ShaderDb::load_shader_file(
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/fragment/omnishadow.glsl",
                  ShaderType::FRAGMENT),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/geometry/omnishadow.glsl",
                  ShaderType::GEOMETRY)});
 

@@ -30,8 +30,8 @@ AkarinGLFW::AkarinGLFW()
 #endif
 
     window = glfwCreateWindow(
-        window_dimension.x,
-        window_dimension.y,
+        static_cast<int>(window_dimension.x),
+        static_cast<int>(window_dimension.y),
         "Akarin 3D Engine",
         nullptr, nullptr);
 
@@ -116,8 +116,8 @@ void AkarinGLFW::framebuffer_size_callback(
     const int p_width,
     const int p_height)
 {
-    window_dimension.x = p_width;
-    window_dimension.y = p_height;
+    window_dimension.x = static_cast<float>(p_width);
+    window_dimension.y = static_cast<float>(p_height);
     glViewport(0, 0, p_width, p_height);
 };
 

@@ -7,6 +7,8 @@
 #include <sstream>
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
+std::unordered_map<GLuint, ShaderFile> ShaderDb::file_map;
+std::unordered_map<GLuint, ShaderProgram> ShaderDb::program_map;
 
 GLuint ShaderDb::compile_shader(
     const ShaderFile &p_shader_file) noexcept
@@ -127,10 +129,13 @@ GLuint ShaderDb::link_shader_codes(
         glAttachShader(shader_program_id, shader_id);
     }
     glLinkProgram(shader_program_id);
-    program_map.emplace(
-        shader_program_id,
-        ShaderProgram(p_shaders));
     test_shader_program_compilation(shader_program_id);
+    program_map.emplace(
+        std::make_pair(
+            shader_program_id,
+            ShaderProgram(
+                shader_program_id,
+                p_shaders)));
     return shader_program_id;
 };
 
@@ -146,7 +151,7 @@ void ShaderDb::test_shader_program_compilation(
         glGetProgramInfoLog(p_shader, info_log_size, nullptr, info_log);
         std::cerr << "p_shader:" << p_shader << " shader program compilation failed"
                   << "\n";
-        for (const auto &p_iter : program_map.at(p_shader).m_shader_ids)
+        for (const GLuint &p_iter : program_map.at(p_shader).m_shaders)
         {
             std::cerr << "id: " << p_iter << "\n";
             std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
@@ -173,28 +178,28 @@ void ShaderDb::set_shader_program_texture(
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.diffuse"), i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         case TextureType::HEIGHT:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.height"), i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         case TextureType::NORMAL:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.normal"), i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         case TextureType::SPECULAR:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.specular"), i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         default:
@@ -204,20 +209,4 @@ void ShaderDb::set_shader_program_texture(
         };
     }
     // TODO :: Temporary solution...need to figure out how deal with this crap
-};
-
-// Public functions
-
-ShaderDb &ShaderDb::get() noexcept
-{
-    static ShaderDb instance;
-    return instance;
-};
-
-ShaderDb::~ShaderDb()
-{
-    for (const auto &iter : program_map)
-    {
-        glDeleteProgram(iter.first);
-    }
 };

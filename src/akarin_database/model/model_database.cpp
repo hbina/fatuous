@@ -1,6 +1,5 @@
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
-#include "components/texture_job.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
 #include "components/vertex.hpp"
 
