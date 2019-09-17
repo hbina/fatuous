@@ -1,9 +1,9 @@
-#include "components/texture_data.hpp"
+#include "components/texture_info.hpp"
 #include "misc/akarin_macros.hpp"
 
 #include "glad/glad.h"
 
-TextureData::TextureData(
+TextureInfo::TextureInfo(
     const GLuint p_gl_id,
     const TextureType p_texture_type,
     const std::string &p_path,

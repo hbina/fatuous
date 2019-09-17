@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/texture.hpp"
 #include "components/shader_file.hpp"
 #include "akarin_database/shader/shader_program.hpp"
 
@@ -8,50 +9,45 @@
 #include <vector>
 #include <unordered_map>
 
-class ShaderDb
+namespace ShaderDb
 {
-    // Shader files
-    GLuint compile_shader(
-        const ShaderFile &) noexcept;
+// Shader files
+GLuint compile_shader(
+    const std::string &,
+    const ShaderType) noexcept;
 
-    void test_shader_code_compilation(
-        const GLuint,
-        const ShaderType) noexcept;
+void test_shader_code_compilation(
+    const GLuint,
+    const ShaderType) noexcept;
 
-    void add_shader_code(
-        const GLuint,
-        const ShaderFile &) noexcept;
+void add_shader_code(
+    const GLuint,
+    const ShaderFile &) noexcept;
 
-    ShaderFile read_shader_code_file(
-        const std::string &,
-        const ShaderType);
+std::string read_shader_code_file(
+    const std::string &,
+    const ShaderType);
 
-    // Shader programs functions
+// Shader programs functions
 
-    void test_shader_program_compilation(
-        const GLuint) noexcept;
+void test_shader_program_compilation(
+    const ShaderProgram &) noexcept;
 
-    ShaderDb() = default;
-    ~ShaderDb();
+// Shader file functions
 
-public:
-    // Shader file functions
+ShaderFile load_shader_file(
+    const std::string &,
+    const ShaderType) noexcept;
 
-    GLuint load_shader_file(
-        const std::string &,
-        const ShaderType) noexcept;
+// Shader program functions
+void set_shader_program_texture(
+    const GLuint,
+    const std::vector<Texture> &) noexcept;
 
-    // Shader program functions
-    void set_shader_program_texture(
-        const GLuint,
-        const std::vector<std::size_t> &) noexcept;
+GLuint link_shader_codes(
+    const std::vector<ShaderFile> &) noexcept;
 
-    GLuint link_shader_codes(
-        const std::vector<GLuint> &) noexcept;
-
-    // Public members
-    std::unordered_map<GLuint, ShaderFile> file_map;
-    std::unordered_map<GLuint, ShaderProgram> program_map;
-
-    static ShaderDb &get() noexcept;
-};
+// Public members
+extern std::unordered_map<GLuint, ShaderFile> file_map;
+extern std::unordered_map<GLuint, ShaderProgram> program_map;
+}; // namespace ShaderDb

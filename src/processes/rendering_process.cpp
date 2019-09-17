@@ -21,7 +21,7 @@
 
 void draw(
     const GLuint,
-    const ModelData &,
+    const Model &,
     const Transform &,
     bool draw_depth = false);
 
@@ -53,7 +53,7 @@ void RenderingProcess::render(
 
 void draw(
     const GLuint p_shader_id,
-    const ModelData &p_model,
+    const Model &p_model,
     const Transform &p_transform,
     const bool draw_depth)
 {
@@ -64,9 +64,9 @@ void draw(
         p_transform.position,
         p_transform.scale,
         draw_depth);
-    for (const std::size_t &p_mesh_id : p_model.m_meshes)
+    for (const Mesh &mesh : p_model.m_meshes)
     {
-        MeshDb::meshes_map.at(p_mesh_id).draw(
+        mesh.draw(
             p_shader_id,
             draw_depth);
     }
@@ -80,11 +80,11 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        model_shader = ShaderDb::link_shader_codes(
+            {ShaderDb::load_shader_file(
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
     }
@@ -111,10 +111,10 @@ void render_normal(
         AkarinCameraSystem::get_position());
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
-    p_reg.view<ModelData, Transform>()
+    p_reg.view<Model, Transform>()
         .each([](
                   const auto &e,
-                  const ModelData &p_model_data,
+                  const Model &p_model_data,
                   const Transform &p_transform) {
             draw(
                 model_shader,
@@ -133,14 +133,14 @@ void prepare_shadow(
     {
         init = true;
 
-        depth_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        depth_shader = ShaderDb::link_shader_codes(
+            {ShaderDb::load_shader_file(
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/fragment/omnishadow.glsl",
                  ShaderType::FRAGMENT),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
                  "./shaders/geometry/omnishadow.glsl",
                  ShaderType::GEOMETRY)});
 
@@ -205,10 +205,10 @@ void prepare_shadow(
         depth_shader,
         "camera_position",
         AkarinCameraSystem::get_position());
-    p_reg.view<ModelData, Transform>()
+    p_reg.view<Model, Transform>()
         .each([](
                   const auto &e,
-                  const ModelData &p_model_data,
+                  const Model &p_model_data,
                   const Transform &p_transform) {
             draw(
                 depth_shader,

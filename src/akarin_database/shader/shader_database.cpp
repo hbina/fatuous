@@ -8,12 +8,16 @@
 
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
+std::unordered_map<GLuint, ShaderFile> ShaderDb::file_map;
+std::unordered_map<GLuint, ShaderProgram> ShaderDb::program_map;
+
 GLuint ShaderDb::compile_shader(
-    const ShaderFile &p_shader_file) noexcept
+    const std::string &p_shader_file,
+    const ShaderType p_type) noexcept
 {
     GLuint shader_id = DEFAULT_SHADER_ID;
 
-    switch (p_shader_file.m_type)
+    switch (p_type)
     {
     case ShaderType::VERTEX:
     {
@@ -38,10 +42,10 @@ GLuint ShaderDb::compile_shader(
     };
     };
 
-    const char *shader_code_cstr = p_shader_file.m_content.c_str();
+    const char *shader_code_cstr = p_shader_file.c_str();
     glShaderSource(shader_id, 1, &shader_code_cstr, nullptr);
     glCompileShader(shader_id);
-    test_shader_code_compilation(shader_id, p_shader_file.m_type);
+    test_shader_code_compilation(shader_id, p_type);
     return shader_id;
 };
 
@@ -61,7 +65,7 @@ void ShaderDb::test_shader_code_compilation(
     }
 };
 
-ShaderFile ShaderDb::read_shader_code_file(
+std::string ShaderDb::read_shader_code_file(
     const std::string &p_shader_path,
     const ShaderType p_type)
 {
@@ -80,10 +84,7 @@ ShaderFile ShaderDb::read_shader_code_file(
     {
         std::cerr << "p_shader files could not be loaded p_shader_path:" << p_shader_path << "\n";
     }
-    return ShaderFile(
-        p_shader_path,
-        shader_code,
-        p_type);
+    return shader_code;
 };
 
 void ShaderDb::add_shader_code(
@@ -95,7 +96,7 @@ void ShaderDb::add_shader_code(
         p_shader_file);
 };
 
-GLuint ShaderDb::load_shader_file(
+ShaderFile ShaderDb::load_shader_file(
     const std::string &p_filepath,
     const ShaderType p_type) noexcept
 {
@@ -107,50 +108,57 @@ GLuint ShaderDb::load_shader_file(
         });
     if (find_iter != file_map.cend())
     {
-        return (*find_iter).first;
+        return (*find_iter).second;
     }
-    const ShaderFile &shader_data = read_shader_code_file(p_filepath, p_type);
-    GLuint shader_id = compile_shader(shader_data);
+    const std::string &shader_content = read_shader_code_file(p_filepath, p_type);
+    GLuint shader_id = compile_shader(shader_content, p_type);
+    ShaderFile shader_file = ShaderFile(
+        shader_id,
+        p_filepath,
+        shader_content,
+        p_type);
     if (shader_id != DEFAULT_SHADER_ID)
     {
-        add_shader_code(shader_id, shader_data);
+        add_shader_code(shader_id, shader_file);
     }
-    return shader_id;
+    return shader_file;
 };
 
 GLuint ShaderDb::link_shader_codes(
-    const std::vector<GLuint> &p_shaders) noexcept
+    const std::vector<ShaderFile> &p_shaders) noexcept
 {
     GLuint shader_program_id = glCreateProgram();
-    for (const auto shader_id : p_shaders)
+    for (const auto shader_iter : p_shaders)
     {
-        glAttachShader(shader_program_id, shader_id);
+        glAttachShader(shader_program_id, shader_iter.m_id);
     }
     glLinkProgram(shader_program_id);
+    ShaderProgram shdr_prg = ShaderProgram(
+        shader_program_id,
+        p_shaders);
     program_map.emplace(
         shader_program_id,
-        ShaderProgram(p_shaders));
-    test_shader_program_compilation(shader_program_id);
+        shdr_prg);
+    test_shader_program_compilation(shdr_prg);
     return shader_program_id;
 };
 
 void ShaderDb::test_shader_program_compilation(
-    const GLuint p_shader) noexcept
+    const ShaderProgram &p_shader) noexcept
 {
     static constexpr auto info_log_size = 1024;
     GLint success;
     GLchar info_log[info_log_size];
-    glGetProgramiv(p_shader, GL_LINK_STATUS, &success);
+    glGetProgramiv(p_shader.m_id, GL_LINK_STATUS, &success);
     if (!success)
     {
-        glGetProgramInfoLog(p_shader, info_log_size, nullptr, info_log);
-        std::cerr << "p_shader:" << p_shader << " shader program compilation failed"
-                  << "\n";
-        for (const auto &p_iter : program_map.at(p_shader).m_shader_ids)
+        glGetProgramInfoLog(p_shader.m_id, info_log_size, nullptr, info_log);
+        std::cerr << "p_shader:" << p_shader.m_id << " shader program compilation failed\n";
+        for (const ShaderFile &p_iter : p_shader.m_shaders)
         {
-            std::cerr << "id: " << p_iter << "\n";
-            std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
-            std::cerr << "type: " << file_map.at(p_iter).m_type << "\n";
+            std::cerr << "id: " << p_iter.m_id << "\n";
+            std::cerr << "filepath: " << p_iter.m_filepath << "\n";
+            std::cerr << "type: " << p_iter.m_type << "\n";
         }
         std::cout << info_log << "\n";
     }
@@ -162,39 +170,39 @@ void ShaderDb::test_shader_program_compilation(
 
 void ShaderDb::set_shader_program_texture(
     const GLuint p_shader_program_id,
-    const std::vector<std::size_t> &textures) noexcept
+    const std::vector<Texture> &textures) noexcept
 {
     // TODO :: This is not normalized data structure...please consider making it so.
-    for (std::size_t i = 0; i < textures.size(); i++)
+    for (GLint i = 0; i < textures.size(); i++)
     {
-        switch (TextureDb::textures_map[textures[i]].m_type)
+        switch (textures[i].m_type)
         {
         case TextureType::DIFFUSE:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.diffuse"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::HEIGHT:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.height"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::NORMAL:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.normal"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::SPECULAR:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.specular"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         default:
@@ -204,20 +212,4 @@ void ShaderDb::set_shader_program_texture(
         };
     }
     // TODO :: Temporary solution...need to figure out how deal with this crap
-};
-
-// Public functions
-
-ShaderDb &ShaderDb::get() noexcept
-{
-    static ShaderDb instance;
-    return instance;
-};
-
-ShaderDb::~ShaderDb()
-{
-    for (const auto &iter : program_map)
-    {
-        glDeleteProgram(iter.first);
-    }
 };

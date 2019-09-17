@@ -8,16 +8,16 @@
 #include <string>
 #include <iostream>
 
-struct TextureData
+struct TextureInfo
 {
-    GLuint m_gl_id;
-    TextureType m_type;
-    std::string m_path;
-    std::array<int, 3> m_dimension;
+    const GLuint m_gl_id;
+    const TextureType m_type;
+    const std::string m_path;
+    const std::array<int, 3> m_dimension;
 
     // TODO :: Make this =delete later and use operator[] instead...
-    TextureData() = default;
-    TextureData(const GLuint,
+    TextureInfo() = default;
+    TextureInfo(const GLuint,
                 const TextureType,
                 const std::string &,
                 const std::array<int, 3> &);

@@ -1,6 +1,7 @@
 #include "components/texture.hpp"
 
 Texture::Texture(
-    const std::size_t p_id)
-    : m_id(p_id){};
-    
+    const GLuint p_id,
+    const TextureType p_type)
+    : m_id(p_id),
+      m_type(p_type){};

@@ -34,12 +34,12 @@ add_executable(
     src/enums/shader_type.cpp
     src/enums/texture_type.cpp
 
-    src/components/model_data.cpp
+    src/components/model.cpp
     src/components/shader_file.cpp
     src/components/mesh_job.cpp
-    src/components/mesh_data.cpp
+    src/components/mesh.cpp
     src/components/texture.cpp
-    src/components/texture_data.cpp
+    src/components/texture_info.cpp
     src/components/texture_job.cpp
     
     src/akarin_database/texture/texture_database.cpp
