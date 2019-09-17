@@ -22,43 +22,38 @@
 #include <thread>
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
-void add_model(
+std::size_t add_model(
     const Model &) noexcept;
-bool contains(
-    const std::string &) noexcept;
-std::vector<std::size_t> load_material_textures(
+std::vector<Texture> load_material_textures(
     const std::string &,
     const aiMaterial *,
     const aiTextureType,
     const TextureType) noexcept;
 void process_node(
-    entt::registry &,
     const std::string &,
     const aiNode *,
     const aiScene *,
     std::vector<Mesh> &) noexcept;
 Mesh process_mesh(
-    entt::registry &,
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
-std::unordered_map<std::size_t, Model> ModelDb::models_map;
-std::atomic<std::size_t> m_model_id_counter = 1;
+std::unordered_map<std::size_t, Model> ModelDb::map;
+std::atomic<std::size_t> model_counter = 1;
 
-void ModelDb::add_model_job(
-    entt::registry &p_reg,
+std::size_t ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
 {
     const auto &find_model_iter = std::find_if(
-        ModelDb::models_map.cbegin(),
-        ModelDb::models_map.cend(),
+        ModelDb::map.cbegin(),
+        ModelDb::map.cend(),
         [p_model_path](const std::pair<const std::size_t, Model> &p_model_iter) -> bool {
             return p_model_iter.second.m_path == p_model_path;
         });
-    if (find_model_iter != ModelDb::models_map.cend())
+    if (find_model_iter != ModelDb::map.cend())
     {
         std::cout << "model:" << p_model_path << " already exists\n";
-        return;
+        return (*find_model_iter).first;
     }
 
     Assimp::Importer importer;
@@ -66,7 +61,7 @@ void ModelDb::add_model_job(
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
-        return;
+        return 0; // TODO :: Make return default models
     }
 
     const std::string model_root_directory = p_model_path.substr(
@@ -75,21 +70,19 @@ void ModelDb::add_model_job(
     aiNode *root_node = scene->mRootNode;
     std::vector<Mesh> meshes;
     process_node(
-        p_reg,
         model_root_directory,
         root_node,
         scene,
         meshes);
 
     // TODO :: Must be deferred until Texture and Mesh are done with their shit.
-    add_model(
+    return add_model(
         Model(
             p_model_path,
             meshes));
 };
 
 void process_node(
-    entt::registry &p_reg,
     const std::string &p_model_root_directory,
     const aiNode *node,
     const aiScene *scene,
@@ -99,7 +92,6 @@ void process_node(
     {
         aiMesh *ai_mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(process_mesh(
-            p_reg,
             p_model_root_directory,
             ai_mesh,
             scene));
@@ -107,7 +99,6 @@ void process_node(
     for (std::size_t i = 0; i < node->mNumChildren; i++)
     {
         process_node(
-            p_reg,
             p_model_root_directory,
             node->mChildren[i],
             scene,
@@ -116,14 +107,13 @@ void process_node(
 };
 
 Mesh process_mesh(
-    entt::registry &p_reg,
     const std::string &p_model_root_directory,
     const aiMesh *p_mesh,
     const aiScene *p_scene) noexcept
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<std::size_t> textures;
+    std::vector<Texture> textures;
 
     for (std::size_t i = 0; i < p_mesh->mNumVertices; i++)
     {
@@ -182,19 +172,19 @@ Mesh process_mesh(
 
     aiMaterial *material = p_scene->mMaterials[p_mesh->mMaterialIndex];
 
-    std::vector<std::size_t> texture_diffuse_maps = load_material_textures(p_model_root_directory, material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
+    std::vector<Texture> texture_diffuse_maps = load_material_textures(p_model_root_directory, material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
     textures.insert(textures.end(), texture_diffuse_maps.begin(), texture_diffuse_maps.end());
-    std::vector<std::size_t> texture_specular_maps = load_material_textures(p_model_root_directory, material, aiTextureType_SPECULAR, TextureType::SPECULAR);
+    std::vector<Texture> texture_specular_maps = load_material_textures(p_model_root_directory, material, aiTextureType_SPECULAR, TextureType::SPECULAR);
     textures.insert(textures.end(), texture_specular_maps.begin(), texture_specular_maps.end());
-    std::vector<std::size_t> texture_normal_maps = load_material_textures(p_model_root_directory, material, aiTextureType_NORMALS, TextureType::NORMAL);
+    std::vector<Texture> texture_normal_maps = load_material_textures(p_model_root_directory, material, aiTextureType_NORMALS, TextureType::NORMAL);
     textures.insert(textures.end(), texture_normal_maps.begin(), texture_normal_maps.end());
-    std::vector<std::size_t> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
+    std::vector<Texture> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
     textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
 
-    return MeshDb::create_mesh(p_reg, vertices, indices, textures);
+    return MeshDb::create_mesh(vertices, indices, textures);
 };
 
-std::vector<std::size_t> load_material_textures(
+std::vector<Texture> load_material_textures(
     const std::string &p_model_root_directory,
     const aiMaterial *p_ai_material,
     const aiTextureType p_ai_texture_type,
@@ -208,17 +198,19 @@ std::vector<std::size_t> load_material_textures(
         p_ai_material->GetTexture(p_ai_texture_type, texture_iter, &str);
         const std::string texture_path = std::string(str.C_Str());
         textures.push_back(
-            TextureDb::add_texture_job(
-                p_model_root_directory + '/' + texture_path, p_texture_type));
+            TextureDb::create_gl_texture(
+                p_model_root_directory + '/' + texture_path,
+                p_texture_type));
     }
     return textures;
 };
 
-void add_model(
+std::size_t add_model(
     const Model &p_modeldata) noexcept
 {
-    std::size_t model_id = m_model_id_counter++;
-    ModelDb::models_map.emplace(
+    std::size_t model_id = model_counter++;
+    ModelDb::map.emplace(
         model_id,
         p_modeldata);
+    return model_id;
 };

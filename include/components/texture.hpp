@@ -1,13 +1,18 @@
 #pragma once
 
+#include "glad/glad.h"
+#include "enums/texture_type.hpp"
+
 #include <array>
 #include <string>
 #include <iostream>
 
 struct Texture
 {
-  GLuint m_id = 0;
+  GLuint m_gl_id;
+  TextureType m_type;
 
   Texture() = delete;
-  Texture(const std::size_t);
+  Texture(const GLuint,
+          const TextureType);
 };

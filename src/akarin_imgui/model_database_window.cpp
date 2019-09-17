@@ -24,13 +24,12 @@ void ModelDbWindow::render(
         if (ImGui::Button("Load Model"))
         {
             ModelDb::add_model_job(
-                p_reg,
                 std::string(model_path_text));
         }
     }
     if (ImGui::CollapsingHeader("Models List"))
     {
-        for (const auto &p_modeldata_iter : ModelDb::models_map)
+        for (const auto &p_modeldata_iter : ModelDb::map)
         {
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
@@ -40,24 +39,26 @@ void ModelDbWindow::render(
 
     if (ImGui::CollapsingHeader("Meshes List"))
     {
-        p_reg.view<Mesh>().each([](const Mesh &mesh_iter) {
+        for (const std::pair<const std::size_t, Mesh> &mesh_iter : MeshDb::meshes_map)
+        {
+            const Mesh &mesh = mesh_iter.second;
             std::stringstream vao_id_ostr;
             vao_id_ostr << "m_vao_id: ";
-            vao_id_ostr << mesh_iter.m_vao_gl_id;
+            vao_id_ostr << mesh.m_vao_gl_id;
             if (ImGui::TreeNode(vao_id_ostr.str().c_str()))
             {
                 std::stringstream m_vertices_ostr;
-                m_vertices_ostr << mesh_iter.m_vertices.size();
+                m_vertices_ostr << mesh.m_vertices.size();
                 ImGui::Text("vertices count: %s", m_vertices_ostr.str().c_str());
                 std::stringstream m_indices_ostr;
-                m_indices_ostr << mesh_iter.m_indices.size();
+                m_indices_ostr << mesh.m_indices.size();
                 ImGui::Text("indices count: %s", m_indices_ostr.str().c_str());
                 if (ImGui::TreeNode("Textures:"))
                 {
-                    for (const std::size_t &p_texture_id : mesh_iter.m_textures)
+                    for (const Texture &p_texture_id : mesh.m_textures)
                     {
                         // TODO :: Refactor a bunch of this
-                        const TextureInfo &texture_data = TextureDb::textures_map[p_texture_id];
+                        const TextureInfo &texture_data = TextureDb::textures_map[p_texture_id.m_gl_id];
                         std::stringstream ostr_texture_gl_id;
                         ostr_texture_gl_id << texture_data.m_gl_id;
                         ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());
@@ -85,8 +86,7 @@ void ModelDbWindow::render(
                 }
                 ImGui::TreePop();
             }
-        });
+        };
     }
-
     ImGui::End();
 };

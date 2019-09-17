@@ -22,7 +22,6 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
             {
                 // TODO :: Dummy, fix later. Add a combo
                 ShaderDb::load_shader_file(
-                    p_reg,
                     shader_code_text,
                     ShaderType::VERTEX);
             }
@@ -50,7 +49,7 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
             ImGui::InputText("id:", shader_code_text, 64);
             if (ImGui::Button("Load Shader Program"))
             {
-                // ShaderDb::link_shader_codes({}); // TODO :: Implement this
+                // ShaderDb::link_shader_files({}); // TODO :: Implement this
             }
         }
         if (ImGui::CollapsingHeader("Shader Programs List"))

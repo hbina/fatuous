@@ -7,15 +7,14 @@
 #include <mutex>
 #include <vector>
 
-// std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
+std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
 
 std::atomic<std::size_t> mesh_id_counter = 1;
 
 Mesh MeshDb::create_mesh(
-    entt::registry &p_reg,
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
-    const std::vector<std::size_t> &p_textures) noexcept
+    const std::vector<Texture> &p_textures) noexcept
 {
     const std::size_t mesh_id = mesh_id_counter++;
     GLuint mesh_vao_gl_id = 0;
@@ -71,8 +70,9 @@ Mesh MeshDb::create_mesh(
         p_vertices,
         p_indices,
         p_textures);
-    p_reg.assign<Mesh>(
-        p_reg.create(),
-        mesh);
+    meshes_map.emplace(
+        std::make_pair(
+            mesh_id,
+            mesh));
     return mesh;
 };

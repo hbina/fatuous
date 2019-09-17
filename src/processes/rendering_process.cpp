@@ -66,10 +66,8 @@ void draw(
         p_transform.position,
         p_transform.scale,
         draw_depth);
-    p_reg.view<Mesh>()
-        .each([&](const Mesh &mesh) {
-            mesh.draw(p_shader_id, draw_depth);
-        });
+    for (const Mesh &mesh : p_model.m_meshes)
+        mesh.draw(p_shader_id, draw_depth);
 };
 
 void render_normal(
@@ -80,14 +78,11 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderDb::link_shader_codes(
-            p_reg,
+        model_shader = ShaderDb::link_shader_files(
             {ShaderDb::load_shader_file(
-                 p_reg,
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
              ShaderDb::load_shader_file(
-                 p_reg,
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
     }
@@ -136,18 +131,14 @@ void prepare_shadow(
     {
         init = true;
 
-        depth_shader = ShaderDb::link_shader_codes(
-            p_reg,
+        depth_shader = ShaderDb::link_shader_files(
             {ShaderDb::load_shader_file(
-                 p_reg,
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
              ShaderDb::load_shader_file(
-                 p_reg,
                  "./shaders/fragment/omnishadow.glsl",
                  ShaderType::FRAGMENT),
              ShaderDb::load_shader_file(
-                 p_reg,
                  "./shaders/geometry/omnishadow.glsl",
                  ShaderType::GEOMETRY)});
 

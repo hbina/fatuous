@@ -12,14 +12,10 @@
 namespace TextureDb
 {
 
-extern std::unordered_map<std::size_t, TextureInfo> textures_map;
+extern std::unordered_map<GLuint, TextureInfo> textures_map;
 
-Texture load_cube_texture(
+GLuint load_cube_texture(
     const std::array<std::string, 6> &) noexcept;
-
-std::size_t add_texture_job(
-    const std::string &,
-    const TextureType) noexcept;
 
 Texture create_gl_texture(
     const std::string &,
