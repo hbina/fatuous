@@ -67,7 +67,7 @@ void SkyboxSystem::render() noexcept
 {
     static GLuint g_skybox_shader_id = 0;
     static GLuint g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
-    static Texture g_skybox_texture_id = 0;
+    static GLuint g_skybox_texture_id = 0;
     static bool initialized = false;
     if (!initialized)
     {
@@ -99,7 +99,7 @@ void SkyboxSystem::render() noexcept
     ShaderUtilities::setMat4(g_skybox_shader_id, "projection", AkarinCameraSystem::get_projection());
     glBindVertexArray(g_skybox_vao_id);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, TextureDb::textures_map[g_skybox_texture_id.m_id].m_gl_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, g_skybox_texture_id);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     OpenGLSettings::refresh_settings();

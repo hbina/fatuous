@@ -8,35 +8,12 @@
 #include <vector>
 
 std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
-
-std::mutex mesh_job_mutex;
 std::atomic<std::size_t> mesh_id_counter = 1;
-std::vector<MeshJob> mesh_jobs;
 
-void execute_job(const MeshJob &) noexcept;
-
-std::size_t MeshDb::add_mesh_job(
+Mesh MeshDb::create_mesh(
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
-    const std::vector<std::size_t> &p_textures) noexcept
-{
-    std::lock_guard<std::mutex> lock(mesh_job_mutex);
-    const std::size_t mesh_id{mesh_id_counter++};
-    mesh_jobs.emplace_back(mesh_id, p_vertices, p_indices, p_textures);
-    return mesh_id;
-};
-
-void MeshDb::execute_jobs() noexcept
-{
-    std::lock_guard<std::mutex> lock(mesh_job_mutex);
-    for (const MeshJob &mesh_job : mesh_jobs)
-    {
-        execute_job(mesh_job);
-    }
-    mesh_jobs.clear();
-};
-
-void execute_job(const MeshJob &p_mesh_job) noexcept
+    const std::vector<Texture> &p_textures) noexcept
 {
     GLuint mesh_vao_gl_id = 0;
     GLuint mesh_vbo_gl_id = 0;
@@ -51,14 +28,14 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
 
     glBufferData(
         GL_ARRAY_BUFFER,
-        p_mesh_job.m_vertices.size() * sizeof(Vertex),
-        &p_mesh_job.m_vertices[0],
+        p_vertices.size() * sizeof(Vertex),
+        &p_vertices[0],
         GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_ebo_gl_id);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
-        p_mesh_job.m_indices.size() * sizeof(unsigned int),
-        &p_mesh_job.m_indices[0],
+        p_indices.size() * sizeof(unsigned int),
+        &p_indices[0],
         GL_STATIC_DRAW);
 
     // vertex positions
@@ -83,14 +60,23 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
 
     glBindVertexArray(0);
 
+    const std::size_t mesh_id = mesh_id_counter++;
+
     MeshDb::meshes_map.emplace(
         std::make_pair(
-            p_mesh_job.m_id,
+            mesh_id,
             Mesh(
                 mesh_vao_gl_id,
                 mesh_vbo_gl_id,
                 mesh_ebo_gl_id,
-                p_mesh_job.m_vertices,
-                p_mesh_job.m_indices,
-                p_mesh_job.m_textures)));
+                p_vertices,
+                p_indices,
+                p_textures)));
+    return Mesh(
+        mesh_vao_gl_id,
+        mesh_vbo_gl_id,
+        mesh_ebo_gl_id,
+        p_vertices,
+        p_indices,
+        p_textures);
 };

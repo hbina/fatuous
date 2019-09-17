@@ -34,9 +34,8 @@ void ModelDbWindow::render() noexcept
             modeldata_ostr << p_modeldata_iter.second.m_path;
             if (ImGui::TreeNode(modeldata_ostr.str().c_str()))
             {
-                for (const std::size_t &p_mesh_id : p_modeldata_iter.second.m_meshes)
+                for (const Mesh &mesh_iter : p_modeldata_iter.second.m_meshes)
                 {
-                    const Mesh &mesh_iter = MeshDb::meshes_map.at(p_mesh_id);
                     std::stringstream vao_id_ostr;
                     vao_id_ostr << "m_vao_id: ";
                     vao_id_ostr << mesh_iter.m_vao_gl_id;
@@ -50,10 +49,10 @@ void ModelDbWindow::render() noexcept
                         ImGui::Text("indices count: %s", m_indices_ostr.str().c_str());
                         if (ImGui::TreeNode("Textures:"))
                         {
-                            for (const std::size_t &p_texture_id : mesh_iter.m_textures)
+                            for (const Texture &txt_iter : mesh_iter.m_textures)
                             {
                                 // TODO :: Refactor a bunch of this
-                                const TextureData &texture_data = TextureDb::textures_map[p_texture_id];
+                                const TextureData &texture_data = TextureDb::textures_map.at(txt_iter.m_id);
                                 std::stringstream ostr_texture_gl_id;
                                 ostr_texture_gl_id << texture_data.m_gl_id;
                                 ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());

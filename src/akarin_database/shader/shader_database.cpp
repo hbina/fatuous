@@ -162,39 +162,39 @@ void ShaderDb::test_shader_program_compilation(
 
 void ShaderDb::set_shader_program_texture(
     const GLuint p_shader_program_id,
-    const std::vector<std::size_t> &textures) noexcept
+    const std::vector<Texture> &textures) noexcept
 {
     // TODO :: This is not normalized data structure...please consider making it so.
     for (GLint i = 0; i < static_cast<GLint>(textures.size()); i++)
     {
-        switch (TextureDb::textures_map[textures[i]].m_type)
+        switch (textures[i].m_type)
         {
         case TextureType::DIFFUSE:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.diffuse"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::HEIGHT:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.height"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::NORMAL:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.normal"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         case TextureType::SPECULAR:
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glUniform1i(glGetUniformLocation(p_shader_program_id, "material.specular"), i);
-            glBindTexture(GL_TEXTURE_2D, TextureDb::textures_map[textures[i]].m_gl_id);
+            glBindTexture(GL_TEXTURE_2D, textures[i].m_id);
             break;
         };
         default:

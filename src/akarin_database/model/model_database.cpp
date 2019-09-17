@@ -26,7 +26,7 @@ void add_model(
     const ModelData &) noexcept;
 bool contains(
     const std::string &) noexcept;
-std::vector<std::size_t> load_material_textures(
+std::vector<Texture> load_material_textures(
     const std::string &,
     const aiMaterial *,
     const aiTextureType,
@@ -35,65 +35,60 @@ void process_node(
     const std::string &,
     const aiNode *,
     const aiScene *,
-    std::vector<std::size_t> &) noexcept;
-std::size_t process_mesh(
+    std::vector<Mesh> &) noexcept;
+Mesh process_mesh(
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
 std::unordered_map<std::size_t, ModelData> ModelDb::models_map;
 std::atomic<std::size_t> m_model_id_counter = 1;
-std::vector<std::future<void>> model_jobs;
 
 void ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
 {
-    model_jobs.push_back(std::async(
-        std::launch::async,
-        [p_model_path]() {
-            const auto &find_model_iter = std::find_if(
-                ModelDb::models_map.cbegin(),
-                ModelDb::models_map.cend(),
-                [p_model_path](const std::pair<const std::size_t, ModelData> &p_model_iter) -> bool {
-                    return p_model_iter.second.m_path == p_model_path;
-                });
-            if (find_model_iter != ModelDb::models_map.cend())
-            {
-                std::cout << "model:" << p_model_path << " already exists\n";
-                return;
-            }
+    const auto &find_model_iter = std::find_if(
+        ModelDb::models_map.cbegin(),
+        ModelDb::models_map.cend(),
+        [p_model_path](const std::pair<const std::size_t, ModelData> &p_model_iter) -> bool {
+            return p_model_iter.second.m_path == p_model_path;
+        });
+    if (find_model_iter != ModelDb::models_map.cend())
+    {
+        std::cout << "model:" << p_model_path << " already exists\n";
+        return;
+    }
 
-            Assimp::Importer importer;
-            const aiScene *scene = importer.ReadFile(p_model_path, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-            {
-                std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
-                return;
-            }
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile(p_model_path, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
+        return;
+    }
 
-            const std::string model_root_directory = p_model_path.substr(
-                0,
-                p_model_path.find_last_of('/'));
-            aiNode *root_node = scene->mRootNode;
-            std::vector<std::size_t> meshes;
-            process_node(
-                model_root_directory,
-                root_node,
-                scene,
-                meshes);
+    const std::string model_root_directory = p_model_path.substr(
+        0,
+        p_model_path.find_last_of('/'));
+    aiNode *root_node = scene->mRootNode;
+    std::vector<Mesh> meshes;
+    process_node(
+        model_root_directory,
+        root_node,
+        scene,
+        meshes);
 
-            // TODO :: Must be deferred until Texture and Mesh are done with their shit.
-            add_model(
-                ModelData(
-                    p_model_path,
-                    meshes));
-        }));
+    // TODO :: Must be deferred until Texture and Mesh are done with their shit.
+    add_model(
+        ModelData(
+            p_model_path,
+            meshes));
 };
 
 void process_node(
     const std::string &p_model_root_directory,
     const aiNode *node,
     const aiScene *scene,
-    std::vector<std::size_t> &meshes) noexcept
+    std::vector<Mesh> &meshes) noexcept
 {
     for (std::size_t i = 0; i < node->mNumMeshes; i++)
     {
@@ -106,14 +101,14 @@ void process_node(
     }
 };
 
-std::size_t process_mesh(
+Mesh process_mesh(
     const std::string &p_model_root_directory,
     const aiMesh *p_mesh,
     const aiScene *p_scene) noexcept
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<std::size_t> textures;
+    std::vector<Texture> textures;
 
     for (std::size_t i = 0; i < p_mesh->mNumVertices; i++)
     {
@@ -172,25 +167,25 @@ std::size_t process_mesh(
 
     aiMaterial *material = p_scene->mMaterials[p_mesh->mMaterialIndex];
 
-    std::vector<std::size_t> texture_diffuse_maps = load_material_textures(p_model_root_directory, material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
+    std::vector<Texture> texture_diffuse_maps = load_material_textures(p_model_root_directory, material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
     textures.insert(textures.end(), texture_diffuse_maps.begin(), texture_diffuse_maps.end());
-    std::vector<std::size_t> texture_specular_maps = load_material_textures(p_model_root_directory, material, aiTextureType_SPECULAR, TextureType::SPECULAR);
+    std::vector<Texture> texture_specular_maps = load_material_textures(p_model_root_directory, material, aiTextureType_SPECULAR, TextureType::SPECULAR);
     textures.insert(textures.end(), texture_specular_maps.begin(), texture_specular_maps.end());
-    std::vector<std::size_t> texture_normal_maps = load_material_textures(p_model_root_directory, material, aiTextureType_NORMALS, TextureType::NORMAL);
+    std::vector<Texture> texture_normal_maps = load_material_textures(p_model_root_directory, material, aiTextureType_NORMALS, TextureType::NORMAL);
     textures.insert(textures.end(), texture_normal_maps.begin(), texture_normal_maps.end());
-    std::vector<std::size_t> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
+    std::vector<Texture> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
     textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
 
-    return MeshDb::add_mesh_job(vertices, indices, textures);
+    return MeshDb::create_mesh(vertices, indices, textures);
 };
 
-std::vector<std::size_t> load_material_textures(
+std::vector<Texture> load_material_textures(
     const std::string &p_model_root_directory,
     const aiMaterial *p_ai_material,
     const aiTextureType p_ai_texture_type,
     const TextureType p_texture_type) noexcept
 {
-    std::vector<std::size_t> textures;
+    std::vector<Texture> textures;
     auto tex_count = p_ai_material->GetTextureCount(p_ai_texture_type);
     for (std::uint32_t texture_iter = 0; texture_iter < tex_count; texture_iter++)
     {
@@ -198,8 +193,9 @@ std::vector<std::size_t> load_material_textures(
         p_ai_material->GetTexture(p_ai_texture_type, texture_iter, &str);
         const std::string texture_path = std::string(str.C_Str());
         textures.push_back(
-            TextureDb::add_texture_job(
-                p_model_root_directory + '/' + texture_path, p_texture_type));
+            TextureDb::create_gl_texture(
+                p_model_root_directory + '/' + texture_path,
+                p_texture_type));
     }
     return textures;
 };

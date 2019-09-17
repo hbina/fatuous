@@ -15,7 +15,7 @@ struct Mesh
     GLuint m_ebo_gl_id = 0;
     const std::vector<Vertex> m_vertices;
     const std::vector<unsigned int> m_indices;
-    const std::vector<std::size_t> m_textures;
+    const std::vector<Texture> m_textures;
 
     Mesh() = delete;
     Mesh(
@@ -24,7 +24,7 @@ struct Mesh
         const unsigned int,
         const std::vector<Vertex> &,
         const std::vector<unsigned int> &,
-        const std::vector<std::size_t> &) noexcept;
+        const std::vector<Texture> &) noexcept;
 
     void draw(
         const GLuint,

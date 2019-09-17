@@ -64,9 +64,9 @@ void draw(
         p_transform.position,
         p_transform.scale,
         draw_depth);
-    for (const std::size_t &p_mesh_id : p_model.m_meshes)
+    for (const Mesh &mesh : p_model.m_meshes)
     {
-        MeshDb::meshes_map.at(p_mesh_id).draw(
+        mesh.draw(
             p_shader_id,
             draw_depth);
     }

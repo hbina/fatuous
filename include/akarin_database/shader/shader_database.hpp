@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/shader_file.hpp"
+#include "components/texture.hpp"
 #include "akarin_database/shader/shader_program.hpp"
 
 #include "glad/glad.h"
@@ -44,7 +45,7 @@ public:
     // Shader program functions
     void set_shader_program_texture(
         const GLuint,
-        const std::vector<std::size_t> &) noexcept;
+        const std::vector<Texture> &) noexcept;
 
     GLuint link_shader_codes(
         const std::vector<GLuint> &) noexcept;
