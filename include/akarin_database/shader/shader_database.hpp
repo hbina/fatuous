@@ -13,7 +13,7 @@
 
 namespace ShaderDb
 {
-extern std::unordered_map<GLuint, ShaderFile> shader_map;
+extern std::unordered_map<GLuint, ShaderFile> file_map;
 extern std::unordered_map<GLuint, ShaderProgram> program_map;
 
 GLuint load_shader_file(

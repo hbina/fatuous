@@ -4,7 +4,6 @@
 #include "akarin_database/lighting/lighting_database.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "components/shader.hpp"
 #include "components/transform.hpp"
 #include "misc/shader_utilities.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"

@@ -1,7 +1,7 @@
+#include "akarin_database/mesh/mesh_database.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "components/texture_job.hpp"
-#include "akarin_database/mesh/mesh_database.hpp"
 #include "components/vertex.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -23,7 +23,7 @@
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
 std::size_t add_model(
-    const Model &) noexcept;
+    const ModelInfo &) noexcept;
 std::vector<Texture> load_material_textures(
     const std::string &,
     const aiMaterial *,
@@ -38,8 +38,8 @@ Mesh process_mesh(
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
-std::unordered_map<std::size_t, Model> ModelDb::map;
-std::atomic<std::size_t> model_counter = 1;
+
+std::unordered_map<std::size_t, ModelInfo> ModelDb::map;
 
 std::size_t ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
@@ -47,7 +47,7 @@ std::size_t ModelDb::add_model_job(
     const auto &find_model_iter = std::find_if(
         ModelDb::map.cbegin(),
         ModelDb::map.cend(),
-        [p_model_path](const std::pair<const std::size_t, Model> &p_model_iter) -> bool {
+        [p_model_path](const std::pair<const std::size_t, ModelInfo> &p_model_iter) -> bool {
             return p_model_iter.second.m_path == p_model_path;
         });
     if (find_model_iter != ModelDb::map.cend())
@@ -77,7 +77,7 @@ std::size_t ModelDb::add_model_job(
 
     // TODO :: Must be deferred until Texture and Mesh are done with their shit.
     return add_model(
-        Model(
+        ModelInfo(
             p_model_path,
             meshes));
 };
@@ -206,8 +206,9 @@ std::vector<Texture> load_material_textures(
 };
 
 std::size_t add_model(
-    const Model &p_modeldata) noexcept
+    const ModelInfo &p_modeldata) noexcept
 {
+    static std::atomic<std::size_t> model_counter = 1;
     std::size_t model_id = model_counter++;
     ModelDb::map.emplace(
         model_id,

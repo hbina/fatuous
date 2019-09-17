@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-std::unordered_map<GLuint, ShaderFile> ShaderDb::shader_map;
+std::unordered_map<GLuint, ShaderFile> ShaderDb::file_map;
 std::unordered_map<GLuint, ShaderProgram> ShaderDb::program_map;
 
 GLuint add_shader_file(
@@ -233,7 +233,7 @@ GLuint add_shader_file(
     const std::string &p_content,
     const ShaderType &p_type) noexcept
 {
-    ShaderDb::shader_map.emplace(
+    ShaderDb::file_map.emplace(
         std::make_pair(
             p_id,
             ShaderFile(p_filepath,

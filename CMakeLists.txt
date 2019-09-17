@@ -35,6 +35,7 @@ add_executable(
     src/enums/texture_type.cpp
 
     src/components/model.cpp
+    src/components/model_info.cpp
     src/components/shader_file.cpp
     src/components/mesh_job.cpp
     src/components/mesh.cpp

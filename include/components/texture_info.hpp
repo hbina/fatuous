@@ -15,8 +15,7 @@ struct TextureInfo
     std::string m_path;
     std::array<int, 3> m_dimension;
 
-    // TODO :: Make this =delete later and use operator[] instead...
-    TextureInfo() = default;
+    TextureInfo() = delete;
     TextureInfo(const GLuint,
                 const TextureType,
                 const std::string &,

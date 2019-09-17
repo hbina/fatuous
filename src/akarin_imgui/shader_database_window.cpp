@@ -11,6 +11,7 @@
 
 void ShaderDbWindow::render(entt::registry &p_reg) noexcept
 {
+    ImGui::Begin("Shader Database");
     if (ImGui::CollapsingHeader("Shader Files"))
     {
         if (ImGui::CollapsingHeader("Load Shader Files"))
@@ -29,14 +30,16 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
         if (ImGui::CollapsingHeader("Shader Files List"))
         {
             ImGui::Text("List of Shader files loaded:");
-
-            p_reg.view<ShaderFile>().each([](const ShaderFile &p_iter) {
+            for (const std::pair<const GLuint, ShaderFile> &iter : ShaderDb::file_map)
+            {
                 std::ostringstream out;
-                out << p_iter << "\n";
+                out << "id:" << iter.first << " ";
+                out << "filepath:" << iter.second.m_filepath << " ";
+                out << "type:" << iter.second.m_type << "\n";
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
-            });
+            };
         }
     }
     if (ImGui::CollapsingHeader("Shader Programs"))
@@ -55,13 +58,19 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
         if (ImGui::CollapsingHeader("Shader Programs List"))
         {
             ImGui::Text("List of Shader programs loaded:");
-            p_reg.view<ShaderProgram>().each([](const ShaderProgram &prg_iter) {
+            for (const std::pair<const GLuint, ShaderProgram> &iter : ShaderDb::program_map)
+            {
                 std::ostringstream out;
-                out << prg_iter << "\n";
+                out << "id:" << iter.first << "\n";
+                for (const GLuint shader_id : iter.second.m_shaders)
+                {
+                    out << "\t" << shader_id << "\n";
+                }
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
-            });
+            };
         }
     }
+    ImGui::End();
 };

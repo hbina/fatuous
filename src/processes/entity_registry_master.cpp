@@ -9,7 +9,6 @@
 #include "akarin_database/shader/shader_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
-#include "components/shader.hpp"
 
 #include "entt/entt.hpp"
 
@@ -37,7 +36,7 @@ void EntityRegistryMaster::create_entity(
     entt::entity new_entity = p_reg.create();
     p_reg.assign<Model>(
         new_entity,
-        ModelDb::map.at(p_model_id));
+        ModelDb::map.at(p_model_id).m_model);
 
     p_reg.assign<Transform>(
         new_entity,

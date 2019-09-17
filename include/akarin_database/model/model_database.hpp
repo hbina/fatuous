@@ -1,8 +1,9 @@
 #ifndef MODEL_SYSTEM_HPP
 #define MODEL_SYSTEM_HPP
 
-#include "components/texture.hpp"
 #include "components/model.hpp"
+#include "components/texture.hpp"
+#include "components/model_info.hpp"
 
 #include "entt/entt.hpp"
 
@@ -13,7 +14,7 @@
 
 namespace ModelDb
 {
-extern std::unordered_map<std::size_t, Model> map;
+extern std::unordered_map<std::size_t, ModelInfo> map;
 
 std::size_t add_model_job(
     const std::string &) noexcept;
