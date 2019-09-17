@@ -5,15 +5,13 @@
 
 // FIXME :: This is not normalized data structure! ... Or is it?
 Mesh::Mesh(
-    const std::size_t p_id,
     const GLuint p_vao_gl_id,
     const GLuint p_vbo_gl_id,
     const GLuint p_ebo_gl_id,
     const std::vector<Vertex> &p_vertices,
     const std::vector<std::uint32_t> &p_indices,
     const std::vector<Texture> &p_textures) noexcept
-    : m_id(p_id),
-      m_vao_gl_id(p_vao_gl_id),
+    : m_vao_gl_id(p_vao_gl_id),
       m_vbo_gl_id(p_vbo_gl_id),
       m_ebo_gl_id(p_ebo_gl_id),
       m_vertices(p_vertices),

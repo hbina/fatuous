@@ -63,7 +63,6 @@ Mesh MeshDb::create_mesh(
     glBindVertexArray(0);
 
     Mesh mesh = Mesh(
-        mesh_id,
         mesh_vao_gl_id,
         mesh_vbo_gl_id,
         mesh_ebo_gl_id,

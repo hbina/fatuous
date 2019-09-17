@@ -10,7 +10,6 @@
 
 struct Mesh
 {
-    const std::size_t m_id;
     const GLuint m_vao_gl_id;
     const GLuint m_vbo_gl_id;
     const GLuint m_ebo_gl_id;
@@ -20,7 +19,6 @@ struct Mesh
 
     Mesh() = delete;
     Mesh(
-        const std::size_t,
         const GLuint,
         const GLuint,
         const GLuint,
