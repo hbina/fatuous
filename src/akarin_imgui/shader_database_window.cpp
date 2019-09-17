@@ -33,9 +33,7 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
 
             p_reg.view<ShaderFile>().each([](const ShaderFile &p_iter) {
                 std::ostringstream out;
-                out << p_iter.m_id;
-                out << " : ";
-                out << p_iter.m_filepath << "\n";
+                out << p_iter << "\n";
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
@@ -60,12 +58,7 @@ void ShaderDbWindow::render(entt::registry &p_reg) noexcept
             ImGui::Text("List of Shader programs loaded:");
             p_reg.view<ShaderProgram>().each([](const ShaderProgram &prg_iter) {
                 std::ostringstream out;
-                out << prg_iter.m_id;
-                out << " : ";
-                for (const GLuint &shr_iter : prg_iter.m_shaders)
-                {
-                    out << shr_iter << ", ";
-                };
+                out << prg_iter << "\n";
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
