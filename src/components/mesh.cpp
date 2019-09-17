@@ -11,7 +11,7 @@ Mesh::Mesh(
     const GLuint p_ebo_gl_id,
     const std::vector<Vertex> &p_vertices,
     const std::vector<std::uint32_t> &p_indices,
-    const std::vector<std::size_t> &p_textures) noexcept
+    const std::vector<Texture> &p_textures) noexcept
     : m_id(p_id),
       m_vao_gl_id(p_vao_gl_id),
       m_vbo_gl_id(p_vbo_gl_id),

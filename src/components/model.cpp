@@ -1,4 +1,4 @@
-#include "components/model_data.hpp"
+#include "components/model.hpp"
 
 Model::Model(
     const std::string &m_path,

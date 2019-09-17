@@ -4,5 +4,8 @@
 
 struct Position
 {
-    glm::vec3 position;
+    glm::vec3 m_pos;
+
+    Position() = delete;
+    Position(const glm::vec3 &);
 };
