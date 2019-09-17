@@ -59,8 +59,7 @@ add_executable(
     src/akarin_imgui/model_database_window.cpp
     src/akarin_imgui/lighting_database_window.cpp
     src/akarin_imgui/entity_database_window.cpp
-    src/akarin_imgui/shader_code_database_window.cpp
-    src/akarin_imgui/shader_program_database_window.cpp
+    src/akarin_imgui/shader_database_window.cpp
     src/akarin_imgui/opengl_settings_window.cpp)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

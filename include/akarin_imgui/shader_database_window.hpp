@@ -1,7 +1,7 @@
 #ifndef SHADER_PROGRAM_DATABASE_WINDOW_HPP
 #define SHADER_PROGRAM_DATABASE_WINDOW_HPP
 
-namespace ShaderProgramDbWindow
+namespace ShaderDbWindow
 {
 void render() noexcept;
 };
