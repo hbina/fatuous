@@ -7,36 +7,45 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<std::size_t, MeshData> MeshDb::meshes_map;
+// std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
 
-std::mutex mesh_job_mutex;
 std::atomic<std::size_t> mesh_id_counter = 1;
-std::vector<MeshJob> mesh_jobs;
 
-void execute_job(const MeshJob &) noexcept;
+void execute_job(
+    entt::registry &,
+    const MeshJob &) noexcept;
 
 std::size_t MeshDb::add_mesh_job(
+    entt::registry &p_reg,
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
     const std::vector<std::size_t> &p_textures) noexcept
 {
-    std::lock_guard<std::mutex> lock(mesh_job_mutex);
-    const std::size_t mesh_id{mesh_id_counter++};
-    mesh_jobs.emplace_back(mesh_id, p_vertices, p_indices, p_textures);
+    const std::size_t mesh_id = mesh_id_counter++;
+    p_reg.assign<MeshJob>(
+        p_reg.create(),
+        mesh_id,
+        p_vertices,
+        p_indices,
+        p_textures);
     return mesh_id;
 };
 
-void MeshDb::execute_jobs() noexcept
+void MeshDb::execute_jobs(
+    entt::registry &p_reg) noexcept
 {
-    std::lock_guard<std::mutex> lock(mesh_job_mutex);
-    for (const MeshJob &mesh_job : mesh_jobs)
-    {
-        execute_job(mesh_job);
-    }
-    mesh_jobs.clear();
+    p_reg.view<MeshJob>()
+        .each([&](
+                  const entt::entity &e,
+                  const MeshJob &mesh_job) {
+            execute_job(p_reg, mesh_job);
+            p_reg.destroy(e);
+        });
 };
 
-void execute_job(const MeshJob &p_mesh_job) noexcept
+void execute_job(
+    entt::registry &p_reg,
+    const MeshJob &p_mesh_job) noexcept
 {
     GLuint mesh_vao_gl_id = 0;
     GLuint mesh_vbo_gl_id = 0;
@@ -83,14 +92,13 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
 
     glBindVertexArray(0);
 
-    MeshDb::meshes_map.emplace(
-        std::make_pair(
-            p_mesh_job.m_id,
-            MeshData(
-                mesh_vao_gl_id,
-                mesh_vbo_gl_id,
-                mesh_ebo_gl_id,
-                p_mesh_job.m_vertices,
-                p_mesh_job.m_indices,
-                p_mesh_job.m_textures)));
+    p_reg.assign<Mesh>(
+        p_reg.create(),
+        p_mesh_job.m_id,
+        mesh_vao_gl_id,
+        mesh_vbo_gl_id,
+        mesh_ebo_gl_id,
+        p_mesh_job.m_vertices,
+        p_mesh_job.m_indices,
+        p_mesh_job.m_textures);
 };

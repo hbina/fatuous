@@ -1,9 +1,9 @@
-#ifndef MODEL_DATABASE_WINDOW_HPP
-#define MODEL_DATABASE_WINDOW_HPP
+#pragma once
+
+#include "entt/entt.hpp"
 
 namespace ModelDbWindow
 {
-void render() noexcept;
+void render(
+    entt::registry &) noexcept;
 };
-
-#endif

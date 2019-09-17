@@ -20,8 +20,9 @@
 #include "glm/glm.hpp"
 
 void draw(
+    entt::registry &,
     const GLuint,
-    const ModelData &,
+    const Model &,
     const Transform &,
     bool draw_depth = false);
 
@@ -52,8 +53,9 @@ void RenderingProcess::render(
 };
 
 void draw(
+    entt::registry &p_reg,
     const GLuint p_shader_id,
-    const ModelData &p_model,
+    const Model &p_model,
     const Transform &p_transform,
     const bool draw_depth)
 {
@@ -64,12 +66,10 @@ void draw(
         p_transform.position,
         p_transform.scale,
         draw_depth);
-    for (const std::size_t &p_mesh_id : p_model.m_meshes)
-    {
-        MeshDb::meshes_map.at(p_mesh_id).draw(
-            p_shader_id,
-            draw_depth);
-    }
+    p_reg.view<Mesh>()
+        .each([&](const Mesh &mesh) {
+            mesh.draw(p_shader_id, draw_depth);
+        });
 };
 
 void render_normal(
@@ -114,12 +114,12 @@ void render_normal(
         AkarinCameraSystem::get_position());
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
-    p_reg.view<ModelData, Transform>()
-        .each([](
-                  const auto &e,
-                  const ModelData &p_model_data,
+    p_reg.view<Model, Transform>()
+        .each([&](
+                  const Model &p_model_data,
                   const Transform &p_transform) {
             draw(
+                p_reg,
                 model_shader,
                 p_model_data,
                 p_transform);
@@ -212,12 +212,12 @@ void prepare_shadow(
         depth_shader,
         "camera_position",
         AkarinCameraSystem::get_position());
-    p_reg.view<ModelData, Transform>()
-        .each([](
-                  const auto &e,
-                  const ModelData &p_model_data,
+    p_reg.view<Model, Transform>()
+        .each([&](
+                  const Model &p_model_data,
                   const Transform &p_transform) {
             draw(
+                p_reg,
                 depth_shader,
                 p_model_data,
                 p_transform,

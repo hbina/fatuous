@@ -23,7 +23,7 @@
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
 void add_model(
-    const ModelData &) noexcept;
+    const Model &) noexcept;
 bool contains(
     const std::string &) noexcept;
 std::vector<std::size_t> load_material_textures(
@@ -32,64 +32,64 @@ std::vector<std::size_t> load_material_textures(
     const aiTextureType,
     const TextureType) noexcept;
 void process_node(
+    entt::registry &,
     const std::string &,
     const aiNode *,
     const aiScene *,
     std::vector<std::size_t> &) noexcept;
 std::size_t process_mesh(
+    entt::registry &,
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
-std::unordered_map<std::size_t, ModelData> ModelDb::models_map;
+std::unordered_map<std::size_t, Model> ModelDb::models_map;
 std::atomic<std::size_t> m_model_id_counter = 1;
-std::vector<std::future<void>> model_jobs;
 
 void ModelDb::add_model_job(
+    entt::registry &p_reg,
     const std::string &p_model_path) noexcept
 {
-    model_jobs.push_back(std::async(
-        std::launch::async,
-        [p_model_path]() {
-            const auto &find_model_iter = std::find_if(
-                ModelDb::models_map.cbegin(),
-                ModelDb::models_map.cend(),
-                [p_model_path](const std::pair<const std::size_t, ModelData> &p_model_iter) -> bool {
-                    return p_model_iter.second.m_path == p_model_path;
-                });
-            if (find_model_iter != ModelDb::models_map.cend())
-            {
-                std::cout << "model:" << p_model_path << " already exists\n";
-                return;
-            }
+    const auto &find_model_iter = std::find_if(
+        ModelDb::models_map.cbegin(),
+        ModelDb::models_map.cend(),
+        [p_model_path](const std::pair<const std::size_t, Model> &p_model_iter) -> bool {
+            return p_model_iter.second.m_path == p_model_path;
+        });
+    if (find_model_iter != ModelDb::models_map.cend())
+    {
+        std::cout << "model:" << p_model_path << " already exists\n";
+        return;
+    }
 
-            Assimp::Importer importer;
-            const aiScene *scene = importer.ReadFile(p_model_path, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-            {
-                std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
-                return;
-            }
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile(p_model_path, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        std::cerr << "unable to load model error:" << importer.GetErrorString() << "\n";
+        return;
+    }
 
-            const std::string model_root_directory = p_model_path.substr(
-                0,
-                p_model_path.find_last_of('/'));
-            aiNode *root_node = scene->mRootNode;
-            std::vector<std::size_t> meshes;
-            process_node(
-                model_root_directory,
-                root_node,
-                scene,
-                meshes);
+    const std::string model_root_directory = p_model_path.substr(
+        0,
+        p_model_path.find_last_of('/'));
+    aiNode *root_node = scene->mRootNode;
+    std::vector<std::size_t> meshes;
+    process_node(
+        p_reg,
+        model_root_directory,
+        root_node,
+        scene,
+        meshes);
 
-            // TODO :: Must be deferred until Texture and Mesh are done with their shit.
-            add_model(
-                ModelData(
-                    p_model_path,
-                    meshes));
-        }));
+    // TODO :: Must be deferred until Texture and Mesh are done with their shit.
+    add_model(
+        Model(
+            p_model_path,
+            meshes));
 };
 
 void process_node(
+    entt::registry &p_reg,
     const std::string &p_model_root_directory,
     const aiNode *node,
     const aiScene *scene,
@@ -98,15 +98,25 @@ void process_node(
     for (std::size_t i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh *ai_mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(process_mesh(p_model_root_directory, ai_mesh, scene));
+        meshes.push_back(process_mesh(
+            p_reg,
+            p_model_root_directory,
+            ai_mesh,
+            scene));
     }
     for (std::size_t i = 0; i < node->mNumChildren; i++)
     {
-        process_node(p_model_root_directory, node->mChildren[i], scene, meshes);
+        process_node(
+            p_reg,
+            p_model_root_directory,
+            node->mChildren[i],
+            scene,
+            meshes);
     }
 };
 
 std::size_t process_mesh(
+    entt::registry &p_reg,
     const std::string &p_model_root_directory,
     const aiMesh *p_mesh,
     const aiScene *p_scene) noexcept
@@ -181,7 +191,7 @@ std::size_t process_mesh(
     std::vector<std::size_t> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
     textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
 
-    return MeshDb::add_mesh_job(vertices, indices, textures);
+    return MeshDb::add_mesh_job(p_reg, vertices, indices, textures);
 };
 
 std::vector<std::size_t> load_material_textures(
@@ -205,7 +215,7 @@ std::vector<std::size_t> load_material_textures(
 };
 
 void add_model(
-    const ModelData &p_modeldata) noexcept
+    const Model &p_modeldata) noexcept
 {
     std::size_t model_id = m_model_id_counter++;
     ModelDb::models_map.emplace(
