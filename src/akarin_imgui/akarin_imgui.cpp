@@ -1,5 +1,5 @@
 #include "akarin_imgui/akarin_imgui.hpp"
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/glfw/akarin_glfw.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
 #include "akarin_imgui/entity_database_window.hpp"
 #include "akarin_imgui/model_database_window.hpp"

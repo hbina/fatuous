@@ -1,6 +1,6 @@
 #include "misc/opengl_settings.hpp"
 #include "misc/akarin_macros.hpp"
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/glfw/akarin_glfw.hpp"
 
 #include "glad/glad.h"
 

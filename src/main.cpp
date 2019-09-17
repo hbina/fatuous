@@ -1,4 +1,4 @@
-#include "akarin_database/singleton/glfw/akarin_glfw.hpp"
+#include "akarin_database/glfw/akarin_glfw.hpp"
 #include "processes/entity_registry_master.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
 
