@@ -57,7 +57,7 @@ void ModelDbWindow::render(
                     for (const std::size_t &p_texture_id : mesh_iter.m_textures)
                     {
                         // TODO :: Refactor a bunch of this
-                        const TextureData &texture_data = TextureDb::textures_map[p_texture_id];
+                        const TextureInfo &texture_data = TextureDb::textures_map[p_texture_id];
                         std::stringstream ostr_texture_gl_id;
                         ostr_texture_gl_id << texture_data.m_gl_id;
                         ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());

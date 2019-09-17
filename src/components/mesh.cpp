@@ -1,4 +1,4 @@
-#include "components/mesh_data.hpp"
+#include "components/mesh.hpp"
 #include "akarin_database/shader/shader_database.hpp"
 
 #include "glad/glad.h"

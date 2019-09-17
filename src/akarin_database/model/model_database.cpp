@@ -36,8 +36,8 @@ void process_node(
     const std::string &,
     const aiNode *,
     const aiScene *,
-    std::vector<std::size_t> &) noexcept;
-std::size_t process_mesh(
+    std::vector<Mesh> &) noexcept;
+Mesh process_mesh(
     entt::registry &,
     const std::string &,
     const aiMesh *,
@@ -73,7 +73,7 @@ void ModelDb::add_model_job(
         0,
         p_model_path.find_last_of('/'));
     aiNode *root_node = scene->mRootNode;
-    std::vector<std::size_t> meshes;
+    std::vector<Mesh> meshes;
     process_node(
         p_reg,
         model_root_directory,
@@ -93,7 +93,7 @@ void process_node(
     const std::string &p_model_root_directory,
     const aiNode *node,
     const aiScene *scene,
-    std::vector<std::size_t> &meshes) noexcept
+    std::vector<Mesh> &meshes) noexcept
 {
     for (std::size_t i = 0; i < node->mNumMeshes; i++)
     {
@@ -115,7 +115,7 @@ void process_node(
     }
 };
 
-std::size_t process_mesh(
+Mesh process_mesh(
     entt::registry &p_reg,
     const std::string &p_model_root_directory,
     const aiMesh *p_mesh,
@@ -191,7 +191,7 @@ std::size_t process_mesh(
     std::vector<std::size_t> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
     textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
 
-    return MeshDb::add_mesh_job(p_reg, vertices, indices, textures);
+    return MeshDb::create_mesh(p_reg, vertices, indices, textures);
 };
 
 std::vector<std::size_t> load_material_textures(
@@ -200,7 +200,7 @@ std::vector<std::size_t> load_material_textures(
     const aiTextureType p_ai_texture_type,
     const TextureType p_texture_type) noexcept
 {
-    std::vector<std::size_t> textures;
+    std::vector<Texture> textures;
     auto tex_count = p_ai_material->GetTextureCount(p_ai_texture_type);
     for (std::uint32_t texture_iter = 0; texture_iter < tex_count; texture_iter++)
     {

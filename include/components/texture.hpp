@@ -6,7 +6,7 @@
 
 struct Texture
 {
-  std::size_t m_id;
+  GLuint m_id = 0;
 
   Texture() = delete;
   Texture(const std::size_t);

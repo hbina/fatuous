@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-struct TextureData
+struct TextureInfo
 {
     GLuint m_gl_id;
     TextureType m_type;
@@ -16,8 +16,8 @@ struct TextureData
     std::array<int, 3> m_dimension;
 
     // TODO :: Make this =delete later and use operator[] instead...
-    TextureData() = default;
-    TextureData(const GLuint,
+    TextureInfo() = default;
+    TextureInfo(const GLuint,
                 const TextureType,
                 const std::string &,
                 const std::array<int, 3> &);
