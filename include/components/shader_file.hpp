@@ -19,5 +19,3 @@ struct ShaderFile
         const std::string &,
         const ShaderType);
 };
-
-std::ostream &operator<<(std::ostream &, const ShaderFile &) noexcept;

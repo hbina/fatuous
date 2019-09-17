@@ -14,9 +14,9 @@
 #include <sstream>
 
 void ModelDbWindow::render(
-    entt::registry &p_reg) noexcept
+    entt::registry &p_reg) noexcept // We will use this to list users of ModelInfo
 {
-    ImGui::Begin("Model System");
+    ImGui::Begin("Model Database");
     if (ImGui::CollapsingHeader("Load Models"))
     {
         static char model_path_text[64] = "";
@@ -58,7 +58,7 @@ void ModelDbWindow::render(
                     for (const Texture &p_texture_id : mesh.m_textures)
                     {
                         // TODO :: Refactor a bunch of this
-                        const TextureInfo &texture_data = TextureDb::textures_map[p_texture_id.m_gl_id];
+                        const TextureInfo &texture_data = TextureDb::textures_map.at(p_texture_id.m_gl_id);
                         std::stringstream ostr_texture_gl_id;
                         ostr_texture_gl_id << texture_data.m_gl_id;
                         ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());

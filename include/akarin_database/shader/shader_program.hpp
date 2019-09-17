@@ -12,5 +12,3 @@ struct ShaderProgram
     ShaderProgram(
         const std::vector<GLuint> &) noexcept;
 };
-
-std::ostream &operator<<(std::ostream &, const ShaderProgram &) noexcept;
