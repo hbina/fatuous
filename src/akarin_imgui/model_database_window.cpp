@@ -36,7 +36,7 @@ void ModelDbWindow::render() noexcept
             {
                 for (const std::size_t &p_mesh_id : p_modeldata_iter.second.m_meshes)
                 {
-                    const MeshData &mesh_iter = MeshDb::meshes_map.at(p_mesh_id);
+                    const Mesh &mesh_iter = MeshDb::meshes_map.at(p_mesh_id);
                     std::stringstream vao_id_ostr;
                     vao_id_ostr << "m_vao_id: ";
                     vao_id_ostr << mesh_iter.m_vao_gl_id;

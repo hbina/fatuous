@@ -7,7 +7,7 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<std::size_t, MeshData> MeshDb::meshes_map;
+std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
 
 std::mutex mesh_job_mutex;
 std::atomic<std::size_t> mesh_id_counter = 1;
@@ -86,7 +86,7 @@ void execute_job(const MeshJob &p_mesh_job) noexcept
     MeshDb::meshes_map.emplace(
         std::make_pair(
             p_mesh_job.m_id,
-            MeshData(
+            Mesh(
                 mesh_vao_gl_id,
                 mesh_vbo_gl_id,
                 mesh_ebo_gl_id,

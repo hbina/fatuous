@@ -165,7 +165,7 @@ void ShaderDb::set_shader_program_texture(
     const std::vector<std::size_t> &textures) noexcept
 {
     // TODO :: This is not normalized data structure...please consider making it so.
-    for (std::size_t i = 0; i < textures.size(); i++)
+    for (GLint i = 0; i < static_cast<GLint>(textures.size()); i++)
     {
         switch (TextureDb::textures_map[textures[i]].m_type)
         {

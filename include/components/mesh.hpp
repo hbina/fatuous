@@ -8,7 +8,7 @@
 #include <vector>
 #include <array>
 
-struct MeshData
+struct Mesh
 {
     GLuint m_vao_gl_id = 0;
     GLuint m_vbo_gl_id = 0;
@@ -17,8 +17,8 @@ struct MeshData
     const std::vector<unsigned int> m_indices;
     const std::vector<std::size_t> m_textures;
 
-    MeshData() = delete;
-    MeshData(
+    Mesh() = delete;
+    Mesh(
         const unsigned int,
         const unsigned int,
         const unsigned int,

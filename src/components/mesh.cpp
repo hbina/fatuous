@@ -1,10 +1,10 @@
-#include "components/mesh_data.hpp"
+#include "components/mesh.hpp"
 #include "akarin_database/shader/shader_database.hpp"
 
 #include "glad/glad.h"
 
 // FIXME :: This is not normalized data structure! ... Or is it?
-MeshData::MeshData(
+Mesh::Mesh(
     const GLuint p_vao_gl_id,
     const GLuint p_vbo_gl_id,
     const GLuint p_ebo_gl_id,
@@ -18,7 +18,7 @@ MeshData::MeshData(
       m_indices(p_indices),
       m_textures(p_textures){};
 
-void MeshData::draw(
+void Mesh::draw(
     const GLuint p_shader_id,
     bool draw_depth = false) const
 {

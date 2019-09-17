@@ -37,7 +37,7 @@ add_executable(
     src/components/model_data.cpp
     src/components/shader_file.cpp
     src/components/mesh_job.cpp
-    src/components/mesh_data.cpp
+    src/components/mesh.cpp
     src/components/texture.cpp
     src/components/texture_data.cpp
     src/components/texture_job.cpp

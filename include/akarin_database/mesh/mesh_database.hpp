@@ -1,7 +1,7 @@
 #ifndef MESH_DATABASE_HPP
 #define MESH_DATABASE_HPP
 
-#include "components/mesh_data.hpp"
+#include "components/mesh.hpp"
 #include "components/vertex.hpp"
 
 #include <unordered_map>
@@ -9,7 +9,7 @@
 namespace MeshDb
 {
 // TODO :: Must check if hash conflicts
-extern std::unordered_map<std::size_t, MeshData> meshes_map;
+extern std::unordered_map<std::size_t, Mesh> meshes_map;
 
 std::size_t add_mesh_job(
     const std::vector<Vertex> &,
