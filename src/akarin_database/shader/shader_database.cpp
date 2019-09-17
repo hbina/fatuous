@@ -9,11 +9,12 @@
 constexpr GLuint DEFAULT_SHADER_ID = 0;
 
 GLuint ShaderDb::compile_shader(
-    const ShaderFile &p_shader_file) noexcept
+    const std::string &p_content,
+    const ShaderType p_type) noexcept
 {
     GLuint shader_id = DEFAULT_SHADER_ID;
 
-    switch (p_shader_file.m_type)
+    switch (p_type)
     {
     case ShaderType::VERTEX:
     {
@@ -38,10 +39,10 @@ GLuint ShaderDb::compile_shader(
     };
     };
 
-    const char *shader_code_cstr = p_shader_file.m_content.c_str();
+    const char *shader_code_cstr = p_content.c_str();
     glShaderSource(shader_id, 1, &shader_code_cstr, nullptr);
     glCompileShader(shader_id);
-    test_shader_code_compilation(shader_id, p_shader_file.m_type);
+    test_shader_code_compilation(shader_id, p_type);
     return shader_id;
 };
 
@@ -61,81 +62,93 @@ void ShaderDb::test_shader_code_compilation(
     }
 };
 
-ShaderFile ShaderDb::read_shader_code_file(
-    const std::string &p_shader_path,
+std::string ShaderDb::read_shader_code_file(
+    const std::string &p_path,
     const ShaderType p_type)
 {
-    std::string shader_code;
-    std::ifstream shader_file_istream;
-    shader_file_istream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    std::string content;
+    std::ifstream ifs;
+    ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
     {
-        shader_file_istream.open(p_shader_path);
+        ifs.open(p_path);
         std::stringstream fragment_shader_stream;
-        fragment_shader_stream << shader_file_istream.rdbuf();
-        shader_file_istream.close();
-        shader_code = fragment_shader_stream.str();
+        fragment_shader_stream << ifs.rdbuf();
+        ifs.close();
+        content = fragment_shader_stream.str();
     }
     catch (std::ifstream::failure e)
     {
-        std::cerr << "p_shader files could not be loaded p_shader_path:" << p_shader_path << "\n";
+        std::cerr << "shader file could not be loaded p_path:" << p_path << "\n";
     }
-    return ShaderFile(
-        p_shader_path,
-        shader_code,
+    return content;
+};
+
+void ShaderDb::add_shader_file(
+    entt::registry &p_reg,
+    const GLuint p_id,
+    const std::string &p_filepath,
+    const std::string &p_content,
+    const ShaderType &p_type) noexcept
+{
+    p_reg.assign<ShaderFile>(
+        p_reg.create(),
+        p_id,
+        p_filepath,
+        p_content,
         p_type);
 };
 
-void ShaderDb::add_shader_code(
-    const GLuint p_shader_code_id,
-    const ShaderFile &p_shader_file) noexcept
-{
-    file_map.emplace(
-        p_shader_code_id,
-        p_shader_file);
-};
-
 GLuint ShaderDb::load_shader_file(
+    entt::registry &p_reg,
     const std::string &p_filepath,
     const ShaderType p_type) noexcept
 {
-    const auto &find_iter = std::find_if(
-        file_map.cbegin(),
-        file_map.cend(),
-        [p_filepath](const auto &p_iter) -> bool {
-            return p_iter.second.m_filepath == p_filepath;
-        });
-    if (find_iter != file_map.cend())
-    {
-        return (*find_iter).first;
-    }
-    const ShaderFile &shader_data = read_shader_code_file(p_filepath, p_type);
-    GLuint shader_id = compile_shader(shader_data);
+    const auto &shader_data = read_shader_code_file(p_filepath, p_type);
+    GLuint shader_id = compile_shader(shader_data, p_type);
     if (shader_id != DEFAULT_SHADER_ID)
     {
-        add_shader_code(shader_id, shader_data);
+        add_shader_file(
+            p_reg,
+            shader_id,
+            p_filepath,
+            shader_data,
+            p_type);
     }
     return shader_id;
 };
 
 GLuint ShaderDb::link_shader_codes(
+    entt::registry &p_reg,
     const std::vector<GLuint> &p_shaders) noexcept
 {
-    GLuint shader_program_id = glCreateProgram();
+    GLuint prg_id = glCreateProgram();
     for (const auto shader_id : p_shaders)
     {
-        glAttachShader(shader_program_id, shader_id);
+        glAttachShader(prg_id, shader_id);
     }
-    glLinkProgram(shader_program_id);
-    program_map.emplace(
-        shader_program_id,
-        ShaderProgram(p_shaders));
-    test_shader_program_compilation(shader_program_id);
-    return shader_program_id;
+    glLinkProgram(prg_id);
+    test_shader_program_compilation(prg_id, p_shaders);
+    add_shader_program(p_reg,
+                       prg_id,
+                       p_shaders);
+    return prg_id;
+};
+
+void ShaderDb::add_shader_program(
+    entt::registry &p_reg,
+    const GLuint p_id,
+    const std::vector<GLuint> &p_shaders) noexcept
+{
+    p_reg.assign<ShaderProgram>(
+        p_reg.create(),
+        p_id,
+        p_shaders);
 };
 
 void ShaderDb::test_shader_program_compilation(
-    const GLuint p_shader) noexcept
+    const GLuint p_shader,
+    const std::vector<GLuint> &p_shaders) noexcept
 {
     static constexpr auto info_log_size = 1024;
     GLint success;
@@ -146,11 +159,11 @@ void ShaderDb::test_shader_program_compilation(
         glGetProgramInfoLog(p_shader, info_log_size, nullptr, info_log);
         std::cerr << "p_shader:" << p_shader << " shader program compilation failed"
                   << "\n";
-        for (const auto &p_iter : program_map.at(p_shader).m_shader_ids)
+        for (const auto &p_iter : p_shaders)
         {
             std::cerr << "id: " << p_iter << "\n";
-            std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
-            std::cerr << "type: " << file_map.at(p_iter).m_type << "\n";
+            // std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
+            // std::cerr << "type: " << file_map.at(p_iter).m_type << "\n";
         }
         std::cout << info_log << "\n";
     }
@@ -204,20 +217,4 @@ void ShaderDb::set_shader_program_texture(
         };
     }
     // TODO :: Temporary solution...need to figure out how deal with this crap
-};
-
-// Public functions
-
-ShaderDb &ShaderDb::get() noexcept
-{
-    static ShaderDb instance;
-    return instance;
-};
-
-ShaderDb::~ShaderDb()
-{
-    for (const auto &iter : program_map)
-    {
-        glDeleteProgram(iter.first);
-    }
 };

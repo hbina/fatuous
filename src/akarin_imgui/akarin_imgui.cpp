@@ -22,7 +22,7 @@ bool show_shadercode_database_window = false;
 bool show_shaderprogram_database_window = false;
 bool show_opengl_settings_window = false;
 
-void AkarinImgui::render() noexcept
+void AkarinImgui::render(entt::registry& p_reg) noexcept
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -47,7 +47,7 @@ void AkarinImgui::render() noexcept
     if (show_lighting_database_window)
         LightingDbWindow::render();
     if (show_shaderprogram_database_window)
-        ShaderDbWindow::render();
+        ShaderDbWindow::render(p_reg);
     if (show_opengl_settings_window)
         OpenGLSettingsWindow::render();
     ImGui::Render();

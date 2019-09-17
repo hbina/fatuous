@@ -1,9 +1,8 @@
-#ifndef SKYBOX_SYSTEM_HPP
-#define SKYBOX_SYSTEM_HPP
+#pragma once
+
+#include "entt/entt.hpp"
 
 namespace SkyboxSystem
 {
-void render() noexcept;
+void render(entt::registry &p_reg) noexcept;
 }; // namespace SkyboxSystem
-
-#endif

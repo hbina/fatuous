@@ -25,7 +25,6 @@ void EntityRegistryMaster::run() noexcept
     AkarinCameraSystem::process_keyboard(delta_time);
     MeshDb::execute_jobs();
     TextureDb::execute_jobs();
-    SwarmSystem::update(p_reg, delta_time);
     RenderingProcess::render(p_reg);
 };
 

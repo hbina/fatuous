@@ -1,9 +1,8 @@
-#ifndef SHADER_PROGRAM_DATABASE_WINDOW_HPP
-#define SHADER_PROGRAM_DATABASE_WINDOW_HPP
+#pragma once
+
+#include "entt/entt.hpp"
 
 namespace ShaderDbWindow
 {
-void render() noexcept;
+void render(entt::registry &) noexcept;
 };
-
-#endif

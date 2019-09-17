@@ -63,7 +63,7 @@ const std::array<std::string, 6> faces{
     "./resources/skybox/front.jpg",
     "./resources/skybox/back.jpg"};
 
-void SkyboxSystem::render() noexcept
+void SkyboxSystem::render(entt::registry &p_reg) noexcept
 {
     static GLuint g_skybox_shader_id = 0;
     static GLuint g_skybox_vao_id = 0, g_skybox_vbo_id = 0;
@@ -72,11 +72,14 @@ void SkyboxSystem::render() noexcept
     if (!initialized)
     {
         initialized = true;
-        g_skybox_shader_id = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        g_skybox_shader_id = ShaderDb::link_shader_codes(
+            p_reg,
+            {ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/vertex/skybox.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/fragment/skybox.glsl",
                  ShaderType::FRAGMENT)});
         g_skybox_texture_id = TextureDb::load_cube_texture(faces);
