@@ -43,6 +43,11 @@ add_executable(
     src/components/texture_info.cpp
     src/components/texture_job.cpp
     src/components/position.cpp
+    src/components/depth_buffer.cpp
+    src/components/phong_light.cpp
+    src/components/lighting.cpp
+    src/components/intensity.cpp
+    src/components/transform.cpp
     
     src/akarin_database/texture/texture_database.cpp
     src/akarin_database/model/model_database.cpp

@@ -13,7 +13,7 @@ namespace MeshDb
 {
 extern std::unordered_map<std::size_t, Mesh> meshes_map;
 
-Mesh create_mesh(
+std::size_t create_mesh(
     const std::vector<Vertex> &,
     const std::vector<unsigned int> &,
     const std::vector<Texture> &) noexcept;

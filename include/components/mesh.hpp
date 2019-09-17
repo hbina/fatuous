@@ -15,7 +15,7 @@ struct Mesh
     const GLuint m_ebo_gl_id;
     const std::vector<Vertex> m_vertices;
     const std::vector<unsigned int> m_indices;
-    std::vector<Texture> m_textures;
+    const std::vector<Texture> m_textures;
 
     Mesh() = delete;
     Mesh(

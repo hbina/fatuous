@@ -1,5 +1,6 @@
 #include "akarin_database/shader/shader_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
+#include "misc/akarin_macros.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -9,7 +10,7 @@
 std::unordered_map<GLuint, ShaderFile> ShaderDb::file_map;
 std::unordered_map<GLuint, ShaderProgram> ShaderDb::program_map;
 
-GLuint add_shader_file(
+void add_shader_file(
     const GLuint,
     const std::string &,
     const std::string &,
@@ -47,7 +48,7 @@ GLuint ShaderDb::load_shader_file(
     GLuint shader_id = compile_shader(shader_data, p_type);
     if (shader_id != DEFAULT_SHADER_ID)
     {
-        return add_shader_file(
+        add_shader_file(
             shader_id,
             p_filepath,
             shader_data,
@@ -59,15 +60,15 @@ GLuint ShaderDb::load_shader_file(
 GLuint ShaderDb::link_shader_files(
     const std::vector<GLuint> &p_shaders) noexcept
 {
-    GLuint prg_id = glCreateProgram();
+    GLuint program_id = glCreateProgram();
     for (const auto shader_id : p_shaders)
     {
-        glAttachShader(prg_id, shader_id);
+        glAttachShader(program_id, shader_id);
     }
-    glLinkProgram(prg_id);
-    test_shader_program_compilation(prg_id, p_shaders);
-    add_shader_program(prg_id, p_shaders);
-    return prg_id;
+    glLinkProgram(program_id);
+    test_shader_program_compilation(program_id, p_shaders);
+    add_shader_program(program_id, p_shaders);
+    return program_id;
 };
 
 void ShaderDb::set_shader_program_texture(
@@ -144,8 +145,8 @@ void test_shader_program_compilation(
         for (const auto &p_iter : p_shaders)
         {
             std::cerr << "id: " << p_iter << "\n";
-            // std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
-            // std::cerr << "type: " << file_map.at(p_iter).m_type << "\n";
+            std::cerr << "filepath: " << ShaderDb::file_map.at(p_iter).m_filepath << "\n";
+            std::cerr << "type: " << ShaderDb::file_map.at(p_iter).m_type << "\n";
         }
         std::cout << info_log << "\n";
     }
@@ -176,9 +177,7 @@ GLuint compile_shader(
     }
     default:
     {
-        std::cerr << "unable to compile shader"
-                  << "\n";
-        return shader_id;
+        UNHANDLED_SWITCH_CASE(__LINE__, __FILE__);
     };
     };
 
@@ -227,7 +226,7 @@ std::string read_shader_code_file(
     return content;
 };
 
-GLuint add_shader_file(
+void add_shader_file(
     const GLuint p_id,
     const std::string &p_filepath,
     const std::string &p_content,
@@ -239,6 +238,4 @@ GLuint add_shader_file(
             ShaderFile(p_filepath,
                        p_content,
                        p_type)));
-
-    return p_id;
 };

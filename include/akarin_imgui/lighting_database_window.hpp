@@ -1,6 +1,7 @@
 #ifndef LIGHTING_WINDOW_HPP
 #define LIGHTING_WINDOW_HPP
 
+#include "akarin_database/lighting/lighting_database.hpp"
 #include "components/lighting.hpp"
 
 #include "glm/glm.hpp"
@@ -17,10 +18,6 @@ extern float shadow_bias;
 extern bool enable_directional_light;
 extern bool enable_point_light;
 extern bool enable_spot_light;
-
-extern DirectionalLight directional_light;
-extern PointLight point_light;
-extern SpotLight spot_light;
 
 void render() noexcept;
 }; // namespace LightingDbWindow

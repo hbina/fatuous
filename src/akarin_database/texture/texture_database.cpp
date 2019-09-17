@@ -10,7 +10,18 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<GLuint, TextureInfo> TextureDb::textures_map;
+std::unordered_map<GLuint, TextureInfo> TextureDb::map;
+
+bool contains(
+    const std::string &) noexcept;
+
+void add_texture(
+    const GLuint,
+    const TextureType,
+    const std::string &p_path,
+    const int,
+    const int,
+    const int) noexcept;
 
 Texture TextureDb::create_gl_texture(
     const std::string &p_path,
@@ -85,15 +96,11 @@ Texture TextureDb::create_gl_texture(
         std::cerr << "texture failed to load at p_path: " << p_path << "\n";
         stbi_image_free(data);
     }
-
-    TextureDb::textures_map.emplace(
-        std::make_pair(
-            texture_gl_id,
-            TextureInfo(
-                texture_gl_id,
-                p_type,
-                p_path,
-                {texture_width, texture_height})));
+    add_texture(
+        texture_gl_id,
+        p_type,
+        p_path,
+        texture_width, texture_height, texture_channels);
     return Texture(texture_gl_id, p_type);
 };
 
@@ -142,13 +149,40 @@ GLuint TextureDb::load_cube_texture(
     std::string textures_folder_dir = std::string(
         std::string(faces[0]).substr(0),
         std::string(faces[0]).find_last_of('/'));
-    TextureDb::textures_map.emplace(
+    add_texture(
+        texture_gl_id,
+        TextureType::CUBE_MAP,
+        textures_folder_dir,
+        texture_width, texture_height, texture_channels);
+    return texture_gl_id;
+};
+
+void add_texture(
+    const GLuint texture_gl_id,
+    const TextureType p_type,
+    const std::string &p_path,
+    const int p_texture_width,
+    const int p_texture_height,
+    const int p_texture_channel) noexcept
+{
+    TextureDb::map.emplace(
         std::make_pair(
             texture_gl_id,
             TextureInfo(
-                texture_gl_id,
-                TextureType::CUBE_MAP,
-                textures_folder_dir,
-                {texture_width, texture_height, texture_channels})));
-    return texture_gl_id;
+                Texture(
+                    texture_gl_id,
+                    p_type),
+                p_path,
+                {p_texture_width, p_texture_height, p_texture_channel})));
+};
+
+bool contains(
+    const std::string &p_texture_file) noexcept
+{
+    return std::any_of(
+        TextureDb::map.cbegin(),
+        TextureDb::map.cend(),
+        [&](const std::pair<const GLuint, TextureInfo> &p_iter) {
+            return p_iter.second.m_path == p_texture_file;
+        });
 };

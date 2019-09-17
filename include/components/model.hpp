@@ -7,9 +7,9 @@
 
 struct Model
 {
-    std::vector<Mesh> m_meshes;
+    std::vector<std::size_t> m_meshes;
 
     Model() = delete;
     Model(
-        const std::vector<Mesh> &);
+        const std::vector<std::size_t> &);
 };

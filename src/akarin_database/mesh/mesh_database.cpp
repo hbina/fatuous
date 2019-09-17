@@ -9,7 +9,7 @@
 
 std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
 
-Mesh MeshDb::create_mesh(
+std::size_t MeshDb::create_mesh(
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
     const std::vector<Texture> &p_textures) noexcept
@@ -61,16 +61,15 @@ Mesh MeshDb::create_mesh(
 
     glBindVertexArray(0);
 
-    Mesh mesh = Mesh(
-        mesh_vao_gl_id,
-        mesh_vbo_gl_id,
-        mesh_ebo_gl_id,
-        p_vertices,
-        p_indices,
-        p_textures);
     meshes_map.emplace(
         std::make_pair(
             mesh_id,
-            mesh));
-    return mesh;
+            Mesh(
+                mesh_vao_gl_id,
+                mesh_vbo_gl_id,
+                mesh_ebo_gl_id,
+                p_vertices,
+                p_indices,
+                p_textures)));
+    return mesh_id;
 };

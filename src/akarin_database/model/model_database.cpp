@@ -33,15 +33,15 @@ void process_node(
     const std::string &,
     const aiNode *,
     const aiScene *,
-    std::vector<Mesh> &) noexcept;
-Mesh process_mesh(
+    std::vector<std::size_t> &) noexcept;
+std::size_t process_mesh(
     const std::string &,
     const aiMesh *,
     const aiScene *) noexcept;
 
 std::unordered_map<std::size_t, ModelInfo> ModelDb::map;
 
-std::size_t ModelDb::add_model_job(
+std::size_t ModelDb::parse_model_file(
     const std::string &p_model_path) noexcept
 {
     const auto &find_model_iter = std::find_if(
@@ -68,7 +68,7 @@ std::size_t ModelDb::add_model_job(
         0,
         p_model_path.find_last_of('/'));
     aiNode *root_node = scene->mRootNode;
-    std::vector<Mesh> meshes;
+    std::vector<std::size_t> meshes;
     process_node(
         model_root_directory,
         root_node,
@@ -79,14 +79,14 @@ std::size_t ModelDb::add_model_job(
     return add_model(
         ModelInfo(
             p_model_path,
-            meshes));
+            Model(meshes)));
 };
 
 void process_node(
     const std::string &p_model_root_directory,
     const aiNode *node,
     const aiScene *scene,
-    std::vector<Mesh> &meshes) noexcept
+    std::vector<std::size_t> &meshes) noexcept
 {
     for (std::size_t i = 0; i < node->mNumMeshes; i++)
     {
@@ -106,7 +106,7 @@ void process_node(
     }
 };
 
-Mesh process_mesh(
+std::size_t process_mesh(
     const std::string &p_model_root_directory,
     const aiMesh *p_mesh,
     const aiScene *p_scene) noexcept
@@ -208,7 +208,7 @@ std::vector<Texture> load_material_textures(
 std::size_t add_model(
     const ModelInfo &p_modeldata) noexcept
 {
-    static std::atomic<std::size_t> model_counter = 1;
+    static std::size_t model_counter = 1;
     std::size_t model_id = model_counter++;
     ModelDb::map.emplace(
         model_id,

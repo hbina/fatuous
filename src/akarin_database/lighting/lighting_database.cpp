@@ -3,141 +3,57 @@
 #include "misc/shader_utilities.hpp"
 #include "systems/akarin_camera_system.hpp"
 
-void add_dirlight(
-    const GLuint,
-    const bool) noexcept;
-void add_pointlight(
-    const GLuint,
-    const bool) noexcept;
-void add_spotlight(
-    const GLuint,
-    const bool) noexcept;
+std::size_t directional_light_counter = 1;
+std::size_t point_light_counter = 1;
+std::size_t spot_light_counter = 1;
 
-void LightingDb::prepare_light(
-    const GLuint p_shader_id) noexcept
-{
-    add_dirlight(
-        p_shader_id,
-        LightingDbWindow::enable_directional_light);
-    add_pointlight(
-        p_shader_id,
-        LightingDbWindow::enable_point_light);
-    add_spotlight(
-        p_shader_id,
-        LightingDbWindow::enable_spot_light);
+std::unordered_map<std::size_t, DirectionalLight> LightingDb::dir_map;
+std::unordered_map<std::size_t, PointLight> LightingDb::point_map;
+std::unordered_map<std::size_t, SpotLight> LightingDb::spot_map;
+
+void LightingDb::prepare_normal_render(
+    const GLuint p_shader_id) noexcept {
+    // TODO :: Prepare for lighting stuff...
 };
 
-void add_dirlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+void LightingDb::create_dir_light() noexcept
 {
-    // TODO :: Shininess is actually part of Directional Light, as such, we need a separate Material helper class
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "material.shininess",
-        LightingDbWindow::directional_light.shininess);
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.direction",
-        LightingDbWindow::directional_light.direction);
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.ambient",
-        p_enabled ? LightingDbWindow::directional_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.diffuse",
-        p_enabled ? LightingDbWindow::directional_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "directional_light.specular",
-        p_enabled ? LightingDbWindow::directional_light.specular : std::array<float, 3>{0, 0, 0});
+    dir_map.emplace(
+        std::make_pair(
+            directional_light_counter++,
+            DirectionalLight(22.0f,
+                             glm::vec3(0.0f, 1.0f, 0.0f),
+                             PhongLight(
+                                 glm::vec3(0.7f),
+                                 glm::vec3(0.7f),
+                                 glm::vec3(0.7f)))));
 };
 
-void add_pointlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+void LightingDb::create_point_light() noexcept
 {
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.position",
-        LightingDbWindow::point_light.position);
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.ambient",
-        p_enabled ? LightingDbWindow::point_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.diffuse",
-        p_enabled ? LightingDbWindow::point_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "point_light.specular",
-        p_enabled ? LightingDbWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.attenuation_value",
-        LightingDbWindow::point_light.attenuation_value);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.constant",
-        LightingDbWindow::point_light.constant);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.linear",
-        LightingDbWindow::point_light.linear);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.quadratic",
-        LightingDbWindow::point_light.quadratic);
+    point_map.emplace(
+        std::make_pair(
+            point_light_counter++,
+            PointLight(
+                glm::vec3(0.0f),
+                Intensity(255.0f, 255.0f, 255.0f, 255.0f),
+                PhongLight(
+                    glm::vec3(255.0f),
+                    glm::vec3(255.0f),
+                    glm::vec3(255.0f)),
+                DepthBuffer(glm::vec2(500.0f)))));
+    // TODO :: Since this is a one time thing... need to pass as parameter...
 };
 
-void add_spotlight(
-    const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+void LightingDb::create_spot_light() noexcept
 {
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.position",
-        AkarinCameraSystem::get_position());
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.direction",
-        AkarinCameraSystem::get_front());
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.ambient",
-        p_enabled ? LightingDbWindow::spot_light.ambient : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.diffuse",
-        p_enabled ? LightingDbWindow::spot_light.diffuse : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setVec3(
-        p_shader_id,
-        "spot_light.specular",
-        p_enabled ? LightingDbWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "point_light.attenuation_value",
-        LightingDbWindow::point_light.attenuation_value);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.constant",
-        1.0f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.linear",
-        0.09f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.quadratic",
-        0.032f);
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.cutOff",
-        glm::cos(glm::radians(LightingDbWindow::spot_light.cutOff)));
-    ShaderUtilities::setFloat(
-        p_shader_id,
-        "spot_light.outerCutOff",
-        glm::cos(glm::radians(LightingDbWindow::spot_light.outerCutOff)));
+    spot_map.emplace(
+        std::make_pair(
+            spot_light_counter++,
+            SpotLight(
+                glm::vec3(0.0f),
+                glm::vec3(0.0f),
+                0.0f, 0.0f,
+                Intensity(255.0f, 255.0f, 255.0f, 255.0f),
+                PhongLight(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f)))));
 };

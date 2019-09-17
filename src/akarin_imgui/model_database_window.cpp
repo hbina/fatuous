@@ -23,7 +23,7 @@ void ModelDbWindow::render(
         ImGui::InputText("path:", model_path_text, 64);
         if (ImGui::Button("Load Model"))
         {
-            ModelDb::add_model_job(
+            ModelDb::parse_model_file(
                 std::string(model_path_text));
         }
     }
@@ -34,6 +34,7 @@ void ModelDbWindow::render(
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
             modeldata_ostr << p_modeldata_iter.second.m_path;
+            ImGui::Text("%s", modeldata_ostr.str().c_str());
         };
     }
 
@@ -57,8 +58,16 @@ void ModelDbWindow::render(
                 {
                     for (const Texture &p_texture_id : mesh.m_textures)
                     {
-                        // TODO :: Refactor a bunch of this
-                        const TextureInfo &texture_data = TextureDb::textures_map.at(p_texture_id.m_gl_id);
+                        std::stringstream ostr_gl_id;
+                        ostr_gl_id << p_texture_id.m_gl_id;
+                        ImGui::Text("m_gl_id: %s", ostr_gl_id.str().c_str());
+
+                        std::stringstream ostr_texture_type;
+                        ostr_texture_type << p_texture_id.m_type;
+                        ImGui::Text("m_type: %s", ostr_texture_type.str().c_str());
+// TODO :: Refactor a bunch of this
+#if 0
+                        const TextureInfo &texture_data = TextureDb::map.at(p_texture_id.m_gl_id);
                         std::stringstream ostr_texture_gl_id;
                         ostr_texture_gl_id << texture_data.m_gl_id;
                         ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());
@@ -81,6 +90,7 @@ void ModelDbWindow::render(
                             ImVec2(
                                 static_cast<float>(texture_data.m_dimension[0]),
                                 static_cast<float>(texture_data.m_dimension[1])));
+#endif
                     };
                     ImGui::TreePop();
                 }

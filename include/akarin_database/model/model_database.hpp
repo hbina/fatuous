@@ -16,7 +16,7 @@ namespace ModelDb
 {
 extern std::unordered_map<std::size_t, ModelInfo> map;
 
-std::size_t add_model_job(
+std::size_t parse_model_file(
     const std::string &) noexcept;
 }; // namespace ModelDb
 

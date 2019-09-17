@@ -36,13 +36,8 @@ void EntityDatabaseWindow::render() noexcept
     }
     if (ImGui::Button("Create entity"))
     {
-        if (selected_model_id == 0)
-        {
-        }
-        else
-        {
-            EntityRegistryMaster::create_entity(static_cast<std::size_t>(selected_model_id));
-        }
+        if (selected_model_id != 0)
+            EntityRegistryMaster::create_entity(selected_model_id);
     }
     ImGui::SameLine();
 

@@ -1,6 +1,8 @@
 #ifndef SHADER_UTILITIES_HPP
 #define SHADER_UTILITIES_HPP
 
+#include "components/lighting.hpp"
+
 #include "glm/glm.hpp"
 #include "glad/glad.h"
 
@@ -19,6 +21,23 @@ void transform_shader(
     const glm::vec3 &,
     const glm::vec3 &,
     const bool draw_depth = false) noexcept;
+
+void attach_dir_light(
+    const GLuint,
+    const DirectionalLight &) noexcept;
+
+void attach_point_light(
+    const GLuint,
+    const PointLight &) noexcept;
+
+void attach_spot_light(
+    const GLuint,
+    const SpotLight &) noexcept;
+
+void prepare_omni_shadow(
+    const PointLight &) noexcept;
+
+void configure_lighting(const GLuint) noexcept;
 
 void setBool(
     const GLuint,

@@ -53,8 +53,10 @@ uniform Material material;
 
 uniform samplerCube depth_map;
 uniform float far_plane;
-uniform vec3 light_pos;
 uniform bool enable_shadow;
+uniform bool enable_directional_light;
+uniform bool enable_point_light;
+uniform bool enable_spot_light;
 uniform float shadow_bias;
 
 // function prototypes
@@ -73,12 +75,20 @@ void main() {
   vec3 normal = normalize(Normal);
   vec3 view_direction = normalize(camera_position - FragPos);
   float shadow = enable_shadow ? ShadowCalculation(FragPos, normal) : 0.0;
-  vec3 result = CalcDirLight(directional_light, normal, view_direction);
-  result += (1.0 - shadow) *
-            CalcPointLight(point_light, normal, FragPos, view_direction);
-  result += (1.0 - shadow) *
-            CalcSpotLight(spot_light, normal, FragPos, view_direction);
-  FragColor = vec4(result, 1.0);
+  vec3 result = enable_directional_light
+                    ? CalcDirLight(directional_light, normal, view_direction)
+                    : vec3(0.0f);
+  result += enable_point_light
+                ? (1.0 - shadow) * CalcPointLight(point_light, normal, FragPos,
+                                                  view_direction)
+                : vec3(0.0f);
+  /**
+  result += enable_spot_light
+                ? (1.0 - shadow) *
+                      CalcSpotLight(spot_light, normal, FragPos, view_direction)
+                : vec3(0.0f);
+                **/
+  // FragColor = vec4(result, 1.0);
 }
 
 // calculates the color when using a directional light.
@@ -159,7 +169,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
 
 float ShadowCalculation(vec3 frag_pos, vec3 normal) {
   // get vector between fragment position and light position
-  vec3 frag_to_light = frag_pos - light_pos;
+  vec3 frag_to_light = frag_pos - point_light.position;
   // use the light to fragment vector to sample from the depth map
   float closest_depth = texture(depth_map, frag_to_light).r;
   // it is currently in linear range between [0,1]. Re-transform back to
@@ -171,7 +181,7 @@ float ShadowCalculation(vec3 frag_pos, vec3 normal) {
   // now test for shadows
   float shadow = current_depth - shadow_bias > closest_depth ? 1.0 : 0.0;
   // for debugging purposes
-  // FragColor = vec4(vec3(closest_depth / far_plane), 1.0);
+  FragColor = vec4(vec3(closest_depth/far_plane), 1.0);
 
   // Calculates intensity depending on the normals
   float intensity = dot(normal, -normalize(frag_to_light));
