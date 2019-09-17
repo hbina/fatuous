@@ -23,7 +23,7 @@ void EntityRegistryMaster::run() noexcept
 {
     auto delta_time = AkarinTimer::get_delta_time();
     AkarinCameraSystem::process_keyboard(delta_time);
-    MeshDb::execute_jobs();
+    MeshDb::execute_jobs(p_reg);
     TextureDb::execute_jobs();
     RenderingProcess::render(p_reg);
 };
@@ -37,7 +37,7 @@ void EntityRegistryMaster::create_entity(
     const std::size_t p_model_id) noexcept
 {
     entt::entity new_entity = p_reg.create();
-    p_reg.assign<ModelData>(
+    p_reg.assign<Model>(
         new_entity,
         ModelDb::models_map.at(p_model_id));
 

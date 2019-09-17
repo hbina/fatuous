@@ -13,16 +13,19 @@
 #include <ostream>
 #include <sstream>
 
-void ModelDbWindow::render() noexcept
+void ModelDbWindow::render(
+    entt::registry &p_reg) noexcept
 {
-    ImGui::Begin("ModelData System");
+    ImGui::Begin("Model System");
     if (ImGui::CollapsingHeader("Load Models"))
     {
         static char model_path_text[64] = "";
         ImGui::InputText("path:", model_path_text, 64);
-        if (ImGui::Button("Load ModelData"))
+        if (ImGui::Button("Load Model"))
         {
-            ModelDb::add_model_job(std::string(model_path_text));
+            ModelDb::add_model_job(
+                p_reg,
+                std::string(model_path_text));
         }
     }
     if (ImGui::CollapsingHeader("Models List"))
@@ -32,59 +35,57 @@ void ModelDbWindow::render() noexcept
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
             modeldata_ostr << p_modeldata_iter.second.m_path;
-            if (ImGui::TreeNode(modeldata_ostr.str().c_str()))
+        };
+    }
+
+    if (ImGui::CollapsingHeader("Meshes List"))
+    {
+        p_reg.view<Mesh>().each([](const Mesh &mesh_iter) {
+            std::stringstream vao_id_ostr;
+            vao_id_ostr << "m_vao_id: ";
+            vao_id_ostr << mesh_iter.m_vao_gl_id;
+            if (ImGui::TreeNode(vao_id_ostr.str().c_str()))
             {
-                for (const std::size_t &p_mesh_id : p_modeldata_iter.second.m_meshes)
+                std::stringstream m_vertices_ostr;
+                m_vertices_ostr << mesh_iter.m_vertices.size();
+                ImGui::Text("vertices count: %s", m_vertices_ostr.str().c_str());
+                std::stringstream m_indices_ostr;
+                m_indices_ostr << mesh_iter.m_indices.size();
+                ImGui::Text("indices count: %s", m_indices_ostr.str().c_str());
+                if (ImGui::TreeNode("Textures:"))
                 {
-                    const MeshData &mesh_iter = MeshDb::meshes_map.at(p_mesh_id);
-                    std::stringstream vao_id_ostr;
-                    vao_id_ostr << "m_vao_id: ";
-                    vao_id_ostr << mesh_iter.m_vao_gl_id;
-                    if (ImGui::TreeNode(vao_id_ostr.str().c_str()))
+                    for (const std::size_t &p_texture_id : mesh_iter.m_textures)
                     {
-                        std::stringstream m_vertices_ostr;
-                        m_vertices_ostr << mesh_iter.m_vertices.size();
-                        ImGui::Text("vertices count: %s", m_vertices_ostr.str().c_str());
-                        std::stringstream m_indices_ostr;
-                        m_indices_ostr << mesh_iter.m_indices.size();
-                        ImGui::Text("indices count: %s", m_indices_ostr.str().c_str());
-                        if (ImGui::TreeNode("Textures:"))
-                        {
-                            for (const std::size_t &p_texture_id : mesh_iter.m_textures)
-                            {
-                                // TODO :: Refactor a bunch of this
-                                const TextureData &texture_data = TextureDb::textures_map[p_texture_id];
-                                std::stringstream ostr_texture_gl_id;
-                                ostr_texture_gl_id << texture_data.m_gl_id;
-                                ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());
+                        // TODO :: Refactor a bunch of this
+                        const TextureData &texture_data = TextureDb::textures_map[p_texture_id];
+                        std::stringstream ostr_texture_gl_id;
+                        ostr_texture_gl_id << texture_data.m_gl_id;
+                        ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());
 
-                                std::stringstream ostr_texture_path;
-                                ostr_texture_path << texture_data.m_path;
-                                ImGui::Text("path: %s", ostr_texture_path.str().c_str());
+                        std::stringstream ostr_texture_path;
+                        ostr_texture_path << texture_data.m_path;
+                        ImGui::Text("path: %s", ostr_texture_path.str().c_str());
 
-                                std::stringstream ostr_texture_type;
-                                ostr_texture_type << texture_data.m_type;
-                                ImGui::Text("type: %s", ostr_texture_type.str().c_str());
+                        std::stringstream ostr_texture_type;
+                        ostr_texture_type << texture_data.m_type;
+                        ImGui::Text("type: %s", ostr_texture_type.str().c_str());
 
-                                std::stringstream ostr_texture_size;
-                                ostr_texture_size << texture_data.m_dimension[0] << " " << texture_data.m_dimension[1] << ", " << texture_data.m_dimension[2];
-                                ImGui::Text("dimension: %s", ostr_texture_size.str().c_str());
+                        std::stringstream ostr_texture_size;
+                        ostr_texture_size << texture_data.m_dimension[0] << " " << texture_data.m_dimension[1] << ", " << texture_data.m_dimension[2];
+                        ImGui::Text("dimension: %s", ostr_texture_size.str().c_str());
 
-                                // TODO :: Figure out how to resize the image properly, maintaing its aspect ratio etc etc
-                                ImGui::Image(
-                                    (ImTextureID)(intptr_t)texture_data.m_gl_id,
-                                    ImVec2(
-                                        static_cast<float>(texture_data.m_dimension[0]),
-                                        static_cast<float>(texture_data.m_dimension[1])));
-                            };
-                            ImGui::TreePop();
-                        }
-                        ImGui::TreePop();
-                    }
-                };
+                        // TODO :: Figure out how to resize the image properly, maintaing its aspect ratio etc etc
+                        ImGui::Image(
+                            (ImTextureID)(intptr_t)texture_data.m_gl_id,
+                            ImVec2(
+                                static_cast<float>(texture_data.m_dimension[0]),
+                                static_cast<float>(texture_data.m_dimension[1])));
+                    };
+                    ImGui::TreePop();
+                }
                 ImGui::TreePop();
             }
-        };
+        });
     }
 
     ImGui::End();

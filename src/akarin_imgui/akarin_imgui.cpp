@@ -43,7 +43,7 @@ void AkarinImgui::render(entt::registry& p_reg) noexcept
     if (show_entity_database_window)
         EntityDatabaseWindow::render();
     if (show_model_database_window)
-        ModelDbWindow::render();
+        ModelDbWindow::render(p_reg);
     if (show_lighting_database_window)
         LightingDbWindow::render();
     if (show_shaderprogram_database_window)
