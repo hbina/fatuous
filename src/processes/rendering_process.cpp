@@ -111,14 +111,16 @@ void render_normal(
         AkarinCameraSystem::get_position());
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
-    auto entity_view = p_reg.view<ModelData, Transform>();
-    for (const entt::entity &entity : entity_view)
-    {
-        draw(
-            model_shader,
-            entity_view.get<ModelData>(entity),
-            entity_view.get<Transform>(entity));
-    }
+    p_reg.view<ModelData, Transform>()
+        .each([](
+                  const auto &e,
+                  const ModelData &p_model_data,
+                  const Transform &p_transform) {
+            draw(
+                model_shader,
+                p_model_data,
+                p_transform);
+        });
 };
 
 void prepare_shadow(
@@ -203,15 +205,17 @@ void prepare_shadow(
         depth_shader,
         "camera_position",
         AkarinCameraSystem::get_position());
-    auto entity_view = p_reg.view<ModelData, Transform>();
-    for (const entt::entity &entity : entity_view)
-    {
-        draw(
-            depth_shader,
-            entity_view.get<ModelData>(entity),
-            entity_view.get<Transform>(entity),
-            true);
-    }
+    p_reg.view<ModelData, Transform>()
+        .each([](
+                  const auto &e,
+                  const ModelData &p_model_data,
+                  const Transform &p_transform) {
+            draw(
+                depth_shader,
+                p_model_data,
+                p_transform,
+                true);
+        });
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     OpenGLSettings::refresh_settings();
 };
