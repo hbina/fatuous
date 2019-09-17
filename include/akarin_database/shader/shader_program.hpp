@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 
 #include <vector>
+#include <ostream>
 
 struct ShaderProgram
 {
@@ -14,3 +15,5 @@ struct ShaderProgram
         const std::vector<GLuint> &) noexcept;
     ~ShaderProgram();
 };
+
+std::ostream &operator<<(std::ostream &, const ShaderProgram &) noexcept;
