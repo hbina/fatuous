@@ -9,7 +9,7 @@
 #include <sstream>
 #include <algorithm>
 
-void ShaderDbWindow::render() noexcept
+void ShaderDbWindow::render(entt::registry &p_reg) noexcept
 {
     if (ImGui::CollapsingHeader("Shader Files"))
     {
@@ -21,23 +21,25 @@ void ShaderDbWindow::render() noexcept
             if (ImGui::Button("Load Shader file"))
             {
                 // TODO :: Dummy, fix later. Add a combo
-                ShaderDb::get().load_shader_file(shader_code_text, ShaderType::VERTEX);
+                ShaderDb::load_shader_file(
+                    p_reg,
+                    shader_code_text,
+                    ShaderType::VERTEX);
             }
         }
         if (ImGui::CollapsingHeader("Shader Files List"))
         {
             ImGui::Text("List of Shader files loaded:");
 
-            for (const auto &p_iter : ShaderDb::get().file_map)
-            {
+            p_reg.view<ShaderFile>().each([](const ShaderFile &p_iter) {
                 std::ostringstream out;
-                out << p_iter.first;
+                out << p_iter.m_id;
                 out << " : ";
-                out << p_iter.second.m_filepath << "\n";
+                out << p_iter.m_filepath << "\n";
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
-            };
+            });
         }
     }
     if (ImGui::CollapsingHeader("Shader Programs"))
@@ -50,25 +52,24 @@ void ShaderDbWindow::render() noexcept
             ImGui::InputText("id:", shader_code_text, 64);
             if (ImGui::Button("Load Shader Program"))
             {
-                ShaderDb::get().link_shader_codes({}); // TODO :: Implement this
+                // ShaderDb::link_shader_codes({}); // TODO :: Implement this
             }
         }
         if (ImGui::CollapsingHeader("Shader Programs List"))
         {
             ImGui::Text("List of Shader programs loaded:");
-            for (const auto &prg_iter : ShaderDb::get().program_map)
-            {
+            p_reg.view<ShaderProgram>().each([](const ShaderProgram &prg_iter) {
                 std::ostringstream out;
-                out << prg_iter.first;
+                out << prg_iter.m_id;
                 out << " : ";
-                for (const auto &shr_iter : prg_iter.second.m_shader_ids)
+                for (const GLuint &shr_iter : prg_iter.m_shaders)
                 {
                     out << shr_iter << ", ";
                 };
                 ImGui::Text(
                     "%s",
                     out.str().c_str());
-            };
+            });
         }
     }
 };

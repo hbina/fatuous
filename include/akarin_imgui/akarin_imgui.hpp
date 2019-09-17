@@ -6,7 +6,7 @@
 
 namespace AkarinImgui
 {
-    void render() noexcept;
+void render(entt::registry &) noexcept;
 }; // namespace AkarinImgui
 
 #endif

@@ -46,8 +46,8 @@ void RenderingProcess::render(
     prepare_shadow(p_reg);
     render_normal(p_reg);
 
-    SkyboxSystem::render();
-    AkarinImgui::render();
+    SkyboxSystem::render(p_reg);
+    AkarinImgui::render(p_reg);
     AkarinGLFW::get_instance().swap_buffers();
 };
 
@@ -80,11 +80,14 @@ void render_normal(
     if (!init)
     {
         init = true;
-        model_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        model_shader = ShaderDb::link_shader_codes(
+            p_reg,
+            {ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/vertex/model.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/fragment/model.glsl",
                  ShaderType::FRAGMENT)});
     }
@@ -133,14 +136,18 @@ void prepare_shadow(
     {
         init = true;
 
-        depth_shader = ShaderDb::get().link_shader_codes(
-            {ShaderDb::get().load_shader_file(
+        depth_shader = ShaderDb::link_shader_codes(
+            p_reg,
+            {ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/vertex/omnishadow.glsl",
                  ShaderType::VERTEX),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/fragment/omnishadow.glsl",
                  ShaderType::FRAGMENT),
-             ShaderDb::get().load_shader_file(
+             ShaderDb::load_shader_file(
+                 p_reg,
                  "./shaders/geometry/omnishadow.glsl",
                  ShaderType::GEOMETRY)});
 

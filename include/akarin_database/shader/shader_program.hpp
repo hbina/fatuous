@@ -6,7 +6,11 @@
 
 struct ShaderProgram
 {
-    std::vector<GLuint> m_shader_ids;
+    GLuint m_id;
+    std::vector<GLuint> m_shaders;
     ShaderProgram() = delete;
-    ShaderProgram(const std::vector<GLuint> &) noexcept;
+    ShaderProgram(
+        const GLuint,
+        const std::vector<GLuint> &) noexcept;
+    ~ShaderProgram();
 };
