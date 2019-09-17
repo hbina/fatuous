@@ -23,7 +23,6 @@ void EntityRegistryMaster::run() noexcept
 {
     auto delta_time = AkarinTimer::get_delta_time();
     AkarinCameraSystem::process_keyboard(delta_time);
-    MeshDb::execute_jobs(p_reg);
     TextureDb::execute_jobs();
     RenderingProcess::render(p_reg);
 };

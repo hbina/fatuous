@@ -1,7 +1,7 @@
 #include "akarin_imgui/entity_database_window.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "processes/entity_registry_master.hpp"
-#include "components/mesh_data.hpp"
+#include "components/mesh.hpp"
 #include "components/transform.hpp"
 
 #include "imgui/imgui.h"

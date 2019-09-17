@@ -13,10 +13,8 @@
 std::mutex texture_job_mutex;
 std::vector<TextureJob> texture_jobs;
 
-std::unordered_map<std::size_t, TextureData> TextureDb::textures_map;
+std::unordered_map<std::size_t, TextureInfo> TextureDb::textures_map;
 std::atomic<std::size_t> texture_counter = 1;
-
-void create_gl_texture(const TextureJob &) noexcept;
 
 std::size_t TextureDb::add_texture_job(
     const std::string &p_texture_filepath,
@@ -26,7 +24,7 @@ std::size_t TextureDb::add_texture_job(
         textures_map.cbegin(),
         textures_map.cend(),
         [p_texture_filepath](
-            const std::pair<const std::size_t, TextureData> &p_texture_iter) {
+            const std::pair<const std::size_t, TextureInfo> &p_texture_iter) {
             return p_texture_iter.second.m_path == p_texture_filepath;
         });
     if (texture_iter == textures_map.end())
@@ -58,7 +56,7 @@ void TextureDb::execute_jobs() noexcept
     texture_jobs.clear();
 };
 
-void create_gl_texture(const TextureJob &p_texture_job) noexcept
+Texture create_gl_texture(const TextureJob &p_texture_job) noexcept
 {
     GLuint texture_gl_id;
     glGenTextures(1, &texture_gl_id);
@@ -133,7 +131,7 @@ void create_gl_texture(const TextureJob &p_texture_job) noexcept
     TextureDb::textures_map.emplace(
         std::make_pair(
             p_texture_job.m_id,
-            TextureData(
+            TextureInfo(
                 texture_gl_id,
                 p_texture_job.m_type,
                 p_texture_job.m_path,
@@ -190,7 +188,7 @@ Texture TextureDb::load_cube_texture(
     TextureDb::textures_map.emplace(
         std::make_pair(
             texture_id,
-            TextureData(
+            TextureInfo(
                 texture_gl_id,
                 TextureType::CUBE_MAP,
                 textures_folder_dir,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/texture_data.hpp"
+#include "components/texture_info.hpp"
 
 struct TextureJob
 {

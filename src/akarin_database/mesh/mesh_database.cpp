@@ -11,42 +11,13 @@
 
 std::atomic<std::size_t> mesh_id_counter = 1;
 
-void execute_job(
-    entt::registry &,
-    const MeshJob &) noexcept;
-
-std::size_t MeshDb::add_mesh_job(
+Mesh MeshDb::create_mesh(
     entt::registry &p_reg,
     const std::vector<Vertex> &p_vertices,
     const std::vector<unsigned int> &p_indices,
     const std::vector<std::size_t> &p_textures) noexcept
 {
     const std::size_t mesh_id = mesh_id_counter++;
-    p_reg.assign<MeshJob>(
-        p_reg.create(),
-        mesh_id,
-        p_vertices,
-        p_indices,
-        p_textures);
-    return mesh_id;
-};
-
-void MeshDb::execute_jobs(
-    entt::registry &p_reg) noexcept
-{
-    p_reg.view<MeshJob>()
-        .each([&](
-                  const entt::entity &e,
-                  const MeshJob &mesh_job) {
-            execute_job(p_reg, mesh_job);
-            p_reg.destroy(e);
-        });
-};
-
-void execute_job(
-    entt::registry &p_reg,
-    const MeshJob &p_mesh_job) noexcept
-{
     GLuint mesh_vao_gl_id = 0;
     GLuint mesh_vbo_gl_id = 0;
     GLuint mesh_ebo_gl_id = 0;
@@ -60,14 +31,14 @@ void execute_job(
 
     glBufferData(
         GL_ARRAY_BUFFER,
-        p_mesh_job.m_vertices.size() * sizeof(Vertex),
-        &p_mesh_job.m_vertices[0],
+        p_vertices.size() * sizeof(Vertex),
+        &p_vertices[0],
         GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_ebo_gl_id);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
-        p_mesh_job.m_indices.size() * sizeof(unsigned int),
-        &p_mesh_job.m_indices[0],
+        p_indices.size() * sizeof(unsigned int),
+        &p_indices[0],
         GL_STATIC_DRAW);
 
     // vertex positions
@@ -92,13 +63,16 @@ void execute_job(
 
     glBindVertexArray(0);
 
-    p_reg.assign<Mesh>(
-        p_reg.create(),
-        p_mesh_job.m_id,
+    Mesh mesh = Mesh(
+        mesh_id,
         mesh_vao_gl_id,
         mesh_vbo_gl_id,
         mesh_ebo_gl_id,
-        p_mesh_job.m_vertices,
-        p_mesh_job.m_indices,
-        p_mesh_job.m_textures);
+        p_vertices,
+        p_indices,
+        p_textures);
+    p_reg.assign<Mesh>(
+        p_reg.create(),
+        mesh);
+    return mesh;
 };
