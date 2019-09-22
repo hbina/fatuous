@@ -15,6 +15,8 @@ extern std::unordered_map<std::size_t, SpotLight> spot_map;
 
 void prepare_light(const GLuint) noexcept;
 void create_dir_light() noexcept;
-void create_point_light() noexcept;
+void create_point_light(
+    const GLsizei p_width,
+    const GLsizei p_height) noexcept;
 void create_spot_light() noexcept;
 }; // namespace LightingDb
