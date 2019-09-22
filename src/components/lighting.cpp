@@ -7,7 +7,7 @@ DirectionalLight::DirectionalLight(
       m_phong(p_phong){};
 
 PointLight::PointLight(
-    const std::array<float, 3> &p_position,
+    const glm::vec3 &p_position,
     const Intensity &p_intensity,
     const PhongLight &p_phong)
     : m_position(p_position),

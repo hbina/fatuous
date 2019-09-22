@@ -3,6 +3,8 @@
 #include "phong_light.hpp"
 #include "intensity.hpp"
 
+#include "glm/glm.hpp"
+
 #include <array>
 
 // Move this out to a shader class or something
@@ -23,20 +25,13 @@ struct DirectionalLight
 
 struct PointLight
 {
-    std::array<float, 3> m_position = {1.0f, 1.0f, 1.0f};
-    // float attenuation_value = 25.0f;
-    // float constant = 0.5f;
-    // float linear = 0.01f;
-    // float quadratic = 0.03f;
-    // std::array<float, 3> ambient = {1.0f, 1.0f, 1.0f};
-    // std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
-    // std::array<float, 3> specular = {1.0f, 1.0f, 1.0f};
+    glm::vec3 m_position;
     Intensity m_intensity;
     PhongLight m_phong;
 
     PointLight() = delete;
     PointLight(
-        const std::array<float, 3> &p_position,
+        const glm::vec3 &p_position,
         const Intensity &p_intensity,
         const PhongLight &p_phong);
 };

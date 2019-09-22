@@ -31,7 +31,6 @@ void prepare_shadow(
 void render_normal(
     entt::registry &) noexcept;
 
-glm::vec3 lightPos;
 GLuint depth_cube_map = 0;
 constexpr GLsizei SHADOW_WIDTH = 500, SHADOW_HEIGHT = 500;
 
@@ -39,10 +38,6 @@ void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
     OpenGLSettings::update();
-    lightPos = glm::vec3(
-        LightingDbWindow::point_light.m_position[0],
-        LightingDbWindow::point_light.m_position[1],
-        LightingDbWindow::point_light.m_position[2]);
     prepare_shadow(p_reg);
     render_normal(p_reg);
 
@@ -89,7 +84,10 @@ void render_normal(
     ShaderUtilities::use(model_shader);
     LightingDb::prepare_light(model_shader);
     ShaderUtilities::setInt(model_shader, "depth_map", 4);
-    ShaderUtilities::setVec3(model_shader, "light_pos", lightPos);
+    ShaderUtilities::setVec3(
+        model_shader,
+        "light_pos",
+        LightingDbWindow::point_light.m_position);
     ShaderUtilities::setFloat(
         model_shader,
         "far_plane",
@@ -175,13 +173,13 @@ void prepare_shadow(
         static_cast<float>(SHADOW_WIDTH) / static_cast<float>(SHADOW_HEIGHT),
         LightingDbWindow::near_plane,
         LightingDbWindow::far_plane);
-    std::vector<glm::mat4> shadow_transforms;
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-    shadow_transforms.push_back(shadow_projection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+    std::array<glm::mat4, 6> shadow_transforms = {
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
 
     // Render scene to depth cubemap
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -193,7 +191,7 @@ void prepare_shadow(
     ShaderUtilities::use(depth_shader);
     for (unsigned int i = 0; i < 6; ++i)
         ShaderUtilities::setMat4(depth_shader, "shadow_matrices[" + std::to_string(i) + "]", shadow_transforms[i]);
-    ShaderUtilities::setVec3(depth_shader, "light_pos", lightPos);
+    ShaderUtilities::setVec3(depth_shader, "light_pos", LightingDbWindow::point_light.m_position);
     ShaderUtilities::setFloat(
         depth_shader,
         "far_plane",

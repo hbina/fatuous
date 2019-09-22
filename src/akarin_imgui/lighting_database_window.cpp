@@ -59,7 +59,7 @@ void LightingDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Point Light Properties"))
     {
         ImGui::Checkbox("Enable##point_light", &enable_point_light);
-        ImGui::SliderFloat3("position##point_light", point_light.m_position.data(), -500.0f, 500.0f);
+        ImGui::SliderFloat3("position##point_light", &point_light.m_position[0], -500.0f, 500.0f);
         ImGui::SliderFloat("attenuation_value##point_light", &point_light.m_intensity.m_attval, 1.0f, 100.0f);
         ImGui::SliderFloat("constant##point_light", &point_light.m_intensity.m_constant, 1.0f, 100.0f);
         ImGui::SliderFloat("linear##point_light", &point_light.m_intensity.m_linear, 0.1f, 10.0f);
