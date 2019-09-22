@@ -13,6 +13,6 @@ struct ModelInfo
 
     ModelInfo() = delete;
     ModelInfo(
-        const std::string &,
-        const Model &);
+        const std::string &p_path,
+        const Model &p_model);
 };

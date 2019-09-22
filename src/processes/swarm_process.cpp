@@ -1,6 +1,5 @@
 #include "processes/swarm_process.hpp"
 #include "systems/akarin_camera_system.hpp"
-#include "components/position.hpp"
 #include "components/transform.hpp"
 
 #include <iostream>
@@ -30,8 +29,8 @@ void update_position(
     const Swarm &p_swarm,
     const float p_delta_time)
 {
-    const glm::vec3 distance = AkarinCameraSystem::get_position() - p_transform.position;
+    const glm::vec3 distance = AkarinCameraSystem::get_position() - p_transform.m_position;
     const glm::vec3 direction = glm::normalize(distance);
-    const glm::vec3 new_position = p_transform.position + (direction * p_swarm.value * static_cast<float>(p_delta_time));
-    p_transform.position = new_position;
+    const glm::vec3 new_position = p_transform.m_position + (direction * p_swarm.value * static_cast<float>(p_delta_time));
+    p_transform.m_position = new_position;
 };

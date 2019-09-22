@@ -44,7 +44,7 @@ void ModelDbWindow::render(
             const Mesh &mesh = mesh_iter.second;
             std::stringstream vao_id_ostr;
             vao_id_ostr << "m_vao_id: ";
-            vao_id_ostr << mesh.m_vao_gl_id;
+            vao_id_ostr << mesh.m_vao_id;
             if (ImGui::TreeNode(vao_id_ostr.str().c_str()))
             {
                 std::stringstream m_vertices_ostr;

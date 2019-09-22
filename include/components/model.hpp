@@ -11,5 +11,5 @@ struct Model
 
     Model() = delete;
     Model(
-        const std::vector<Mesh> &);
+        const std::vector<Mesh> &p_meshes);
 };

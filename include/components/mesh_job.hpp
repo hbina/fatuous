@@ -12,8 +12,8 @@ struct MeshJob
     std::vector<std::size_t> m_textures;
 
     MeshJob() = delete;
-    MeshJob(const std::size_t,
-            const std::vector<Vertex> &,
-            const std::vector<unsigned int> &,
-            const std::vector<std::size_t> &);
+    MeshJob(const std::size_t p_id,
+            const std::vector<Vertex> &p_vertices,
+            const std::vector<unsigned int> &p_indices,
+            const std::vector<std::size_t> &p_textures);
 };

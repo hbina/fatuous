@@ -15,7 +15,7 @@ struct ShaderFile
 
     ShaderFile() = delete;
     ShaderFile(
-        const std::string &,
-        const std::string &,
-        const ShaderType);
+        const std::string &p_filepath,
+        const std::string &p_content,
+        const ShaderType p_type);
 };

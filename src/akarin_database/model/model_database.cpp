@@ -117,50 +117,45 @@ Mesh process_mesh(
 
     for (std::size_t i = 0; i < p_mesh->mNumVertices; i++)
     {
-        Vertex vertex;
-        glm::vec3 position;
+        glm::vec3 position = glm::vec3(0.0f);
         position.x = p_mesh->mVertices[i].x;
         position.y = p_mesh->mVertices[i].y;
         position.z = p_mesh->mVertices[i].z;
-        vertex.position = position;
 
-        glm::vec3 normal;
+        glm::vec3 normal = glm::vec3(0.0f);
         normal.x = p_mesh->mNormals[i].x;
         normal.y = p_mesh->mNormals[i].y;
         normal.z = p_mesh->mNormals[i].z;
-        vertex.normal = normal;
 
+        glm::vec2 tex_coord = glm::vec2(0.0f);
         if (p_mesh->mTextureCoords[0])
         {
-            glm::vec2 tex_coord;
             tex_coord.x = p_mesh->mTextureCoords[0][i].x;
             tex_coord.y = p_mesh->mTextureCoords[0][i].y;
-            vertex.tex_coord = tex_coord;
-        }
-        else
-        {
-            vertex.tex_coord = glm::vec2(0.0f, 0.0f);
         }
 
+        glm::vec3 tangent = glm::vec3(0.0f);
         if (p_mesh->mTangents)
         {
-            glm::vec3 tangent;
             tangent.x = p_mesh->mTangents[i].x;
             tangent.y = p_mesh->mTangents[i].y;
             tangent.z = p_mesh->mTangents[i].z;
-            vertex.tangent = tangent;
         }
 
+        glm::vec3 bitangent = glm::vec3(0.0f);
         if (p_mesh->mBitangents)
         {
-            glm::vec3 bitangent;
             bitangent.x = p_mesh->mBitangents[i].x;
             bitangent.y = p_mesh->mBitangents[i].y;
             bitangent.z = p_mesh->mBitangents[i].z;
-            vertex.bitangent = bitangent;
         }
 
-        vertices.push_back(vertex);
+        vertices.emplace_back(
+            position,
+            normal,
+            tangent,
+            bitangent,
+            tex_coord);
     }
 
     for (std::size_t i = 0; i < p_mesh->mNumFaces; i++)

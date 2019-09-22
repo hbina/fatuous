@@ -19,7 +19,6 @@
 #include "glm/glm.hpp"
 
 void draw(
-    entt::registry &,
     const GLuint,
     const Model &,
     const Transform &,
@@ -44,7 +43,6 @@ void RenderingProcess::render(
 };
 
 void draw(
-    entt::registry &p_reg,
     const GLuint p_shader_id,
     const Model &p_model,
     const Transform &p_transform,
@@ -54,8 +52,8 @@ void draw(
         p_shader_id,
         AkarinCameraSystem::get_projection(),
         AkarinCameraSystem::get_view(),
-        p_transform.position,
-        p_transform.scale,
+        p_transform.m_position,
+        p_transform.m_scale,
         draw_depth);
     for (const Mesh &mesh : p_model.m_meshes)
         mesh.draw(p_shader_id, draw_depth);
@@ -85,7 +83,6 @@ void render_normal(
                   const Model &p_model_data,
                   const Transform &p_transform) {
             draw(
-                p_reg,
                 model_shader,
                 p_model_data,
                 p_transform);
@@ -141,7 +138,6 @@ void prepare_shadow(
                       const Model &p_model_data,
                       const Transform &p_transform) {
                 draw(
-                    p_reg,
                     iter.second.m_buffer.m_shader,
                     p_model_data,
                     p_transform,

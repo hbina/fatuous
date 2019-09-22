@@ -10,7 +10,7 @@
 
 struct TextureInfo
 {
-    GLuint m_gl_id;
+    GLuint m_gl_id = 0u;
     TextureType m_type;
     std::string m_path;
     std::array<int, 3> m_dimension;

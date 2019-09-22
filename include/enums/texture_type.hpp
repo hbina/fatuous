@@ -8,8 +8,7 @@ enum class TextureType
     SPECULAR,
     DIFFUSE,
     NORMAL,
-    HEIGHT,
-    ERROR
+    HEIGHT
 };
 
 std::ostream &operator<<(std::ostream &, const TextureType);

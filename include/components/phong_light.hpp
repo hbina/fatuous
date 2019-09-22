@@ -9,7 +9,7 @@ struct PhongLight
     std::array<float, 3> m_specular = {0.1f, 0.1f, 0.1f};
     PhongLight() = delete;
     PhongLight(
-        const std::array<float, 3> &,
-        const std::array<float, 3> &,
-        const std::array<float, 3> &);
+        const std::array<float, 3> &p_ambient,
+        const std::array<float, 3> &p_diffuse,
+        const std::array<float, 3> &p_specular);
 };
