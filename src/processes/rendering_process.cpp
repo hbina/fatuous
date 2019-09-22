@@ -40,9 +40,9 @@ void RenderingProcess::render(
 {
     OpenGLSettings::update();
     lightPos = glm::vec3(
-        LightingDbWindow::point_light.position[0],
-        LightingDbWindow::point_light.position[1],
-        LightingDbWindow::point_light.position[2]);
+        LightingDbWindow::point_light.m_position[0],
+        LightingDbWindow::point_light.m_position[1],
+        LightingDbWindow::point_light.m_position[2]);
     prepare_shadow(p_reg);
     render_normal(p_reg);
 

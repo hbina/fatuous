@@ -23,8 +23,17 @@ DirectionalLight LightingDbWindow::directional_light = DirectionalLight(
         {0.1f, 0.1f, 0.1f},
         {1.0f, 1.0f, 1.0f},
         {0.1f, 0.1f, 0.1f}));
-        
-PointLight LightingDbWindow::point_light;
+
+PointLight LightingDbWindow::point_light = PointLight(
+    {0.0f, 0.0f, 0.0f},
+    Intensity(
+        25.0f,
+        0.5f, 0.01f, 0.03f),
+    PhongLight(
+        {1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f}));
+
 SpotLight LightingDbWindow::spot_light;
 
 void LightingDbWindow::render() noexcept
@@ -50,14 +59,14 @@ void LightingDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Point Light Properties"))
     {
         ImGui::Checkbox("Enable##point_light", &enable_point_light);
-        ImGui::SliderFloat3("position##point_light", point_light.position.data(), -500.0f, 500.0f);
-        ImGui::SliderFloat("attenuation_value##point_light", &point_light.attenuation_value, 1.0f, 100.0f);
-        ImGui::SliderFloat("constant##point_light", &point_light.constant, 1.0f, 100.0f);
-        ImGui::SliderFloat("linear##point_light", &point_light.linear, 0.1f, 10.0f);
-        ImGui::SliderFloat("quadratic##point_light", &point_light.quadratic, 0.001f, 0.100f);
-        ImGui::ColorEdit3("ambient##point_light", point_light.ambient.data());
-        ImGui::ColorEdit3("diffuse##point_light", point_light.diffuse.data());
-        ImGui::ColorEdit3("specular##point_light", point_light.specular.data());
+        ImGui::SliderFloat3("position##point_light", point_light.m_position.data(), -500.0f, 500.0f);
+        ImGui::SliderFloat("attenuation_value##point_light", &point_light.m_intensity.m_attval, 1.0f, 100.0f);
+        ImGui::SliderFloat("constant##point_light", &point_light.m_intensity.m_constant, 1.0f, 100.0f);
+        ImGui::SliderFloat("linear##point_light", &point_light.m_intensity.m_linear, 0.1f, 10.0f);
+        ImGui::SliderFloat("quadratic##point_light", &point_light.m_intensity.m_quadratic, 0.001f, 0.100f);
+        ImGui::ColorEdit3("ambient##point_light", point_light.m_phong.m_ambient.data());
+        ImGui::ColorEdit3("diffuse##point_light", point_light.m_phong.m_diffuse.data());
+        ImGui::ColorEdit3("specular##point_light", point_light.m_phong.m_specular.data());
     }
 
     if (ImGui::CollapsingHeader("Spot Light Properties"))

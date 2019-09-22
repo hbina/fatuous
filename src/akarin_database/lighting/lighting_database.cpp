@@ -65,35 +65,38 @@ void add_pointlight(
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.position",
-        LightingDbWindow::point_light.position);
+        LightingDbWindow::point_light.m_position);
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.ambient",
-        p_enabled ? LightingDbWindow::point_light.ambient : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.m_phong.m_ambient
+                  : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.diffuse",
-        p_enabled ? LightingDbWindow::point_light.diffuse : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.m_phong.m_diffuse
+                  : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "point_light.specular",
-        p_enabled ? LightingDbWindow::point_light.specular : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::point_light.m_phong.m_specular
+                  : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.attenuation_value",
-        LightingDbWindow::point_light.attenuation_value);
+        LightingDbWindow::point_light.m_intensity.m_attval);
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.constant",
-        LightingDbWindow::point_light.constant);
+        LightingDbWindow::point_light.m_intensity.m_constant);
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.linear",
-        LightingDbWindow::point_light.linear);
+        LightingDbWindow::point_light.m_intensity.m_linear);
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.quadratic",
-        LightingDbWindow::point_light.quadratic);
+        LightingDbWindow::point_light.m_intensity.m_quadratic);
 };
 
 void add_spotlight(
@@ -123,7 +126,7 @@ void add_spotlight(
     ShaderUtilities::setFloat(
         p_shader_id,
         "point_light.attenuation_value",
-        LightingDbWindow::point_light.attenuation_value);
+        LightingDbWindow::spot_light.attenuation_value);
     ShaderUtilities::setFloat(
         p_shader_id,
         "spot_light.constant",
