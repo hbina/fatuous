@@ -1,4 +1,4 @@
-# Akarin Engine
+# Fatuous
 
 Demo : https://www.youtube.com/watch?v=BbLW4ZJnaLM
 
@@ -8,7 +8,7 @@ My current goal is to be able to implement all types of rendering techniques (mo
 
 After that, I might implement other stuff like physics, animation, sounds, scripts etc. etc. to make it a proper game engine.
 
-Regardless, I like `LateX`, so here is a more robust text about the project : [Akarin Engine Book](documentation/akarin_engine.tex)
+Regardless, I like `LateX`, so here is a more robust text about the project : [Fatuous Book](documentation/akarin_engine.tex)
 
 # Installation
 
