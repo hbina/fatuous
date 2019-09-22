@@ -11,11 +11,8 @@
 // Move this out to a shader class or something
 struct DirectionalLight
 {
-    float m_shininess = 32.0f;
-    std::array<float, 3> m_direction = {0.0f, 1.0f, 0.0f};
-    // std::array<float, 3> ambient = {0.1f, 0.1f, 0.1f};
-    // std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
-    // std::array<float, 3> specular = {0.1f, 0.1f, 0.1f};
+    float m_shininess;
+    std::array<float, 3> m_direction;
     PhongLight m_phong;
 
     DirectionalLight() = delete;
@@ -34,7 +31,8 @@ struct PointLight
     PointLight(
         const glm::vec3 &p_position,
         const Intensity &p_intensity,
-        const PhongLight &p_phong);
+        const PhongLight &p_phong,
+        const DepthBuffer &p_buffer);
 };
 
 struct SpotLight

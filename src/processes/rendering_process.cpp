@@ -31,9 +31,6 @@ void prepare_shadow(
 void render_normal(
     entt::registry &) noexcept;
 
-GLuint depth_cube_map = 0;
-constexpr GLsizei SHADOW_WIDTH = 500, SHADOW_HEIGHT = 500;
-
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
@@ -83,25 +80,6 @@ void render_normal(
     OpenGLSettings::gl_clear();
     ShaderUtilities::use(model_shader);
     LightingDb::prepare_light(model_shader);
-    ShaderUtilities::setInt(model_shader, "depth_map", 4);
-    ShaderUtilities::setFloat(
-        model_shader,
-        "far_plane",
-        LightingDbWindow::far_plane);
-    ShaderUtilities::setFloat(
-        model_shader,
-        "shadow_bias",
-        LightingDbWindow::shadow_bias);
-    ShaderUtilities::setBool(
-        model_shader,
-        "enable_shadow",
-        LightingDbWindow::enable_shadow);
-    ShaderUtilities::setVec3(
-        model_shader,
-        "camera_position",
-        AkarinCameraSystem::get_position());
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
     p_reg.view<Model, Transform>()
         .each([&](
                   const Model &p_model_data,
@@ -117,96 +95,59 @@ void render_normal(
 void prepare_shadow(
     entt::registry &p_reg) noexcept
 {
-    static GLuint depth_map_fbo = 0;
-    static GLuint depth_shader = 0;
-    static bool init = false;
-    if (!init)
+    for (const auto &iter : LightingDb::point_map)
     {
-        init = true;
+        // Create depth cubemap transformation matrices
+        glm::mat4 shadow_projection = glm::perspective(
+            glm::radians(90.0f),
+            static_cast<float>(iter.second.m_buffer.m_width) / static_cast<float>(iter.second.m_buffer.m_height),
+            LightingDbWindow::near_plane,
+            LightingDbWindow::far_plane);
+        std::array<glm::mat4, 6> shadow_transforms = {
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            shadow_projection * glm::lookAt(iter.second.m_position, iter.second.m_position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
 
-        depth_shader = ShaderDb::link_shader_files(
-            {ShaderDb::load_shader_file(
-                 "./shaders/vertex/omnishadow.glsl",
-                 ShaderType::VERTEX),
-             ShaderDb::load_shader_file(
-                 "./shaders/fragment/omnishadow.glsl",
-                 ShaderType::FRAGMENT),
-             ShaderDb::load_shader_file(
-                 "./shaders/geometry/omnishadow.glsl",
-                 ShaderType::GEOMETRY)});
-
-        // generate the cubemap
-        glGenFramebuffers(1, &depth_map_fbo);
-        glGenTextures(1, &depth_cube_map);
-
-        // generate the single cubemap faces as 2d depth-valued texture images
-        glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
+        // Render scene to depth cubemap
+        glViewport(0, 0, iter.second.m_buffer.m_width, iter.second.m_buffer.m_height);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glBindFramebuffer(GL_FRAMEBUFFER, iter.second.m_buffer.m_fbo);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ShaderUtilities::use(iter.second.m_buffer.m_shader);
         for (unsigned int i = 0; i < 6; ++i)
-        {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-                         SHADOW_WIDTH,
-                         SHADOW_HEIGHT,
-                         0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-        }
-        // Set the texture parameters
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-        // Pass the cubemap as the depth buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, depth_map_fbo);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_cube_map, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
+            ShaderUtilities::setMat4(
+                iter.second.m_buffer.m_shader,
+                "shadow_matrices[" + std::to_string(i) + "]",
+                shadow_transforms[i]);
+        ShaderUtilities::setVec3(
+            iter.second.m_buffer.m_shader,
+            "light_pos",
+            iter.second.m_position);
+        ShaderUtilities::setFloat(
+            iter.second.m_buffer.m_shader,
+            "far_plane",
+            LightingDbWindow::far_plane);
+        ShaderUtilities::setVec3(
+            iter.second.m_buffer.m_shader,
+            "camera_position",
+            AkarinCameraSystem::get_position());
+        p_reg.view<Model, Transform>()
+            .each([&](
+                      const Model &p_model_data,
+                      const Transform &p_transform) {
+                draw(
+                    p_reg,
+                    iter.second.m_buffer.m_shader,
+                    p_model_data,
+                    p_transform,
+                    true);
+            });
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        OpenGLSettings::refresh_settings();
     }
-
-    // Create depth cubemap transformation matrices
-    glm::mat4 shadow_projection = glm::perspective(
-        glm::radians(90.0f),
-        static_cast<float>(SHADOW_WIDTH) / static_cast<float>(SHADOW_HEIGHT),
-        LightingDbWindow::near_plane,
-        LightingDbWindow::far_plane);
-    std::array<glm::mat4, 6> shadow_transforms = {
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        shadow_projection * glm::lookAt(LightingDbWindow::point_light.m_position, LightingDbWindow::point_light.m_position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
-
-    // Render scene to depth cubemap
-    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glBindFramebuffer(GL_FRAMEBUFFER, depth_map_fbo);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ShaderUtilities::use(depth_shader);
-    for (unsigned int i = 0; i < 6; ++i)
-        ShaderUtilities::setMat4(depth_shader, "shadow_matrices[" + std::to_string(i) + "]", shadow_transforms[i]);
-    ShaderUtilities::setVec3(depth_shader, "light_pos", LightingDbWindow::point_light.m_position);
-    ShaderUtilities::setFloat(
-        depth_shader,
-        "far_plane",
-        LightingDbWindow::far_plane);
-    ShaderUtilities::setVec3(
-        depth_shader,
-        "camera_position",
-        AkarinCameraSystem::get_position());
-    p_reg.view<Model, Transform>()
-        .each([&](
-                  const Model &p_model_data,
-                  const Transform &p_transform) {
-            draw(
-                p_reg,
-                depth_shader,
-                p_model_data,
-                p_transform,
-                true);
-        });
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    OpenGLSettings::refresh_settings();
 };

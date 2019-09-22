@@ -9,7 +9,7 @@ struct DepthBuffer
     GLsizei m_width = 0;
     GLuint m_fbo = 0;
     GLuint m_shader = 0;
-    DepthBuffer() = default;
+    DepthBuffer() = delete;
     DepthBuffer(
         const GLsizei p_height,
         const GLsizei p_width);

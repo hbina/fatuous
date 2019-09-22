@@ -9,7 +9,9 @@ DirectionalLight::DirectionalLight(
 PointLight::PointLight(
     const glm::vec3 &p_position,
     const Intensity &p_intensity,
-    const PhongLight &p_phong)
+    const PhongLight &p_phong,
+    const DepthBuffer &p_buffer)
     : m_position(p_position),
       m_intensity(p_intensity),
-      m_phong(p_phong){};
+      m_phong(p_phong),
+      m_buffer(p_buffer){};
