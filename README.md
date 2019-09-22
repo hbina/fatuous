@@ -8,7 +8,7 @@ My current goal is to be able to implement all types of rendering techniques (mo
 
 After that, I might implement other stuff like physics, animation, sounds, scripts etc. etc. to make it a proper game engine.
 
-Regardless, I like `LateX`, so here is a more robust text about the project : [Fatuous Book](documentation/akarin_engine.tex)
+Regardless, I like `LateX`, so here is a more robust text about the project : [Fatuous Book](documentation/fatuous.tex)
 
 # Installation
 
@@ -16,7 +16,7 @@ Regardless, I like `LateX`, so here is a more robust text about the project : [F
 
 First, clone the project
 
-`git clone git@github.com:hbina/akarin_engine.git`
+`git clone git@github.com:hbina/fatuous.git`
 
 Then - after entering the directory - you want to initialize the submodules:
 
@@ -42,4 +42,4 @@ First, let `cmake` generate the build files.
 
 Then, you compile.
 
-`cmake --build . --config Debug --target akarin_engine -j 4`
+`cmake --build . --config Debug --target fatuous -j 4`
