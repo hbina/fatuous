@@ -17,7 +17,13 @@ bool LightingDbWindow::enable_directional_light = true;
 bool LightingDbWindow::enable_point_light = true;
 bool LightingDbWindow::enable_spot_light = true;
 
-DirectionalLight LightingDbWindow::directional_light;
+DirectionalLight LightingDbWindow::directional_light = DirectionalLight(
+    {1.0f, 1.0f, 1.0f},
+    PhongLight(
+        {0.1f, 0.1f, 0.1f},
+        {1.0f, 1.0f, 1.0f},
+        {0.1f, 0.1f, 0.1f}));
+        
 PointLight LightingDbWindow::point_light;
 SpotLight LightingDbWindow::spot_light;
 
@@ -34,11 +40,11 @@ void LightingDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Directional Light Properties"))
     {
         ImGui::Checkbox("Enable##directional_light", &enable_directional_light);
-        ImGui::SliderFloat("shininess##directional_light", &directional_light.shininess, 0.0f, 128.0f);
-        ImGui::SliderFloat3("direction##directional_light", directional_light.direction.data(), -1.0f, 1.0f);
-        ImGui::ColorEdit3("ambient##directional_light", directional_light.ambient.data());
-        ImGui::ColorEdit3("diffuse##directional_light", directional_light.diffuse.data());
-        ImGui::ColorEdit3("specular##directional_light", directional_light.specular.data());
+        ImGui::SliderFloat("shininess##directional_light", &directional_light.m_shininess, 0.0f, 128.0f);
+        ImGui::SliderFloat3("direction##directional_light", directional_light.m_direction.data(), -1.0f, 1.0f);
+        ImGui::ColorEdit3("ambient##directional_light", directional_light.m_phong.m_ambient.data());
+        ImGui::ColorEdit3("diffuse##directional_light", directional_light.m_phong.m_diffuse.data());
+        ImGui::ColorEdit3("specular##directional_light", directional_light.m_phong.m_specular.data());
     }
 
     if (ImGui::CollapsingHeader("Point Light Properties"))

@@ -3,6 +3,10 @@
 #include "misc/shader_utilities.hpp"
 #include "systems/akarin_camera_system.hpp"
 
+std::unordered_map<std::size_t, DirectionalLight> LightingDb::dir_map;
+std::unordered_map<std::size_t, PointLight> LightingDb::point_map;
+std::unordered_map<std::size_t, SpotLight> LightingDb::spot_map;
+
 void add_dirlight(
     const GLuint,
     const bool) noexcept;
@@ -35,23 +39,23 @@ void add_dirlight(
     ShaderUtilities::setFloat(
         p_shader_id,
         "material.shininess",
-        LightingDbWindow::directional_light.shininess);
+        LightingDbWindow::directional_light.m_shininess);
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.direction",
-        LightingDbWindow::directional_light.direction);
+        LightingDbWindow::directional_light.m_direction);
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.ambient",
-        p_enabled ? LightingDbWindow::directional_light.ambient : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.m_phong.m_ambient : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.diffuse",
-        p_enabled ? LightingDbWindow::directional_light.diffuse : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.m_phong.m_diffuse : std::array<float, 3>{0, 0, 0});
     ShaderUtilities::setVec3(
         p_shader_id,
         "directional_light.specular",
-        p_enabled ? LightingDbWindow::directional_light.specular : std::array<float, 3>{0, 0, 0});
+        p_enabled ? LightingDbWindow::directional_light.m_phong.m_specular : std::array<float, 3>{0, 0, 0});
 };
 
 void add_pointlight(
@@ -140,4 +144,21 @@ void add_spotlight(
         p_shader_id,
         "spot_light.outerCutOff",
         glm::cos(glm::radians(LightingDbWindow::spot_light.outerCutOff)));
+};
+
+void LightingDb::create_dir_light() noexcept
+{
+    // std::array<float, 3> ambient = {0.1f, 0.1f, 0.1f};
+    // std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
+    // std::array<float, 3> specular = {0.1f, 0.1f, 0.1f};
+    static std::size_t directional_light_counter = 1;
+    dir_map.emplace(
+        std::make_pair(
+            directional_light_counter++,
+            DirectionalLight(
+                {1.0f, 1.0f, 1.0f},
+                PhongLight(
+                    {0.1f, 0.1f, 0.1f},
+                    {1.0f, 1.0f, 1.0f},
+                    {0.1f, 0.1f, 0.1f}))));
 };

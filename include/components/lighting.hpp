@@ -1,15 +1,23 @@
 #pragma once
 
+#include "phong_light.hpp"
+
 #include <array>
 
 // Move this out to a shader class or something
 struct DirectionalLight
 {
-    float shininess = 32.0f;
-    std::array<float, 3> direction = {0.0f, 1.0f, 0.0f};
-    std::array<float, 3> ambient = {0.1f, 0.1f, 0.1f};
-    std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
-    std::array<float, 3> specular = {0.1f, 0.1f, 0.1f};
+    float m_shininess = 32.0f;
+    std::array<float, 3> m_direction = {0.0f, 1.0f, 0.0f};
+    // std::array<float, 3> ambient = {0.1f, 0.1f, 0.1f};
+    // std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
+    // std::array<float, 3> specular = {0.1f, 0.1f, 0.1f};
+    PhongLight m_phong;
+
+    DirectionalLight() = delete;
+    DirectionalLight(
+        const std::array<float, 3> &,
+        const PhongLight &);
 };
 
 struct PointLight
