@@ -2,6 +2,7 @@
 
 #include "phong_light.hpp"
 #include "intensity.hpp"
+#include "depth_buffer.hpp"
 
 #include "glm/glm.hpp"
 
@@ -28,7 +29,7 @@ struct PointLight
     glm::vec3 m_position;
     Intensity m_intensity;
     PhongLight m_phong;
-
+    DepthBuffer m_buffer;
     PointLight() = delete;
     PointLight(
         const glm::vec3 &p_position,

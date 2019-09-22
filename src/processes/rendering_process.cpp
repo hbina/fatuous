@@ -92,7 +92,7 @@ void render_normal(
         model_shader,
         "shadow_bias",
         LightingDbWindow::shadow_bias);
-    ShaderUtilities::setInt(
+    ShaderUtilities::setBool(
         model_shader,
         "enable_shadow",
         LightingDbWindow::enable_shadow);
