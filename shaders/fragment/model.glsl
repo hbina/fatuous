@@ -53,7 +53,6 @@ uniform Material material;
 
 uniform samplerCube depth_map;
 uniform float far_plane;
-uniform vec3 light_pos;
 uniform bool enable_shadow;
 uniform float shadow_bias;
 
@@ -159,7 +158,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
 
 float ShadowCalculation(vec3 frag_pos, vec3 normal) {
   // get vector between fragment position and light position
-  vec3 frag_to_light = frag_pos - light_pos;
+  vec3 frag_to_light = frag_pos - point_light.position;
   // use the light to fragment vector to sample from the depth map
   float closest_depth = texture(depth_map, frag_to_light).r;
   // it is currently in linear range between [0,1]. Re-transform back to

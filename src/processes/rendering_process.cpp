@@ -84,10 +84,6 @@ void render_normal(
     ShaderUtilities::use(model_shader);
     LightingDb::prepare_light(model_shader);
     ShaderUtilities::setInt(model_shader, "depth_map", 4);
-    ShaderUtilities::setVec3(
-        model_shader,
-        "light_pos",
-        LightingDbWindow::point_light.m_position);
     ShaderUtilities::setFloat(
         model_shader,
         "far_plane",
