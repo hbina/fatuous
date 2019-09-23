@@ -44,12 +44,14 @@ struct SpotLight {
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
+in vec3 Position;
 
 uniform vec3 camera_position;
 uniform DirectionalLight directional_light;
 uniform PointLight point_light;
 uniform SpotLight spot_light;
 uniform Material material;
+uniform samplerCube skybox;
 
 uniform samplerCube depth_map;
 uniform float far_plane;
@@ -66,14 +68,21 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos,
 float ShadowCalculation(vec3 frag_pos, vec3 normal);
 
 void main() {
-  vec4 textureColour = texture(material.diffuse, TexCoords);
-  if (textureColour.a < 0.5) {
-    discard;
-  }
+  // To fix rendering Sponza
+  // vec4 textureColour = texture(material.diffuse, TexCoords);
+  // if (textureColour.a < 0.5) {
+  // discard;
+  // }
+  vec3 I = normalize(Position - camera_position);
+  vec3 R = reflect(I, normalize(Normal));
+  FragColor = vec4(texture(skybox, R).rgb, 1.0);
+
+  // Preparing for Phong calculations
   vec3 normal = normalize(Normal);
   vec3 view_direction = normalize(camera_position - FragPos);
   float shadow = enable_shadow ? ShadowCalculation(FragPos, normal) : 0.0;
   vec3 result = CalcDirLight(directional_light, normal, view_direction);
+  // TODO :: Can split many of these stuff
   result += (1.0 - shadow) *
             CalcPointLight(point_light, normal, FragPos, view_direction);
   result += (1.0 - shadow) *

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "glad/glad.h"
 #include "entt/entt.hpp"
 
 namespace SkyboxSystem
 {
-void render(entt::registry &p_reg) noexcept;
+GLuint render() noexcept;
 }; // namespace SkyboxSystem

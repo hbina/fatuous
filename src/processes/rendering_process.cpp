@@ -37,7 +37,6 @@ void RenderingProcess::render(
     prepare_shadow(p_reg);
     render_normal(p_reg);
 
-    SkyboxSystem::render(p_reg);
     AkarinImgui::render(p_reg);
     AkarinGLFW::swap_buffers();
 };
@@ -87,6 +86,8 @@ void render_normal(
                 p_model_data,
                 p_transform);
         });
+
+    // Temporary
 };
 
 void prepare_shadow(

@@ -5,7 +5,6 @@
 #include "misc/opengl_settings.hpp"
 #include "misc/shader_utilities.hpp"
 
-#include "glad/glad.h"
 #include "stb/stb_image.h"
 
 #include <array>
@@ -63,8 +62,9 @@ const std::array<std::string, 6> faces{
     "./resources/skybox/front.jpg",
     "./resources/skybox/back.jpg"};
 
-void SkyboxSystem::render(entt::registry &p_reg) noexcept
+GLuint SkyboxSystem::render() noexcept
 {
+    // Must register this stuff to their databases
     static GLuint shader_id = 0;
     static GLuint g_skybox_vao_id = 0, vbo_id = 0;
     static GLuint texture_id = 0;
@@ -103,4 +103,5 @@ void SkyboxSystem::render(entt::registry &p_reg) noexcept
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     OpenGLSettings::refresh_settings();
+    return texture_id;
 };
