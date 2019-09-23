@@ -10,9 +10,9 @@
 
 struct Mesh
 {
-    const GLuint m_vao_id = 0u;
-    const GLuint m_vbo_id = 0u;
-    const GLuint m_ebo_id = 0u;
+    const GLuint m_vao_id;
+    const GLuint m_vbo_id;
+    const GLuint m_ebo_id;
     const std::vector<Vertex> m_vertices;
     const std::vector<unsigned int> m_indices;
     std::vector<Texture> m_textures;

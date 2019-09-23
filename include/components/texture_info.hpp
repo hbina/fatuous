@@ -10,10 +10,10 @@
 
 struct TextureInfo
 {
-    GLuint m_gl_id = 0u;
-    TextureType m_type;
-    std::string m_path;
-    std::array<int, 3> m_dimension;
+    const GLuint m_gl_id;
+    const TextureType m_type;
+    const std::string m_path;
+    const std::array<int, 3> m_dimension;
 
     TextureInfo() = delete;
     TextureInfo(const GLuint,

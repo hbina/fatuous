@@ -142,15 +142,18 @@ void ShaderUtilities::attach_dir_light(
     setVec3(
         p_shader_id,
         "directional_light.ambient",
-        LightingDbWindow::enable_directional_light ? directional_light.m_phong.m_ambient : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_dir_light ? directional_light.m_phong.m_ambient
+                                           : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "directional_light.diffuse",
-        LightingDbWindow::enable_directional_light ? directional_light.m_phong.m_diffuse : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_dir_light ? directional_light.m_phong.m_diffuse
+                                           : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "directional_light.specular",
-        LightingDbWindow::enable_directional_light ? directional_light.m_phong.m_specular : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_dir_light ? directional_light.m_phong.m_specular
+                                           : glm::vec3(0.0f));
 };
 
 void ShaderUtilities::attach_point_light(
@@ -165,17 +168,17 @@ void ShaderUtilities::attach_point_light(
         p_shader_id,
         "point_light.ambient",
         LightingDbWindow::enable_point_light ? point_light.m_phong.m_ambient
-                                             : std::array<float, 3>{0, 0, 0});
+                                             : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "point_light.diffuse",
         LightingDbWindow::enable_point_light ? point_light.m_phong.m_diffuse
-                                             : std::array<float, 3>{0, 0, 0});
+                                             : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "point_light.specular",
         LightingDbWindow::enable_point_light ? point_light.m_phong.m_specular
-                                             : std::array<float, 3>{0, 0, 0});
+                                             : glm::vec3(0.0f));
     setFloat(
         p_shader_id,
         "point_light.attenuation_value",

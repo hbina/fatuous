@@ -9,9 +9,9 @@
 
 struct ShaderFile
 {
-    std::string m_filepath;
-    std::string m_content;
-    ShaderType m_type;
+    const std::string m_filepath;
+    const std::string m_content;
+    const ShaderType m_type;
 
     ShaderFile() = delete;
     ShaderFile(

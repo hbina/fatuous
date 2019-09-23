@@ -4,11 +4,11 @@
 
 struct Vertex
 {
-    glm::vec3 m_position;
-    glm::vec3 m_normal;
-    glm::vec3 m_tangent;
-    glm::vec3 m_bitangent;
-    glm::vec2 m_tex_coord;
+    const glm::vec3 m_position;
+    const glm::vec3 m_normal;
+    const glm::vec3 m_tangent;
+    const glm::vec3 m_bitangent;
+    const glm::vec2 m_tex_coord;
 
     Vertex() = delete;
     Vertex(

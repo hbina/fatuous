@@ -12,12 +12,12 @@
 struct DirectionalLight
 {
     float m_shininess;
-    std::array<float, 3> m_direction;
+    glm::vec3 m_direction;
     PhongLight m_phong;
 
     DirectionalLight() = delete;
     DirectionalLight(
-        const std::array<float, 3> &p_direction,
+        const glm::vec3 &p_direction,
         const PhongLight &p_phong);
 };
 

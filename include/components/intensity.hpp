@@ -2,10 +2,10 @@
 
 struct Intensity
 {
-    float m_attval = 1.0f;
-    float m_constant = 1.0f;
-    float m_linear = 1.0f;
-    float m_quadratic = 1.0f;
+    float m_attval;
+    float m_constant;
+    float m_linear;
+    float m_quadratic;
     Intensity() = delete;
     Intensity(
         const float attval,

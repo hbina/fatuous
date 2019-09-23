@@ -168,13 +168,17 @@ Mesh process_mesh(
     aiMaterial *material = p_scene->mMaterials[p_mesh->mMaterialIndex];
 
     std::vector<Texture> texture_diffuse_maps = load_material_textures(p_model_root_directory, material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
-    textures.insert(textures.end(), texture_diffuse_maps.begin(), texture_diffuse_maps.end());
+    for (const auto &iter : texture_diffuse_maps)
+        textures.emplace_back(iter);
     std::vector<Texture> texture_specular_maps = load_material_textures(p_model_root_directory, material, aiTextureType_SPECULAR, TextureType::SPECULAR);
-    textures.insert(textures.end(), texture_specular_maps.begin(), texture_specular_maps.end());
+    for (const auto &iter : texture_specular_maps)
+        textures.emplace_back(iter);
     std::vector<Texture> texture_normal_maps = load_material_textures(p_model_root_directory, material, aiTextureType_NORMALS, TextureType::NORMAL);
-    textures.insert(textures.end(), texture_normal_maps.begin(), texture_normal_maps.end());
+    for (const auto &iter : texture_normal_maps)
+        textures.emplace_back(iter);
     std::vector<Texture> texture_height_maps = load_material_textures(p_model_root_directory, material, aiTextureType_HEIGHT, TextureType::HEIGHT);
-    textures.insert(textures.end(), texture_height_maps.begin(), texture_height_maps.end());
+    for (const auto &iter : texture_height_maps)
+        textures.emplace_back(iter);
 
     return MeshDb::create_mesh(vertices, indices, textures);
 };

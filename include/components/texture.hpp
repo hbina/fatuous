@@ -9,8 +9,8 @@
 
 struct Texture
 {
-  GLuint m_gl_id;
-  TextureType m_type;
+  const GLuint m_gl_id;
+  const TextureType m_type;
 
   Texture() = delete;
   Texture(const GLuint,

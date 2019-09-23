@@ -4,11 +4,11 @@
 
 struct DepthBuffer
 {
-    GLuint m_cube_map = 0u;
-    GLsizei m_height = 1;
-    GLsizei m_width = 1;
-    GLuint m_fbo = 0u;
-    GLuint m_shader = 0u;
+    const GLsizei m_width;
+    const GLsizei m_height;
+    const GLuint m_cube_map;
+    const GLuint m_fbo;
+    const GLuint m_shader;
     DepthBuffer() = delete;
     DepthBuffer(
         const GLsizei p_width,

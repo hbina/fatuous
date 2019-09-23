@@ -14,7 +14,7 @@ float LightingDbWindow::near_plane = 1.0f;
 float LightingDbWindow::far_plane = 1000.0f;
 
 bool LightingDbWindow::enable_shadow = true;
-bool LightingDbWindow::enable_directional_light = true;
+bool LightingDbWindow::enable_dir_light = true;
 bool LightingDbWindow::enable_point_light = true;
 bool LightingDbWindow::enable_spot_light = true;
 
@@ -34,12 +34,12 @@ void LightingDbWindow::render() noexcept
     {
         if (ImGui::TreeNode("Directional Light Properties"))
         {
-            ImGui::Checkbox("Enable##directional_light", &enable_directional_light);
+            ImGui::Checkbox("Enable##directional_light", &enable_dir_light);
             ImGui::SliderFloat("shininess##directional_light", &iter.second.m_shininess, 0.0f, 128.0f);
-            ImGui::SliderFloat3("direction##directional_light", iter.second.m_direction.data(), -1.0f, 1.0f);
-            ImGui::ColorEdit3("ambient##directional_light", iter.second.m_phong.m_ambient.data());
-            ImGui::ColorEdit3("diffuse##directional_light", iter.second.m_phong.m_diffuse.data());
-            ImGui::ColorEdit3("specular##directional_light", iter.second.m_phong.m_specular.data());
+            ImGui::SliderFloat3("direction##directional_light", &iter.second.m_direction[0], -1.0f, 1.0f);
+            ImGui::ColorEdit3("ambient##directional_light", &iter.second.m_phong.m_ambient[0]);
+            ImGui::ColorEdit3("diffuse##directional_light", &iter.second.m_phong.m_diffuse[0]);
+            ImGui::ColorEdit3("specular##directional_light", &iter.second.m_phong.m_specular[0]);
             ImGui::TreePop();
         }
     }
@@ -53,9 +53,9 @@ void LightingDbWindow::render() noexcept
             ImGui::SliderFloat("constant##point_light", &iter.second.m_intensity.m_constant, 1.0f, 100.0f);
             ImGui::SliderFloat("linear##point_light", &iter.second.m_intensity.m_linear, 0.1f, 10.0f);
             ImGui::SliderFloat("quadratic##point_light", &iter.second.m_intensity.m_quadratic, 0.001f, 0.100f);
-            ImGui::ColorEdit3("ambient##point_light", iter.second.m_phong.m_ambient.data());
-            ImGui::ColorEdit3("diffuse##point_light", iter.second.m_phong.m_diffuse.data());
-            ImGui::ColorEdit3("specular##point_light", iter.second.m_phong.m_specular.data());
+            ImGui::ColorEdit3("ambient##point_light", &iter.second.m_phong.m_ambient[0]);
+            ImGui::ColorEdit3("diffuse##point_light", &iter.second.m_phong.m_diffuse[0]);
+            ImGui::ColorEdit3("specular##point_light", &iter.second.m_phong.m_specular[0]);
             ImGui::TreePop();
         }
     }
