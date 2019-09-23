@@ -20,8 +20,7 @@ void EntityDatabaseWindow::render() noexcept
     ImGui::Begin("Entity Window");
     if (ImGui::BeginCombo("Model Selection", current_selection.c_str()))
     {
-        for (const auto &p_modeldata_iter : ModelDb::map)
-        {
+        ModelDb::for_each([](const auto &p_modeldata_iter) {
             if (ImGui::Selectable(p_modeldata_iter.second.m_path.c_str()))
             {
                 selected_model_id = p_modeldata_iter.first;
@@ -31,7 +30,7 @@ void EntityDatabaseWindow::render() noexcept
             {
                 ImGui::SetItemDefaultFocus();
             }
-        };
+        });
         ImGui::EndCombo();
     }
     if (ImGui::Button("Create entity"))

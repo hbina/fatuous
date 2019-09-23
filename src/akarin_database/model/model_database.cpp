@@ -20,6 +20,9 @@
 #include <ctime>
 #include <future>
 #include <thread>
+#include <mutex>
+
+std::mutex mutex;
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
 std::size_t add_model(
@@ -39,18 +42,18 @@ Mesh process_mesh(
     const aiMesh *,
     const aiScene *) noexcept;
 
-std::unordered_map<std::size_t, ModelInfo> ModelDb::map;
+std::unordered_map<std::size_t, ModelInfo> map;
 
 std::size_t ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
 {
     const auto &find_model_iter = std::find_if(
-        ModelDb::map.cbegin(),
-        ModelDb::map.cend(),
+        map.cbegin(),
+        map.cend(),
         [p_model_path](const std::pair<const std::size_t, ModelInfo> &p_model_iter) -> bool {
             return p_model_iter.second.m_path == p_model_path;
         });
-    if (find_model_iter != ModelDb::map.cend())
+    if (find_model_iter != map.cend())
     {
         std::cout << "model:" << p_model_path << " already exists\n";
         return (*find_model_iter).first;
@@ -204,12 +207,27 @@ std::vector<Texture> load_material_textures(
     return textures;
 };
 
+template <typename F, typename... Ts>
+void for_each(F f, Ts...) noexcept
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    for (const auto &iter : map)
+    {
+        f(iter);
+    }
+};
+
+const ModelInfo &get(const std::size_t p_id) noexcept
+{
+    return map.at(p_id);
+};
+
 std::size_t add_model(
     const ModelInfo &p_modeldata) noexcept
 {
     static std::atomic<std::size_t> model_counter = 1;
     std::size_t model_id = model_counter++;
-    ModelDb::map.emplace(
+    map.emplace(
         model_id,
         p_modeldata);
     return model_id;

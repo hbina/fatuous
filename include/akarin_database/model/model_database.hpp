@@ -11,13 +11,20 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <atomic>
 
 namespace ModelDb
 {
-extern std::unordered_map<std::size_t, ModelInfo> map;
+// extern std::unordered_map<std::size_t, ModelInfo> map;
 
 std::size_t add_model_job(
     const std::string &) noexcept;
+
+// Thread-safe access to table;
+template <typename F, typename... Ts>
+void for_each(F f, Ts...) noexcept;
+
+const ModelInfo &get(const std::size_t) noexcept;
 }; // namespace ModelDb
 
 #endif

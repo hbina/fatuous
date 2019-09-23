@@ -29,12 +29,11 @@ void ModelDbWindow::render(
     }
     if (ImGui::CollapsingHeader("Models List"))
     {
-        for (const auto &p_modeldata_iter : ModelDb::map)
-        {
+        ModelDb::for_each([](const auto &p_modeldata_iter) {
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
             modeldata_ostr << p_modeldata_iter.second.m_path;
-        };
+        });
     }
 
     if (ImGui::CollapsingHeader("Meshes List"))

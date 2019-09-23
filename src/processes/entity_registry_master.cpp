@@ -36,7 +36,7 @@ void EntityRegistryMaster::create_entity(
     entt::entity new_entity = p_reg.create();
     p_reg.assign<Model>(
         new_entity,
-        ModelDb::map.at(p_model_id).m_model);
+        ModelDb::get(p_model_id).m_model);
 
     p_reg.assign<Transform>(
         new_entity,
