@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[])
 {
-    while (AkarinGLFW::get_instance().alive())
+    while (AkarinGLFW::alive())
     {
         EntityRegistryMaster::run();
         std::flush(std::cout);

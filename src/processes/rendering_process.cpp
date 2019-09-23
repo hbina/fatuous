@@ -39,7 +39,7 @@ void RenderingProcess::render(
 
     SkyboxSystem::render(p_reg);
     AkarinImgui::render(p_reg);
-    AkarinGLFW::get_instance().swap_buffers();
+    AkarinGLFW::swap_buffers();
 };
 
 void draw(
