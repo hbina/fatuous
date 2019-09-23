@@ -4,6 +4,7 @@
 #include "akarin_database/lighting/lighting_database.hpp"
 #include "akarin_database/model/model_database.hpp"
 #include "akarin_database/mesh/mesh_database.hpp"
+#include "akarin_database/shader/shader_database.hpp"
 #include "components/transform.hpp"
 #include "misc/shader_utilities.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
@@ -11,7 +12,6 @@
 #include "systems/skybox_system.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "misc/opengl_settings.hpp"
-#include "akarin_database/shader/shader_database.hpp"
 
 #include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-project(akarin_engine)
+project(fatuous)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,7 +12,7 @@ else()
 endif()
 
 add_executable(
-    akarin_engine
+    fatuous
     
     src/main.cpp
 
@@ -90,4 +90,4 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/thirdparty/glad/include
     ${CMAKE_SOURCE_DIR}/thirdparty/entt/single_include )
 
-target_link_libraries(akarin_engine ${OPENGL_LIBRARIES} glfw assimp)
+target_link_libraries(fatuous ${OPENGL_LIBRARIES} glfw assimp)

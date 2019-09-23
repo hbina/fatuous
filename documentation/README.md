@@ -7,4 +7,4 @@ I have not seen anything wrong with it yet.
 
 Simply:
 
-`tectonic akarin_engine.tex`
+`tectonic fatuous.tex`

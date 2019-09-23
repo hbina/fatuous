@@ -11,7 +11,7 @@
                 "--config",
                 "Debug",
                 "--target",
-                "akarin_engine"
+                "fatuous"
             ],
             "group": {
                 "kind": "build",

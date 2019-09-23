@@ -71,7 +71,7 @@ GLuint ShaderDb::link_shader_files(
 };
 
 void ShaderDb::set_shader_program_texture(
-    const GLuint p_shader_program_id,
+    const GLuint p_shader_id,
     const std::vector<Texture> &textures) noexcept
 {
     // TODO :: This is not normalized data structure...please consider making it so.
@@ -82,28 +82,28 @@ void ShaderDb::set_shader_program_texture(
         case TextureType::DIFFUSE:
         {
             glActiveTexture(GL_TEXTURE0 + i);
-            glUniform1i(glGetUniformLocation(p_shader_program_id, "material.diffuse"), i);
+            glUniform1i(glGetUniformLocation(p_shader_id, "material.diffuse"), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
-        };
+        }
         case TextureType::HEIGHT:
         {
             glActiveTexture(GL_TEXTURE0 + i);
-            glUniform1i(glGetUniformLocation(p_shader_program_id, "material.height"), i);
+            glUniform1i(glGetUniformLocation(p_shader_id, "material.height"), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         case TextureType::NORMAL:
         {
             glActiveTexture(GL_TEXTURE0 + i);
-            glUniform1i(glGetUniformLocation(p_shader_program_id, "material.normal"), i);
+            glUniform1i(glGetUniformLocation(p_shader_id, "material.normal"), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
         case TextureType::SPECULAR:
         {
             glActiveTexture(GL_TEXTURE0 + i);
-            glUniform1i(glGetUniformLocation(p_shader_program_id, "material.specular"), i);
+            glUniform1i(glGetUniformLocation(p_shader_id, "material.specular"), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].m_gl_id);
             break;
         };
@@ -144,8 +144,8 @@ void test_shader_program_compilation(
         for (const auto &p_iter : p_shaders)
         {
             std::cerr << "id: " << p_iter << "\n";
-            // std::cerr << "filepath: " << file_map.at(p_iter).m_filepath << "\n";
-            // std::cerr << "type: " << file_map.at(p_iter).m_type << "\n";
+            std::cerr << "filepath: " << ShaderDb::file_map.at(p_iter).m_filepath << "\n";
+            std::cerr << "type: " << ShaderDb::file_map.at(p_iter).m_type << "\n";
         }
         std::cout << info_log << "\n";
     }
