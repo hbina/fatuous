@@ -22,7 +22,7 @@ void draw(
     const GLuint,
     const Model &,
     const Transform &,
-    bool draw_depth = false);
+    bool p_draw_depth = false);
 
 void prepare_shadow(
     entt::registry &) noexcept;
@@ -46,7 +46,7 @@ void draw(
     const GLuint p_shader_id,
     const Model &p_model,
     const Transform &p_transform,
-    const bool draw_depth)
+    const bool p_draw_depth)
 {
     ShaderUtilities::transform_shader(
         p_shader_id,
@@ -54,9 +54,9 @@ void draw(
         AkarinCameraSystem::get_view(),
         p_transform.m_position,
         p_transform.m_scale,
-        draw_depth);
+        p_draw_depth);
     for (const Mesh &mesh : p_model.m_meshes)
-        mesh.draw(p_shader_id, draw_depth);
+        mesh.draw(p_shader_id, p_draw_depth);
 };
 
 void render_normal(
@@ -129,10 +129,6 @@ void prepare_shadow(
             iter.second.m_buffer.m_shader,
             "far_plane",
             LightingDbWindow::far_plane);
-        ShaderUtilities::setVec3(
-            iter.second.m_buffer.m_shader,
-            "camera_position",
-            AkarinCameraSystem::get_position());
         p_reg.view<Model, Transform>()
             .each([&](
                       const Model &p_model_data,

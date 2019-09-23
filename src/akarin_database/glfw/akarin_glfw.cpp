@@ -32,7 +32,7 @@ AkarinGLFW::AkarinGLFW()
     window = glfwCreateWindow(
         window_dimension.x,
         window_dimension.y,
-        "Akarin 3D Engine",
+        "Fatuous",
         nullptr, nullptr);
 
     if (window == nullptr)
@@ -60,7 +60,7 @@ AkarinGLFW::AkarinGLFW()
     (void)io; // just to silence warnings
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    const char *glsl_version = "#version 450";
+    const char *glsl_version = "#version 330";
     ImGui_ImplOpenGL3_Init(glsl_version);
 };
 

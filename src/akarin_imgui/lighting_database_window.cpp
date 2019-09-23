@@ -6,6 +6,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include <sstream>
 #include <array>
 
 // Shadow stuff
@@ -22,7 +23,7 @@ SpotLight LightingDbWindow::spot_light;
 
 void LightingDbWindow::render() noexcept
 {
-    ImGui::Begin("Lighting System");
+    ImGui::Begin("Lighting Database");
     if (ImGui::CollapsingHeader("Shadow Properties"))
     {
         ImGui::Checkbox("Enable Shadow", &enable_shadow);
@@ -30,33 +31,45 @@ void LightingDbWindow::render() noexcept
         ImGui::SliderFloat("near_plane##shadow", &near_plane, 0.0f, 100.0f);
         ImGui::SliderFloat("far_plane##shadow", &far_plane, 100.0f, 1000.0f);
     }
-    for (auto &iter : LightingDb::dir_map)
+    if (ImGui::CollapsingHeader("Directional Light Properties"))
     {
-        if (ImGui::TreeNode("Directional Light Properties"))
+        ImGui::Checkbox("Enable##directional_light", &enable_dir_light);
+        for (auto &iter : LightingDb::dir_map)
         {
-            ImGui::Checkbox("Enable##directional_light", &enable_dir_light);
-            ImGui::SliderFloat("shininess##directional_light", &iter.second.m_shininess, 0.0f, 128.0f);
-            ImGui::SliderFloat3("direction##directional_light", &iter.second.m_direction[0], -1.0f, 1.0f);
-            ImGui::ColorEdit3("ambient##directional_light", &iter.second.m_phong.m_ambient[0]);
-            ImGui::ColorEdit3("diffuse##directional_light", &iter.second.m_phong.m_diffuse[0]);
-            ImGui::ColorEdit3("specular##directional_light", &iter.second.m_phong.m_specular[0]);
-            ImGui::TreePop();
+            std::stringstream dir_ostr;
+            dir_ostr << iter.first;
+            dir_ostr << "##directional_light";
+            if (ImGui::TreeNode(dir_ostr.str().c_str()))
+            {
+                ImGui::SliderFloat("shininess##directional_light", &iter.second.m_shininess, 0.0f, 128.0f);
+                ImGui::SliderFloat3("direction##directional_light", &iter.second.m_direction[0], -1.0f, 1.0f);
+                ImGui::ColorEdit3("ambient##directional_light", &iter.second.m_phong.m_ambient[0]);
+                ImGui::ColorEdit3("diffuse##directional_light", &iter.second.m_phong.m_diffuse[0]);
+                ImGui::ColorEdit3("specular##directional_light", &iter.second.m_phong.m_specular[0]);
+                ImGui::TreePop();
+            }
         }
     }
-    for (auto &iter : LightingDb::point_map)
+    if (ImGui::CollapsingHeader("Point Light Properties"))
     {
-        if (ImGui::TreeNode("Point Light Properties"))
+        ImGui::Checkbox("Enable##point_light", &enable_point_light);
+        for (auto &iter : LightingDb::point_map)
         {
-            ImGui::Checkbox("Enable##point_light", &enable_point_light);
-            ImGui::SliderFloat3("position##point_light", &iter.second.m_position[0], -500.0f, 500.0f);
-            ImGui::SliderFloat("attenuation_value##point_light", &iter.second.m_intensity.m_attval, 1.0f, 100.0f);
-            ImGui::SliderFloat("constant##point_light", &iter.second.m_intensity.m_constant, 1.0f, 100.0f);
-            ImGui::SliderFloat("linear##point_light", &iter.second.m_intensity.m_linear, 0.1f, 10.0f);
-            ImGui::SliderFloat("quadratic##point_light", &iter.second.m_intensity.m_quadratic, 0.001f, 0.100f);
-            ImGui::ColorEdit3("ambient##point_light", &iter.second.m_phong.m_ambient[0]);
-            ImGui::ColorEdit3("diffuse##point_light", &iter.second.m_phong.m_diffuse[0]);
-            ImGui::ColorEdit3("specular##point_light", &iter.second.m_phong.m_specular[0]);
-            ImGui::TreePop();
+            std::stringstream dir_ostr;
+            dir_ostr << iter.first;
+            dir_ostr << "##point_light";
+            if (ImGui::TreeNode(dir_ostr.str().c_str()))
+            {
+                ImGui::SliderFloat3("position##point_light", &iter.second.m_position[0], -500.0f, 500.0f);
+                ImGui::SliderFloat("attenuation_value##point_light", &iter.second.m_intensity.m_attval, 1.0f, 100.0f);
+                ImGui::SliderFloat("constant##point_light", &iter.second.m_intensity.m_constant, 1.0f, 100.0f);
+                ImGui::SliderFloat("linear##point_light", &iter.second.m_intensity.m_linear, 0.1f, 10.0f);
+                ImGui::SliderFloat("quadratic##point_light", &iter.second.m_intensity.m_quadratic, 0.001f, 0.100f);
+                ImGui::ColorEdit3("ambient##point_light", &iter.second.m_phong.m_ambient[0]);
+                ImGui::ColorEdit3("diffuse##point_light", &iter.second.m_phong.m_diffuse[0]);
+                ImGui::ColorEdit3("specular##point_light", &iter.second.m_phong.m_specular[0]);
+                ImGui::TreePop();
+            }
         }
     }
     if (ImGui::CollapsingHeader("Spot Light Properties"))
@@ -72,6 +85,5 @@ void LightingDbWindow::render() noexcept
         ImGui::ColorEdit3("diffuse##spot_light", spot_light.diffuse.data());
         ImGui::ColorEdit3("specular##spot_light", spot_light.specular.data());
     }
-
     ImGui::End();
 };
