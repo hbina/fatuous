@@ -7,7 +7,7 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<std::size_t, Mesh> MeshDb::meshes_map;
+std::unordered_map<std::size_t, Mesh> MeshDb::map;
 
 Mesh MeshDb::create_mesh(
     const std::vector<Vertex> &p_vertices,
@@ -68,7 +68,7 @@ Mesh MeshDb::create_mesh(
         p_vertices,
         p_indices,
         p_textures);
-    meshes_map.emplace(
+    map.emplace(
         std::make_pair(
             mesh_id,
             mesh));

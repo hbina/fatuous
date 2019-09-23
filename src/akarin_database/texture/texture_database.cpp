@@ -10,7 +10,7 @@
 #include <mutex>
 #include <vector>
 
-std::unordered_map<GLuint, TextureInfo> TextureDb::textures_map;
+std::unordered_map<GLuint, TextureInfo> TextureDb::map;
 
 Texture TextureDb::create_gl_texture(
     const std::string &p_path,
@@ -86,7 +86,7 @@ Texture TextureDb::create_gl_texture(
         stbi_image_free(data);
     }
 
-    TextureDb::textures_map.emplace(
+    TextureDb::map.emplace(
         std::make_pair(
             texture_gl_id,
             TextureInfo(
@@ -142,7 +142,7 @@ GLuint TextureDb::load_cube_texture(
     std::string textures_folder_dir = std::string(
         std::string(faces[0]).substr(0),
         std::string(faces[0]).find_last_of('/'));
-    TextureDb::textures_map.emplace(
+    TextureDb::map.emplace(
         std::make_pair(
             texture_gl_id,
             TextureInfo(

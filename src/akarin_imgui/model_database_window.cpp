@@ -39,7 +39,7 @@ void ModelDbWindow::render(
 
     if (ImGui::CollapsingHeader("Meshes List"))
     {
-        for (const std::pair<const std::size_t, Mesh> &mesh_iter : MeshDb::meshes_map)
+        for (const std::pair<const std::size_t, Mesh> &mesh_iter : MeshDb::map)
         {
             const Mesh &mesh = mesh_iter.second;
             std::stringstream vao_id_ostr;
@@ -58,7 +58,7 @@ void ModelDbWindow::render(
                     for (const Texture &p_texture_id : mesh.m_textures)
                     {
                         // TODO :: Refactor a bunch of this
-                        const TextureInfo &texture_data = TextureDb::textures_map.at(p_texture_id.m_gl_id);
+                        const TextureInfo &texture_data = TextureDb::map.at(p_texture_id.m_gl_id);
                         std::stringstream ostr_texture_gl_id;
                         ostr_texture_gl_id << texture_data.m_gl_id;
                         ImGui::Text("id: %s", ostr_texture_gl_id.str().c_str());
