@@ -15,6 +15,8 @@ float LightingDbWindow::near_plane = 1.0f;
 float LightingDbWindow::far_plane = 1000.0f;
 
 bool LightingDbWindow::enable_shadow = true;
+bool LightingDbWindow::enable_shadow_debug = true;
+
 bool LightingDbWindow::enable_dir_light = true;
 bool LightingDbWindow::enable_point_light = true;
 bool LightingDbWindow::enable_spot_light = true;
@@ -27,6 +29,7 @@ void LightingDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Shadow Properties"))
     {
         ImGui::Checkbox("Enable Shadow", &enable_shadow);
+        ImGui::Checkbox("Enable Shadow Debug", &enable_shadow_debug);
         ImGui::SliderFloat("shadow_bias##shadow", &shadow_bias, 0.0f, 25.0f);
         ImGui::SliderFloat("near_plane##shadow", &near_plane, 0.0f, 100.0f);
         ImGui::SliderFloat("far_plane##shadow", &far_plane, 100.0f, 1000.0f);

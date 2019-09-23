@@ -53,6 +53,7 @@ uniform Material material;
 
 uniform samplerCube depth_map;
 uniform float far_plane;
+uniform bool enable_shadow_debug;
 uniform bool enable_shadow;
 uniform float shadow_bias;
 
@@ -77,7 +78,8 @@ void main() {
             CalcPointLight(point_light, normal, FragPos, view_direction);
   result += (1.0 - shadow) *
             CalcSpotLight(spot_light, normal, FragPos, view_direction);
-  FragColor = vec4(result, 1.0);
+  if (!enable_shadow_debug)
+    FragColor = vec4(result, 1.0);
 }
 
 // calculates the color when using a directional light.
@@ -170,7 +172,8 @@ float ShadowCalculation(vec3 frag_pos, vec3 normal) {
   // now test for shadows
   float shadow = current_depth - shadow_bias > closest_depth ? 1.0 : 0.0;
   // for debugging purposes
-  // FragColor = vec4(vec3(closest_depth / far_plane), 1.0);
+  if (enable_shadow_debug)
+    FragColor = vec4(vec3(closest_depth / far_plane), 1.0);
 
   // Calculates intensity depending on the normals
   float intensity = dot(normal, -normalize(frag_to_light));

@@ -16,7 +16,7 @@ void LightingDb::prepare_light(
     {
         first = false;
         create_dir_light();
-        create_point_light(500, 500);
+        create_point_light(256, 256);
     }
     for (const auto &dir_light : dir_map)
     {
@@ -47,6 +47,10 @@ void LightingDb::prepare_light(
         p_shader_id,
         "enable_shadow",
         LightingDbWindow::enable_shadow);
+    ShaderUtilities::setBool(
+        p_shader_id,
+        "enable_shadow_debug",
+        LightingDbWindow::enable_shadow_debug);
     ShaderUtilities::setVec3(
         p_shader_id,
         "camera_position",

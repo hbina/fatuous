@@ -10,6 +10,7 @@ namespace LightingDbWindow
 
 // Shadow
 extern bool enable_shadow;
+extern bool enable_shadow_debug;
 extern float near_plane;
 extern float far_plane;
 
