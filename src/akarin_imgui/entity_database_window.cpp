@@ -1,6 +1,6 @@
 #include "akarin_imgui/entity_database_window.hpp"
 #include "akarin_database/model/model_database.hpp"
-#include "processes/entity_registry_master.hpp"
+#include "processes/fatuous.hpp"
 #include "components/mesh.hpp"
 #include "components/transform.hpp"
 
@@ -41,14 +41,14 @@ void EntityDatabaseWindow::render() noexcept
         }
         else
         {
-            EntityRegistryMaster::create_entity(static_cast<std::size_t>(selected_model_id));
+            Fatuous::create_entity(static_cast<std::size_t>(selected_model_id));
         }
     }
     ImGui::SameLine();
 
     // TODO :: Separate this into its own StatisticsWindow
     std::ostringstream out;
-    out << EntityRegistryMaster::get_entity_count();
+    out << Fatuous::get_entity_count();
     ImGui::Text("renderable count = %s", out.str().c_str());
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

@@ -58,7 +58,7 @@ add_executable(
     
     src/akarin_database/glfw/akarin_glfw.cpp
     
-    src/processes/entity_registry_master.cpp
+    src/processes/fatuous.cpp
     src/processes/rendering_process.cpp
     src/processes/swarm_process.cpp
     

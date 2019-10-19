@@ -1,5 +1,7 @@
 #pragma once
 
+#include "akarin_database/glfw/akarin_glfw.hpp"
+
 enum class GLEnum
 {
     DEPTH_TEST,
@@ -39,6 +41,6 @@ void set_cull_face(const CullFace) noexcept;
 
 // Exposed functions
 void refresh_settings() noexcept;
-void gl_clear() noexcept;
+void gl_clear(const AkarinGLFW &p_window) noexcept;
 
 }; // namespace OpenGLSettings

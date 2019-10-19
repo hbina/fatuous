@@ -31,6 +31,7 @@ void render_normal(
     entt::registry &) noexcept;
 
 void RenderingProcess::render(
+    AkarinGLFW &p_window,
     entt::registry &p_reg) noexcept
 {
     OpenGLSettings::update();
@@ -39,7 +40,7 @@ void RenderingProcess::render(
 
     SkyboxSystem::render(p_reg);
     AkarinImgui::render(p_reg);
-    AkarinGLFW::swap_buffers();
+    p_window.swap_buffers();
 };
 
 void draw(

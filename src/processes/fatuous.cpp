@@ -1,4 +1,4 @@
-#include "processes/entity_registry_master.hpp"
+#include "processes/fatuous.hpp"
 #include "systems/akarin_camera_system.hpp"
 #include "processes/rendering_process.hpp"
 #include "akarin_database/model/model_database.hpp"
@@ -16,29 +16,37 @@
 #include <chrono>
 #include <thread>
 
-entt::registry p_reg;
+Fatuous::Fatuous()
+    : m_window("Fatuous", 1024, 768){};
 
-void EntityRegistryMaster::run() noexcept
+void Fatuous::run() noexcept
 {
-    auto delta_time = AkarinTimer::get_delta_time();
-    AkarinCameraSystem::process_keyboard(delta_time);
-    RenderingProcess::render(p_reg);
+    while (m_window.is_alive())
+    {
+        auto delta_time = AkarinTimer::get_delta_time();
+        AkarinCameraSystem::process_keyboard(
+            m_window,
+            delta_time);
+        RenderingProcess::render(
+            m_window,
+            m_registry);
+    }
 };
 
-std::size_t EntityRegistryMaster::get_entity_count() noexcept
+std::size_t Fatuous::get_entity_count() noexcept
 {
-    return p_reg.size();
+    return m_registry.size();
 };
 
-void EntityRegistryMaster::create_entity(
+void Fatuous::create_entity(
     const std::size_t p_model_id) noexcept
 {
-    entt::entity new_entity = p_reg.create();
-    p_reg.assign<Model>(
+    entt::entity new_entity = m_registry.create();
+    m_registry.assign<Model>(
         new_entity,
         ModelDb::map.at(p_model_id).m_model);
 
-    p_reg.assign<Transform>(
+    m_registry.assign<Transform>(
         new_entity,
         glm::vec3(0.0f),
         glm::vec3(1.0f));
