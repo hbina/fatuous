@@ -17,6 +17,7 @@ struct DirectionalLight
 
     DirectionalLight() = delete;
     DirectionalLight(
+        const float p_shininess,
         const glm::vec3 &p_direction,
         const PhongLight &p_phong);
 };
@@ -37,13 +38,15 @@ struct PointLight
 
 struct SpotLight
 {
-    float cutOff = 12.5f;
-    float outerCutOff = 15.0f;
-    float attenuation_value = 25.0f;
-    float constant = 0.5f;
-    float linear = 0.01f;
-    float quadratic = 0.003f;
-    std::array<float, 3> ambient = {1.0f, 1.0f, 1.0f};
-    std::array<float, 3> diffuse = {1.0f, 1.0f, 1.0f};
-    std::array<float, 3> specular = {1.0f, 1.0f, 1.0f};
+    // These stuff are unique to SpotLight ... for now
+    glm::vec2 m_radial;
+    glm::vec3 m_direction;
+    Intensity m_intensity;
+    PhongLight m_phong;
+    SpotLight() = delete;
+    SpotLight(
+        const glm::vec2 &p_radial,
+        const glm::vec3 &p_direction,
+        const Intensity &p_intensity,
+        const PhongLight &p_phong);
 };

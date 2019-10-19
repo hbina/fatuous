@@ -1,5 +1,5 @@
 #include "systems/skybox_system.hpp"
-#include "systems/akarin_camera_system.hpp"
+#include "systems/camera_database.hpp"
 #include "akarin_database/texture/texture_database.hpp"
 #include "akarin_database/shader/shader_database.hpp"
 #include "misc/opengl_settings.hpp"
@@ -94,9 +94,9 @@ void SkyboxSystem::render(entt::registry &p_reg) noexcept
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     ShaderUtilities::use(shader_id);
-    const glm::mat4 &view = glm::mat4(glm::mat3(AkarinCameraSystem::get_view()));
+    const glm::mat4 &view = glm::mat4(glm::mat3(CameraDb::get_view()));
     ShaderUtilities::setMat4(shader_id, "view", view);
-    ShaderUtilities::setMat4(shader_id, "projection", AkarinCameraSystem::get_projection());
+    ShaderUtilities::setMat4(shader_id, "projection", CameraDb::get_projection());
     glBindVertexArray(g_skybox_vao_id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);

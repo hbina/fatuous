@@ -2,7 +2,7 @@
 #include "akarin_imgui/lighting_database_window.hpp" // Circular dependency...remove this...
 #include "akarin_database/shader/shader_database.hpp"
 #include "misc/shader_utilities.hpp"
-#include "systems/akarin_camera_system.hpp"
+#include "systems/camera_database.hpp"
 
 std::unordered_map<std::size_t, DirectionalLight> LightingDb::dir_map;
 std::unordered_map<std::size_t, PointLight> LightingDb::point_map;
@@ -30,9 +30,12 @@ void LightingDb::prepare_light(
             p_shader_id,
             point_light.second);
     }
-    ShaderUtilities::add_spot_light(
-        p_shader_id,
-        LightingDbWindow::enable_spot_light);
+    for (const auto &spot_light : spot_map)
+    {
+        ShaderUtilities::attach_spot_light(
+            p_shader_id,
+            spot_light.second);
+    }
 
     // TODO :: Move this to PointLight
     ShaderUtilities::setFloat(
@@ -54,7 +57,7 @@ void LightingDb::prepare_light(
     ShaderUtilities::setVec3(
         p_shader_id,
         "camera_position",
-        AkarinCameraSystem::get_position());
+        CameraDb::get_position());
 };
 
 void LightingDb::create_dir_light() noexcept
@@ -64,6 +67,7 @@ void LightingDb::create_dir_light() noexcept
         std::make_pair(
             directional_light_counter++,
             DirectionalLight(
+                25.0f,
                 {1.0f, 1.0f, 1.0f},
                 PhongLight(
                     {0.1f, 0.1f, 0.1f},
@@ -132,4 +136,22 @@ void LightingDb::create_point_light(
                     {1.0f, 1.0f, 1.0f},
                     {1.0f, 1.0f, 1.0f}),
                 DepthBuffer(p_width, p_height, light_cube_map, light_fbo, light_shader))));
+};
+
+void LightingDb::create_spot_light() noexcept
+{
+    static std::size_t spot_light_counter = 1;
+    spot_map.emplace(
+        std::make_pair(
+            spot_light_counter++,
+            SpotLight(
+                {12.5f, 15.0f},
+                {1.0f, 1.0f, 1.0f},
+                Intensity(
+                    25.0f,
+                    0.5f, 0.01f, 0.003f),
+                PhongLight(
+                    {1.0f, 1.0f, 1.0f},
+                    {1.0f, 1.0f, 1.0f},
+                    {1.0f, 1.0f, 1.0f}))));
 };

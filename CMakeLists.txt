@@ -29,7 +29,7 @@ add_executable(
     src/misc/opengl_settings.cpp
 
     src/systems/skybox_system.cpp
-    src/systems/akarin_camera_system.cpp
+    src/systems/camera_database.cpp
 
     src/enums/shader_type.cpp
     src/enums/texture_type.cpp

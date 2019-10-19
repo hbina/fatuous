@@ -23,16 +23,16 @@ void transform_shader(
     const bool draw_depth = false) noexcept;
 
 void attach_dir_light(
-    const GLuint,
-    const DirectionalLight &) noexcept;
+    const GLuint p_shader_id,
+    const DirectionalLight &directional_light) noexcept;
 
 void attach_point_light(
-    const GLuint,
-    const PointLight &) noexcept;
+    const GLuint p_shader_id,
+    const PointLight &point_light) noexcept;
 
-void add_spot_light(
-    const GLuint,
-    const bool) noexcept;
+void attach_spot_light(
+    const GLuint p_shader_id,
+    const SpotLight &spot_light) noexcept;
 
 void setBool(
     const GLuint,

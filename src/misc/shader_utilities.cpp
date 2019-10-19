@@ -1,6 +1,6 @@
 #include "misc/shader_utilities.hpp"
 #include "akarin_imgui/lighting_database_window.hpp"
-#include "systems/akarin_camera_system.hpp"
+#include "systems/camera_database.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -203,52 +203,55 @@ void ShaderUtilities::attach_point_light(
     glBindTexture(GL_TEXTURE_CUBE_MAP, point_light.m_buffer.m_cube_map);
 };
 
-void ShaderUtilities::add_spot_light(
+void ShaderUtilities::attach_spot_light(
     const GLuint p_shader_id,
-    const bool p_enabled) noexcept
+    const SpotLight &spot_light) noexcept
 {
     setVec3(
         p_shader_id,
         "spot_light.position",
-        AkarinCameraSystem::get_position());
+        CameraDb::get_position());
     setVec3(
         p_shader_id,
         "spot_light.direction",
-        AkarinCameraSystem::get_front());
+        CameraDb::get_front());
     setVec3(
         p_shader_id,
         "spot_light.ambient",
-        p_enabled ? LightingDbWindow::spot_light.ambient : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_spot_light ? spot_light.m_phong.m_ambient
+                                            : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "spot_light.diffuse",
-        p_enabled ? LightingDbWindow::spot_light.diffuse : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_spot_light ? spot_light.m_phong.m_diffuse
+                                            : glm::vec3(0.0f));
     setVec3(
         p_shader_id,
         "spot_light.specular",
-        p_enabled ? LightingDbWindow::spot_light.specular : std::array<float, 3>{0, 0, 0});
+        LightingDbWindow::enable_spot_light ? spot_light.m_phong.m_specular
+                                            : glm::vec3(0.0f));
     setFloat(
         p_shader_id,
         "point_light.attenuation_value",
-        LightingDbWindow::spot_light.attenuation_value);
+        spot_light.m_intensity.m_attval);
     setFloat(
         p_shader_id,
         "spot_light.constant",
-        1.0f);
+        spot_light.m_intensity.m_constant);
     setFloat(
         p_shader_id,
         "spot_light.linear",
-        0.09f);
+        spot_light.m_intensity.m_linear);
     setFloat(
         p_shader_id,
         "spot_light.quadratic",
-        0.032f);
+        spot_light.m_intensity.m_quadratic);
     setFloat(
         p_shader_id,
         "spot_light.cutOff",
-        glm::cos(glm::radians(LightingDbWindow::spot_light.cutOff)));
+        glm::cos(glm::radians(spot_light.m_radial.x)));
     setFloat(
         p_shader_id,
         "spot_light.outerCutOff",
-        glm::cos(glm::radians(LightingDbWindow::spot_light.outerCutOff)));
+        glm::cos(glm::radians(spot_light.m_radial.y)));
 };

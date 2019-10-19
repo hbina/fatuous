@@ -19,7 +19,7 @@
             "name": "Linux launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/akarin_engine",
+            "program": "${workspaceRoot}/build/fatuous",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

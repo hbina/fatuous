@@ -1,4 +1,4 @@
-#include "systems/akarin_camera_system.hpp"
+#include "systems/camera_database.hpp"
 #include "akarin_database/glfw/akarin_glfw.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
@@ -19,8 +19,7 @@ struct AkarinCamera
     float clip_near = 0.1f;
     float clip_far = 10000.0f;
 
-    void
-    update_camera_vectors() noexcept
+    void update_camera_vectors() noexcept
     {
         glm::vec3 front;
         front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
@@ -38,7 +37,7 @@ struct AkarinCamera
     };
 } akarin_camera;
 
-void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
+void CameraDb::process_keyboard(const float p_delta_time) noexcept
 {
     // TODO :: Make this our enum.
     float velocity = akarin_camera.m_speed * p_delta_time;
@@ -82,7 +81,7 @@ void AkarinCameraSystem::process_keyboard(const float p_delta_time) noexcept
     akarin_camera.update_camera_vectors();
 };
 
-glm::mat4 AkarinCameraSystem::get_projection() noexcept
+glm::mat4 CameraDb::get_projection() noexcept
 {
     return glm::perspective(
         glm::radians(akarin_camera.m_zoom),
@@ -91,17 +90,17 @@ glm::mat4 AkarinCameraSystem::get_projection() noexcept
         akarin_camera.clip_far);
 }
 
-glm::mat4 AkarinCameraSystem::get_view() noexcept
+glm::mat4 CameraDb::get_view() noexcept
 {
     return akarin_camera.get_view_matrix();
 }
 
-glm::vec3 AkarinCameraSystem::get_position() noexcept
+glm::vec3 CameraDb::get_position() noexcept
 {
     return akarin_camera.m_position;
 };
 
-glm::vec3 AkarinCameraSystem::get_front() noexcept
+glm::vec3 CameraDb::get_front() noexcept
 {
     return akarin_camera.m_front;
 };

@@ -1,5 +1,4 @@
-#ifndef LIGHTING_WINDOW_HPP
-#define LIGHTING_WINDOW_HPP
+#pragma once
 
 #include "components/lighting.hpp"
 
@@ -19,8 +18,5 @@ extern bool enable_dir_light;
 extern bool enable_point_light;
 extern bool enable_spot_light;
 
-extern SpotLight spot_light;
-
 void render() noexcept;
 }; // namespace LightingDbWindow
-#endif

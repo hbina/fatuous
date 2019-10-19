@@ -21,8 +21,6 @@ bool LightingDbWindow::enable_dir_light = true;
 bool LightingDbWindow::enable_point_light = true;
 bool LightingDbWindow::enable_spot_light = true;
 
-SpotLight LightingDbWindow::spot_light;
-
 void LightingDbWindow::render() noexcept
 {
     ImGui::Begin("Lighting Database");
@@ -58,10 +56,10 @@ void LightingDbWindow::render() noexcept
         ImGui::Checkbox("Enable##point_light", &enable_point_light);
         for (auto &iter : LightingDb::point_map)
         {
-            std::stringstream dir_ostr;
-            dir_ostr << iter.first;
-            dir_ostr << "##point_light";
-            if (ImGui::TreeNode(dir_ostr.str().c_str()))
+            std::stringstream point_ostr;
+            point_ostr << iter.first;
+            point_ostr << "##point_light";
+            if (ImGui::TreeNode(point_ostr.str().c_str()))
             {
                 ImGui::SliderFloat3("position##point_light", &iter.second.m_position[0], -500.0f, 500.0f);
                 ImGui::SliderFloat("attenuation_value##point_light", &iter.second.m_intensity.m_attval, 1.0f, 100.0f);
@@ -78,15 +76,24 @@ void LightingDbWindow::render() noexcept
     if (ImGui::CollapsingHeader("Spot Light Properties"))
     {
         ImGui::Checkbox("Enable##spot_light", &enable_spot_light);
-        ImGui::InputFloat("cutOff##spot_light", &spot_light.cutOff);
-        ImGui::InputFloat("outerCutOff##spot_light", &spot_light.outerCutOff);
-        ImGui::InputFloat("attenuation_value##spot_light", &spot_light.attenuation_value);
-        ImGui::InputFloat("constant##spot_light", &spot_light.constant);
-        ImGui::InputFloat("linear##spot_light", &spot_light.linear);
-        ImGui::InputFloat("quadratic##spot_light", &spot_light.quadratic);
-        ImGui::ColorEdit3("ambient##spot_light", spot_light.ambient.data());
-        ImGui::ColorEdit3("diffuse##spot_light", spot_light.diffuse.data());
-        ImGui::ColorEdit3("specular##spot_light", spot_light.specular.data());
+        for (auto &iter : LightingDb::spot_map)
+        {
+            std::stringstream spot_ostr;
+            spot_ostr << iter.first;
+            spot_ostr << "##spot_light";
+            if (ImGui::TreeNode(spot_ostr.str().c_str()))
+            {
+                ImGui::InputFloat("cutOff##spot_light", &iter.second.m_radial.x);
+                ImGui::InputFloat("outerCutOff##spot_light", &iter.second.m_radial.y);
+                ImGui::InputFloat("attenuation_value##spot_light", &iter.second.m_intensity.m_attval);
+                ImGui::InputFloat("constant##spot_light", &iter.second.m_intensity.m_constant);
+                ImGui::InputFloat("linear##spot_light", &iter.second.m_intensity.m_linear);
+                ImGui::InputFloat("quadratic##spot_light", &iter.second.m_intensity.m_quadratic);
+                ImGui::ColorEdit3("ambient##spot_light", &iter.second.m_phong.m_ambient[0]);
+                ImGui::ColorEdit3("diffuse##spot_light", &iter.second.m_phong.m_diffuse[0]);
+                ImGui::ColorEdit3("specular##spot_light", &iter.second.m_phong.m_specular[0]);
+            }
+        }
     }
     ImGui::End();
 };

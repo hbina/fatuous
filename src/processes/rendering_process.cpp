@@ -10,7 +10,7 @@
 #include "akarin_imgui/lighting_database_window.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
 #include "systems/skybox_system.hpp"
-#include "systems/akarin_camera_system.hpp"
+#include "systems/camera_database.hpp"
 #include "misc/opengl_settings.hpp"
 
 #include "glad/glad.h"
@@ -24,18 +24,18 @@ void draw(
     const Transform &,
     bool p_draw_depth = false);
 
-void prepare_shadow(
+void prepare_shadow_buffer(
     entt::registry &) noexcept;
 
-void render_normal(
+void render_entities(
     entt::registry &) noexcept;
 
 void RenderingProcess::render(
     entt::registry &p_reg) noexcept
 {
     OpenGLSettings::update();
-    prepare_shadow(p_reg);
-    render_normal(p_reg);
+    prepare_shadow_buffer(p_reg);
+    render_entities(p_reg);
 
     SkyboxSystem::render(p_reg);
     AkarinImgui::render(p_reg);
@@ -50,8 +50,8 @@ void draw(
 {
     ShaderUtilities::transform_shader(
         p_shader_id,
-        AkarinCameraSystem::get_projection(),
-        AkarinCameraSystem::get_view(),
+        CameraDb::get_projection(),
+        CameraDb::get_view(),
         p_transform.m_position,
         p_transform.m_scale,
         p_draw_depth);
@@ -59,7 +59,7 @@ void draw(
         mesh.draw(p_shader_id, p_draw_depth);
 };
 
-void render_normal(
+void render_entities(
     entt::registry &p_reg) noexcept
 {
     static GLuint model_shader = 0;
@@ -89,7 +89,7 @@ void render_normal(
         });
 };
 
-void prepare_shadow(
+void prepare_shadow_buffer(
     entt::registry &p_reg) noexcept
 {
     for (const auto &iter : LightingDb::point_map)
