@@ -15,7 +15,7 @@ float LightingDbWindow::near_plane = 1.0f;
 float LightingDbWindow::far_plane = 1000.0f;
 
 bool LightingDbWindow::enable_shadow = true;
-bool LightingDbWindow::enable_shadow_debug = true;
+bool LightingDbWindow::enable_shadow_debug = false;
 
 bool LightingDbWindow::enable_dir_light = true;
 bool LightingDbWindow::enable_point_light = true;

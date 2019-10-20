@@ -1,5 +1,4 @@
-#ifndef SHADER_UTILITIES_HPP
-#define SHADER_UTILITIES_HPP
+#pragma once
 
 #include "components/lighting.hpp"
 
@@ -95,5 +94,3 @@ void setMat4(
     const glm::mat4 &) noexcept;
 
 }; // namespace ShaderUtilities
-
-#endif

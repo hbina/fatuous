@@ -23,7 +23,8 @@
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
 std::size_t add_model(
-    const ModelInfo &) noexcept;
+    const std::string &p_name,
+    const std::vector<Mesh> &p_meshes) noexcept;
 std::vector<Texture> load_material_textures(
     const std::string &,
     const aiMaterial *,
@@ -75,11 +76,9 @@ std::size_t ModelDb::add_model_job(
         scene,
         meshes);
 
-    // TODO :: Must be deferred until Texture and Mesh are done with their shit.
     return add_model(
-        ModelInfo(
-            p_model_path,
-            meshes));
+        p_model_path,
+        meshes);
 };
 
 void process_node(
@@ -205,12 +204,15 @@ std::vector<Texture> load_material_textures(
 };
 
 std::size_t add_model(
-    const ModelInfo &p_modeldata) noexcept
+    const std::string &p_name,
+    const std::vector<Mesh> &p_meshes) noexcept
 {
     static std::atomic<std::size_t> model_counter = 1;
     std::size_t model_id = model_counter++;
     ModelDb::map.emplace(
         model_id,
-        p_modeldata);
+        ModelInfo(
+            p_name,
+            Model(p_meshes)));
     return model_id;
 };

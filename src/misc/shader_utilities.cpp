@@ -130,7 +130,7 @@ void ShaderUtilities::attach_dir_light(
     const GLuint p_shader_id,
     const DirectionalLight &directional_light) noexcept
 {
-    // TODO :: Shininess is actually part of Directional Light, as such, we need a separate Material helper class
+    // TODO :: Shininess is actually part of Material, as such, we need a separate helper class
     setFloat(
         p_shader_id,
         "material.shininess",

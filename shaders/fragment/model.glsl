@@ -67,19 +67,13 @@ float ShadowCalculation(vec3 frag_pos, vec3 normal);
 
 void main() {
   vec4 textureColour = texture(material.diffuse, TexCoords);
-  if (textureColour.a < 0.5) {
-    discard;
-  }
   vec3 normal = normalize(Normal);
   vec3 view_direction = normalize(camera_position - FragPos);
   float shadow = enable_shadow ? ShadowCalculation(FragPos, normal) : 0.0;
   vec3 result = CalcDirLight(directional_light, normal, view_direction);
-  result += (1.0 - shadow) *
-            CalcPointLight(point_light, normal, FragPos, view_direction);
-  result += (1.0 - shadow) *
-            CalcSpotLight(spot_light, normal, FragPos, view_direction);
-  if (!enable_shadow_debug)
-    FragColor = vec4(result, 1.0);
+  result += CalcPointLight(point_light, normal, FragPos, view_direction);
+  result += CalcSpotLight(spot_light, normal, FragPos, view_direction);
+  FragColor = vec4(textureColour);
 }
 
 // calculates the color when using a directional light.
@@ -172,8 +166,8 @@ float ShadowCalculation(vec3 frag_pos, vec3 normal) {
   // now test for shadows
   float shadow = current_depth - shadow_bias > closest_depth ? 1.0 : 0.0;
   // for debugging purposes
-  if (enable_shadow_debug)
-    FragColor = vec4(vec3(closest_depth / far_plane), 1.0);
+  // if (enable_shadow_debug)
+  //  FragColor = vec4(vec3(closest_depth / far_plane), 1.0);
 
   // Calculates intensity depending on the normals
   float intensity = dot(normal, -normalize(frag_to_light));

@@ -34,6 +34,7 @@ void ModelDbWindow::render(
             std::ostringstream modeldata_ostr;
             modeldata_ostr << p_modeldata_iter.first << " : ";
             modeldata_ostr << p_modeldata_iter.second.m_path;
+            ImGui::Text("Model: %s", modeldata_ostr.str().c_str());
         };
     }
 
