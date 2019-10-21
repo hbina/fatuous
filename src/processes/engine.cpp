@@ -1,4 +1,4 @@
-#include "processes/entity_registry_master.hpp"
+#include "processes/engine.hpp"
 #include "systems/camera_database.hpp"
 #include "processes/rendering_process.hpp"
 #include "akarin_database/model/model_database.hpp"
@@ -16,21 +16,22 @@
 #include <chrono>
 #include <thread>
 
-entt::registry p_reg;
-
-void EntityRegistryMaster::run() noexcept
+void Engine::run() noexcept
 {
     auto delta_time = AkarinTimer::get_delta_time();
     CameraDb::process_keyboard(delta_time);
-    RenderingProcess::render(p_reg);
+    // TODO :: Physics stuff here as well...
+    // TODO :: Logic as well...
+    RenderingProcess::render(m_reg);
 };
 
-std::size_t EntityRegistryMaster::get_entity_count() noexcept
+/**
+std::size_t Engine::get_entity_count() noexcept
 {
     return p_reg.size();
 };
 
-void EntityRegistryMaster::create_entity(
+void Engine::create_entity(
     const std::size_t p_model_id) noexcept
 {
     entt::entity new_entity = p_reg.create();
@@ -43,3 +44,4 @@ void EntityRegistryMaster::create_entity(
         glm::vec3(0.0f),
         glm::vec3(1.0f));
 };
+**/

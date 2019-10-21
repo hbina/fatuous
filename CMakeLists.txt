@@ -15,7 +15,7 @@ add_executable(
     fatuous
     
     src/main.cpp
-
+    
     thirdparty/glad/src/glad.c
     thirdparty/imgui/imgui.cpp
     thirdparty/imgui/imgui_impl_glfw.cpp
@@ -57,8 +57,9 @@ add_executable(
     src/akarin_database/lighting/lighting_database.cpp
     
     src/akarin_database/glfw/akarin_glfw.cpp
+    src/akarin_database/glfw/glfw_data.cpp
     
-    src/processes/entity_registry_master.cpp
+    src/processes/engine.cpp
     src/processes/rendering_process.cpp
     src/processes/swarm_process.cpp
     

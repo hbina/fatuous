@@ -1,6 +1,5 @@
 #include "misc/opengl_settings.hpp"
 #include "misc/akarin_macros.hpp"
-#include "akarin_database/glfw/akarin_glfw.hpp"
 
 #include "glad/glad.h"
 
@@ -173,11 +172,12 @@ void OpenGLSettings::refresh_settings() noexcept
     update_cull_face();
 };
 
-void OpenGLSettings::gl_clear() noexcept
+void OpenGLSettings::gl_clear(
+    const GLFWData &p_glfw) noexcept
 {
     glViewport(0, 0,
-               static_cast<GLsizei>(AkarinGLFW::window_dimension.x),
-               static_cast<GLsizei>(AkarinGLFW::window_dimension.y));
+               static_cast<GLsizei>(p_glfw.dimension.x),
+               static_cast<GLsizei>(p_glfw.dimension.y));
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(get_clear_mask());
 }

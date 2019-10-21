@@ -1,5 +1,5 @@
 #include "akarin_database/glfw/akarin_glfw.hpp"
-#include "processes/entity_registry_master.hpp"
+#include "processes/engine.hpp"
 #include "akarin_imgui/akarin_imgui.hpp"
 
 #include "entt/entt.hpp"
@@ -8,9 +8,10 @@
 
 int main(int argc, char *argv[])
 {
+    Engine engine;
     while (AkarinGLFW::alive())
     {
-        EntityRegistryMaster::run();
+        Engine::run();
         std::flush(std::cout);
     }
     return 0;

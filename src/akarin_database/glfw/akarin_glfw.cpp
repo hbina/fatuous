@@ -6,9 +6,12 @@
 
 #include <iostream>
 
-glm::vec2 AkarinGLFW::window_dimension(1024, 1024);
+std::unordered_map<char, char> keyboard_keys;
+glm::vec2 mouse_offset;
+glm::vec2 window_dimension;
 
-AkarinGLFW::AkarinGLFW()
+GLFWData AkarinGLFW::create_glfw_window(
+    const glm::vec2 &p_dimension) noexcept
 {
     glfwSetErrorCallback([](const int p_error_code, const char *p_error_description) {
         std::cerr << "GLFW error: " << p_error_code << ": " << p_error_description << "\n";
@@ -20,7 +23,7 @@ AkarinGLFW::AkarinGLFW()
         std::exit(EXIT_FAILURE); // Can't do anything about this buddy
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -29,9 +32,9 @@ AkarinGLFW::AkarinGLFW()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-    window = glfwCreateWindow(
-        window_dimension.x,
-        window_dimension.y,
+    GLFWwindow *window = glfwCreateWindow(
+        p_dimension.x,
+        p_dimension.y,
         "Fatuous",
         nullptr, nullptr);
 
@@ -62,40 +65,9 @@ AkarinGLFW::AkarinGLFW()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     const char *glsl_version = "#version 330";
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    return GLFWData(window, p_dimension);
 };
-
-AkarinGLFW &AkarinGLFW::get_instance()
-{
-    static AkarinGLFW instance;
-    return instance;
-};
-
-bool AkarinGLFW::alive() noexcept
-{
-    if (glfwWindowShouldClose(get_instance().window))
-        return false;
-
-    glfwPollEvents();
-    return true;
-};
-
-void AkarinGLFW::swap_buffers() noexcept
-{
-    glfwSwapBuffers(get_instance().window);
-};
-
-AkarinGLFW::~AkarinGLFW()
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    glfwTerminate();
-};
-
-// Static functions
-
-std::unordered_map<char, char> keyboard_keys;
-glm::vec2 mouse_position_offset;
 
 void AkarinGLFW::key_callback(
     GLFWwindow *window,
@@ -127,44 +99,35 @@ void AkarinGLFW::mouse_callback(
     const double p_xpos,
     const double p_ypos)
 {
-    static bool first_mouse_callback = true;
+    static bool first_callback = true;
     const float xpos_f = static_cast<float>(p_xpos);
     const float ypos_f = static_cast<float>(p_ypos);
-    static glm::vec2 last_mouse_position;
-    if (first_mouse_callback)
+    static glm::vec2 last_position;
+    if (first_callback)
     {
-        last_mouse_position = glm::vec2(xpos_f, ypos_f);
-        first_mouse_callback = false;
+        last_position = glm::vec2(xpos_f, ypos_f);
+        first_callback = false;
     }
 
-    mouse_position_offset.x = xpos_f - last_mouse_position.x;
-    mouse_position_offset.y = last_mouse_position.y - ypos_f;
+    mouse_offset.x = xpos_f - last_position.x;
+    mouse_offset.y = last_position.y - ypos_f;
 
-    last_mouse_position.x = xpos_f;
-    last_mouse_position.y = ypos_f;
+    last_position.x = xpos_f;
+    last_position.y = ypos_f;
 };
 
-bool AkarinGLFW::is_pressed(const int key) noexcept
+void AkarinGLFW::update(entt::registry &p_reg) noexcept
 {
-    return keyboard_keys[static_cast<char>(key)] == GLFW_PRESS;
+    p_reg.view<GLFWData>()
+        .each([&](
+                  GLFWData &p_glfw_data) {
+            update_glfw_data(p_glfw_data);
+        });
 };
 
-bool AkarinGLFW::is_repeated(const int key) noexcept
+void AkarinGLFW::update_glfw_data(GLFWData &p_glfw_data) noexcept
 {
-    return keyboard_keys[static_cast<char>(key)] == GLFW_REPEAT;
-};
-
-bool AkarinGLFW::is_released(const int key) noexcept
-{
-    return keyboard_keys[static_cast<char>(key)] == GLFW_RELEASE;
-};
-
-float AkarinGLFW::get_window_size_ratio() noexcept
-{
-    return window_dimension.x / window_dimension.y;
-};
-
-const glm::vec2 AkarinGLFW::get_mouse_offset() noexcept
-{
-    return mouse_position_offset;
-};
+    p_glfw_data.update(keyboard_keys,
+                       mouse_offset,
+                       window_dimension);
+}
