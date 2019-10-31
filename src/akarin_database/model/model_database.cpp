@@ -22,7 +22,7 @@
 #include <thread>
 
 // TODO :: How to implement a profiler??? I think by having a map of string and time, then check for their duration
-std::size_t add_model(
+int add_model(
     const ModelInfo &) noexcept;
 std::vector<Texture> load_material_textures(
     const std::string &,
@@ -39,15 +39,15 @@ Mesh process_mesh(
     const aiMesh *,
     const aiScene *) noexcept;
 
-std::unordered_map<std::size_t, ModelInfo> ModelDb::map;
+std::unordered_map<int, ModelInfo> ModelDb::map;
 
-std::size_t ModelDb::add_model_job(
+int ModelDb::add_model_job(
     const std::string &p_model_path) noexcept
 {
     const auto &find_model_iter = std::find_if(
         ModelDb::map.cbegin(),
         ModelDb::map.cend(),
-        [p_model_path](const std::pair<const std::size_t, ModelInfo> &p_model_iter) -> bool {
+        [p_model_path](const std::pair<const int, ModelInfo> &p_model_iter) -> bool {
             return p_model_iter.second.m_path == p_model_path;
         });
     if (find_model_iter != ModelDb::map.cend())
@@ -88,7 +88,7 @@ void process_node(
     const aiScene *scene,
     std::vector<Mesh> &meshes) noexcept
 {
-    for (std::size_t i = 0; i < node->mNumMeshes; i++)
+    for (int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh *ai_mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(process_mesh(
@@ -96,7 +96,7 @@ void process_node(
             ai_mesh,
             scene));
     }
-    for (std::size_t i = 0; i < node->mNumChildren; i++)
+    for (int i = 0; i < node->mNumChildren; i++)
     {
         process_node(
             p_model_root_directory,
@@ -115,7 +115,7 @@ Mesh process_mesh(
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    for (std::size_t i = 0; i < p_mesh->mNumVertices; i++)
+    for (int i = 0; i < p_mesh->mNumVertices; i++)
     {
         glm::vec3 position = glm::vec3(0.0f);
         position.x = p_mesh->mVertices[i].x;
@@ -158,10 +158,10 @@ Mesh process_mesh(
             tex_coord);
     }
 
-    for (std::size_t i = 0; i < p_mesh->mNumFaces; i++)
+    for (int i = 0; i < p_mesh->mNumFaces; i++)
     {
         aiFace face = p_mesh->mFaces[i];
-        for (std::size_t j = 0; j < face.mNumIndices; j++)
+        for (int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
@@ -204,11 +204,11 @@ std::vector<Texture> load_material_textures(
     return textures;
 };
 
-std::size_t add_model(
+int add_model(
     const ModelInfo &p_modeldata) noexcept
 {
-    static std::atomic<std::size_t> model_counter = 1;
-    std::size_t model_id = model_counter++;
+    static std::atomic<int> model_counter = 1;
+    int model_id = model_counter++;
     ModelDb::map.emplace(
         model_id,
         p_modeldata);

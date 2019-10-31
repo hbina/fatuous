@@ -5,9 +5,9 @@
 
 namespace EntityRegistryMaster
 {
-void create_entity(const std::size_t) noexcept;
+void create_entity(const int) noexcept;
 void run() noexcept;
-std::size_t get_entity_count() noexcept;
+int get_entity_count() noexcept;
 }; // namespace EntityRegistryMaster
 
 #endif

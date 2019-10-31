@@ -25,13 +25,13 @@ void EntityRegistryMaster::run() noexcept
     RenderingProcess::render(p_reg);
 };
 
-std::size_t EntityRegistryMaster::get_entity_count() noexcept
+int EntityRegistryMaster::get_entity_count() noexcept
 {
     return p_reg.size();
 };
 
 void EntityRegistryMaster::create_entity(
-    const std::size_t p_model_id) noexcept
+    const int p_model_id) noexcept
 {
     entt::entity new_entity = p_reg.create();
     p_reg.assign<Model>(

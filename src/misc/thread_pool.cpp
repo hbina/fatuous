@@ -6,7 +6,7 @@ template <class F>
 ThreadPool<F>::ThreadPool()
 {
 	auto nthreads = std::thread::hardware_concurrency();
-	for (std::size_t i = 0; i < nthreads; ++i)
+	for (int i = 0; i < nthreads; ++i)
 	{
 		threads.emplace_back([this] {
 			for (;;)

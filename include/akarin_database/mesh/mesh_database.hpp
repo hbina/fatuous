@@ -11,7 +11,7 @@
 
 namespace MeshDb
 {
-extern std::unordered_map<std::size_t, Mesh> map;
+extern std::unordered_map<int, Mesh> map;
 
 Mesh create_mesh(
     const std::vector<Vertex> &,

@@ -39,7 +39,7 @@ void ModelDbWindow::render(
 
     if (ImGui::CollapsingHeader("Meshes List"))
     {
-        for (const std::pair<const std::size_t, Mesh> &mesh_iter : MeshDb::map)
+        for (const std::pair<const int, Mesh> &mesh_iter : MeshDb::map)
         {
             const Mesh &mesh = mesh_iter.second;
             std::stringstream vao_id_ostr;

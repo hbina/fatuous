@@ -12,7 +12,7 @@
 #include <sstream>
 #include <ostream>
 
-std::size_t selected_model_id = 0;
+int selected_model_id = 0;
 std::string current_selection = "Select Model";
 
 void EntityDatabaseWindow::render() noexcept
@@ -41,7 +41,7 @@ void EntityDatabaseWindow::render() noexcept
         }
         else
         {
-            EntityRegistryMaster::create_entity(static_cast<std::size_t>(selected_model_id));
+            EntityRegistryMaster::create_entity(static_cast<int>(selected_model_id));
         }
     }
     ImGui::SameLine();

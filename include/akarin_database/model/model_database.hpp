@@ -14,9 +14,9 @@
 
 namespace ModelDb
 {
-extern std::unordered_map<std::size_t, ModelInfo> map;
+extern std::unordered_map<int, ModelInfo> map;
 
-std::size_t add_model_job(
+int add_model_job(
     const std::string &) noexcept;
 }; // namespace ModelDb
 

@@ -4,13 +4,13 @@
 
 struct TextureJob
 {
-  const std::size_t m_id;
+  const int m_id;
   const std::string m_path;
   const TextureType m_type;
 
   TextureJob() = delete;
   TextureJob(
-      const std::size_t,
+      const int,
       const std::string &,
       const TextureType);
 };

@@ -4,9 +4,9 @@
 #include "misc/shader_utilities.hpp"
 #include "systems/akarin_camera_system.hpp"
 
-std::unordered_map<std::size_t, DirectionalLight> LightingDb::dir_map;
-std::unordered_map<std::size_t, PointLight> LightingDb::point_map;
-std::unordered_map<std::size_t, SpotLight> LightingDb::spot_map;
+std::unordered_map<int, DirectionalLight> LightingDb::dir_map;
+std::unordered_map<int, PointLight> LightingDb::point_map;
+std::unordered_map<int, SpotLight> LightingDb::spot_map;
 
 void LightingDb::prepare_light(
     const GLuint p_shader_id) noexcept
@@ -59,7 +59,7 @@ void LightingDb::prepare_light(
 
 void LightingDb::create_dir_light() noexcept
 {
-    static std::size_t directional_light_counter = 1;
+    static int directional_light_counter = 1;
     dir_map.emplace(
         std::make_pair(
             directional_light_counter++,
@@ -75,8 +75,8 @@ void LightingDb::create_point_light(
     const GLsizei p_width,
     const GLsizei p_height) noexcept
 {
-    static std::size_t point_light_counter = 1;
-    std::size_t light_id = point_light_counter++;
+    static int point_light_counter = 1;
+    int light_id = point_light_counter++;
 
     GLuint light_shader = 0u;
     GLuint light_fbo = 0u;

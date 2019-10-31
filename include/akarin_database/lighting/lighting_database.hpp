@@ -9,9 +9,9 @@
 namespace LightingDb
 {
 
-extern std::unordered_map<std::size_t, DirectionalLight> dir_map;
-extern std::unordered_map<std::size_t, PointLight> point_map;
-extern std::unordered_map<std::size_t, SpotLight> spot_map;
+extern std::unordered_map<int, DirectionalLight> dir_map;
+extern std::unordered_map<int, PointLight> point_map;
+extern std::unordered_map<int, SpotLight> spot_map;
 
 void prepare_light(const GLuint) noexcept;
 void create_dir_light() noexcept;
